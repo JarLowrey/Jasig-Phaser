@@ -46,9 +46,14 @@ export default class Boot extends Phaser.State {
     // Load the graphical assets required to show the splash screen later,
     // using the asset pack data.
     this.load.pack('boot', null, assets);
+
+    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
   }
 
-  create() {
+  onLoadComplete(){
+    //create variables that are required in the preload state
+    this.game.dimen = this.game.cache.getJSON('dimen');
+
     // After applying the first adjustments and loading the splash screen
     // assets, move to the next game state.
     this.state.start('Preload');

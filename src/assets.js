@@ -47,11 +47,17 @@
 export default {
   // -- Splash screen assets, displayed during the 'Preload' state.
   boot: [{
-    key: 'splash-screen',
-    type: 'image'
+    key: 'preload_sprites',
+    type: 'atlasJSONHash',
+    atlasURL: 'spritesheets/preload_sprites.json',
+    textureURL: 'spritesheets/preload_sprites.png'
   }, {
     key: 'progress-bar',
     type: 'image'
+  }, {
+    key: 'dimen',
+    type: 'json',
+    url: 'json/dimen.json'
   }],
 
   // -- General assets, used throughout the game.
@@ -72,15 +78,6 @@ export default {
   //   key: 'example',
   //   type: 'text',
   //   url: 'example.txt'
-  // }, {
-  //   //  Example: Add a JSON document.
-  //   //
-  //   //  If `url` is omitted, a pattern `<key>.json` is assumed.
-  //   //
-  //   //  Retrieve the file with `game.cache.getJSON(<key>)`.
-  //   key: 'example',
-  //   type: 'json',
-  //   url: 'example.json'
   // }, {
   //   //  Example: Add a XML document.
   //   //
@@ -185,8 +182,7 @@ export default {
   //   atlasURL: 'example.json',
   //   textureURL: 'example.png',
   //   format: 'TEXTURE_ATLAS_JSON_HASH'
-  // },
-  {
+  // }, {
     //  Example: Add a texture atlas (alternative form).
     //
     //  Use the `type` field to specify the texture atlas format, as follows:
@@ -200,7 +196,7 @@ export default {
     //  If `textureURL` is omitted, a pattern `<key>.png` is assumed.
     key: 'sprites',
     type: 'atlasJSONHash',
-    atlasURL: 'sprites.json',
-    textureURL: 'spritesheet.png'
+    atlasURL: 'spritesheets/game_sprites.json',
+    textureURL: 'spritesheets/game_sprites.png'
   }]
 };

@@ -8,10 +8,12 @@
  */
 
 import assets from '../assets';
+import UiHandler from '../objects/UiHandler';
 
 export default class Preload extends Phaser.State {
 
   preload() {
+    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.showSplashScreen();
     this.load.pack('game', null, assets);
   }
@@ -20,15 +22,31 @@ export default class Preload extends Phaser.State {
     // Here is a good place to initialize plugins that depend on any game
     // asset. Don't forget to `import` them first. Example:
     //this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
-
-    this.state.start('Game');
   }
 
   // --------------------------------------------------------------------------
 
   showSplashScreen() {
-    this.add.image(0, 0, 'splash-screen');
-    this.load.setPreloadSprite(this.add.image(82, 282, 'progress-bar'));
+    //add logo and loading bar
+    UiHandler.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 0.5, 'preload_sprites', 'j_tron_labs_logo');
+    const loadingBar =  UiHandler.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
+    this.load.setPreloadSprite(loadingBar);
+
+
+    //show splash screen for a few seconds. then call onLoadComplete
+    this.splashScreenOver = false;
+    this.game.time.events.add(Phaser.Timer.SECOND * 2.5, this.finishedSplashScreen, this);
+  }
+
+  finishedSplashScreen(){
+    this.splashScreenOver = true;
+    this.onLoadComplete();
+  }
+
+  onLoadComplete(){
+    if(this.splashScreenOver && this.load.hasLoaded){ //splash screen has been shown for a minimum amount of time, and loading assets is finished
+      this.state.start('Menu');
+    }
   }
 
 }
