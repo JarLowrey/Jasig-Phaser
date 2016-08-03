@@ -6,15 +6,6 @@
 
 export default class Stars {
 
-  static getStarManager(game){
-    if(!Stars.singleton){
-      Stars.singleton = new Stars(game);
-      Stars.singleton.setupStars();
-    }
-
-    return Stars.singleton;
-  }
-
   constructor(game){
     this.game = game;
 
@@ -22,6 +13,8 @@ export default class Stars {
     this.lifespan = 10000;
     this.emitFreq = 150;
     this.numEmitPer = 2;
+
+    this.setupStars();
   }
 
   //private function to create and setup particle properties
@@ -63,6 +56,3 @@ export default class Stars {
     this.emitter.flow(this.lifespan, this.emitFreq, this.numEmitPer, -1, true);
   }
 }
-
-//ES6 does not support static vars, thus need define it this way (Note: must be after the class)
-Stars.singleton = null;

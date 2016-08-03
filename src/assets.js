@@ -58,7 +58,11 @@ export default {
     key: 'dimen',
     type: 'json',
     url: 'json/dimen.json'
-  }],
+  },{
+    key: 'font_styles',
+    type: 'json',
+    url: 'json/font_styles.json'
+  }  ],
 
   // -- General assets, used throughout the game.
   game: [{

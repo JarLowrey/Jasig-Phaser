@@ -53,6 +53,8 @@ export default class Boot extends Phaser.State {
   onLoadComplete(){
     //create variables that are required in the preload state
     this.game.dimen = this.game.cache.getJSON('dimen');
+    this.game.fonts = this.game.cache.getJSON('font_styles');
+
 
     // After applying the first adjustments and loading the splash screen
     // assets, move to the next game state.
