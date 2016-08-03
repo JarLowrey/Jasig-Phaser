@@ -7,7 +7,6 @@
 
 import Stars from '../objects/Stars';
 import UiHandler from '../objects/UiHandler';
-import IconText from '../objects/IconText';
 
 export default class Game extends Phaser.State {
 

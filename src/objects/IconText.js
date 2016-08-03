@@ -4,8 +4,6 @@
  *
  */
 
-import UiHandler from '../objects/UiHandler';
-
 export default class IconText extends Phaser.Group {
 
   constructor(game, x, y, fontHeight,
@@ -15,7 +13,7 @@ export default class IconText extends Phaser.Group {
     this.x = x;
     this.y = y;
 
-    style = this.game.fonts[style] || this.game.fonts["text"];
+    style = this.game.fonts[style] || this.game.fonts['text'];
     style.fontSize = fontHeight;
     this.text = this.game.add.text(0,0,text,style);
 
@@ -26,9 +24,11 @@ export default class IconText extends Phaser.Group {
     if(whereIconGoesRelativeToText == 'left'){
       this.text.anchor.setTo(0,0.5);
       this.image.anchor.setTo(1,0.5);
+      this.text.x = marginBtwSpriteAndText;
     }else{
       this.text.anchor.setTo(1,0.5);
       this.image.anchor.setTo(0,0.5);
+      this.image.x = marginBtwSpriteAndText;
     }
 
     this.add(this.text);
@@ -40,17 +40,11 @@ export default class IconText extends Phaser.Group {
   }
 
   kill(){
-    this.text.kill();
-    this.image.kill();
-
     this.exists = false;
   }
 
   revive(){
     this.exists = true;
     this.alpha = 1;
-
-    this.text.revive();
-    this.image.revive();
   }
 }

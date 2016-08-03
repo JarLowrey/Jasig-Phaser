@@ -4,7 +4,7 @@
  *
  */
 
- import IconText from '../objects/IconText';
+import IconText from '../objects/IconText';
 
 export default class UiHandler {
 
@@ -20,7 +20,7 @@ export default class UiHandler {
     goldText.setText(amt);
 
     goldText.x = x;
-    goldText.y = y
+    goldText.y = y;
 
     goldText.goldTween.start();
   }
@@ -30,7 +30,7 @@ export default class UiHandler {
 
     if(!goldText){
       goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
-        "score", "text", "sprites", "resources", "left", 0);
+        'score', 'text', 'sprites', 'resources', 'left', 0);
 
       goldText.goldTween = this.game.add.tween(goldText).to({y:'-'+UiHandler.dp(25), //tween it relative to the current position. Needs to be a string
        alpha: 0}, 750, Phaser.Easing.Linear.In);
@@ -44,7 +44,7 @@ export default class UiHandler {
     return goldText;
   }
 
-  goldTextOver(goldText, tween){
+  goldTextOver(goldText){
     goldText.kill();
     //this.game.global.score += goldText.score
   }
