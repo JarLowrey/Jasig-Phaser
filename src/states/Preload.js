@@ -35,7 +35,7 @@ export default class Preload extends Phaser.State {
 
     //show splash screen for a few seconds. then call onLoadComplete
     this.splashScreenOver = false;
-    this.game.time.events.add(Phaser.Timer.SECOND * 2.5, this.finishedSplashScreen, this);
+    this.game.time.events.add(Phaser.Timer.SECOND * 5, this.finishedSplashScreen, this);
   }
 
   finishedSplashScreen(){

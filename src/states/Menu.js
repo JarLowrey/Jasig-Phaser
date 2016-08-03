@@ -2,10 +2,12 @@
  * Menu state
  */
 
+import Stars from '../objects/Stars';
+
 export default class Menu extends Phaser.State {
 
   create() {
-    // TODO: Stub
+    Stars.getStarManager(this.game).showStars();
   }
 
   update() {
