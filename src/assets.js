@@ -66,6 +66,10 @@ export default {
 
   // -- General assets, used throughout the game.
   game: [{
+    key: 'ships',
+    type: 'json',
+    url: 'json/ships.json'
+  },{
   // {
   //   //  Example: Add an image.
   //   //

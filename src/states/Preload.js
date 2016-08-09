@@ -16,6 +16,7 @@ export default class Preload extends Phaser.State {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.showSplashScreen();
     this.load.pack('game', null, assets);
+
   }
 
   create() {
@@ -44,6 +45,8 @@ export default class Preload extends Phaser.State {
   }
 
   onLoadComplete(){
+    this.game.ships = this.game.cache.getJSON('ships');
+
     if(this.splashScreenOver && this.load.hasLoaded){ //splash screen has been shown for a minimum amount of time, and loading assets is finished
       this.state.start('Menu');
     }
