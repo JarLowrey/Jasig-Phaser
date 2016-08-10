@@ -10,7 +10,6 @@ export default class Bullet extends Phaser.Sprite{
     super(game,x,y);
 
     this.anchor.setTo(0.5,0.5);
-    this.ySpd = 800;
 
     this.game.physics.arcade.enableBody(this);
 
@@ -30,18 +29,24 @@ export default class Bullet extends Phaser.Sprite{
     }
   }
 
-  revive(key = 'sprites', frame = 'circle', shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
+  revive(bulletType, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
     super.revive();
 
     this.shooter = shooter;
     this.target = target;
 
-    this.loadTexture(key, frame);
-    this.tint = (this.shooter.isFriendly && frame == 'circle') ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-    this.width = 20;
+    this.bulletInfo = this.game.bullets[bulletType];
+
+    this.loadTexture(this.bulletInfo.key, this.bulletInfo.frame);
+    if(this.bulletInfo.isTinted){
+      this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
+    }
+
+    this.width = this.bulletInfo.width;
     this.scale.y = this.scale.x;
 
-    this.game.physics.arcade.velocityFromAngle(shootingAngle, this.ySpd, this.body.velocity); //set x,y speed to coordinate with angle traveling
+    shootingAngle = (this.shooter.isFriendly) ? 360 - shootingAngle : shootingAngle; //correct angle in bulletInfo for friendliness
+    this.game.physics.arcade.velocityFromAngle(shootingAngle, this.bulletInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
 
     this.setXPos(xPercentageOnShooter);
     this.setYPos(yPercentageOnShooter);
@@ -52,27 +57,16 @@ export default class Bullet extends Phaser.Sprite{
     xPercentageOnShooter -= 50;
     xPercentageOnShooter /= 100;
 
-    this.x = this.shooter.x + xPercentageOnShooter * this.shooter.width * 2;
+    this.x = this.shooter.x + xPercentageOnShooter * this.shooter.width;
   }
 
   //assume that shooter and bullet will have an anchor of 0.5y
   setYPos(yPercentageOnShooter = 50){
     yPercentageOnShooter -= 50;
     yPercentageOnShooter /= 100;
+    //console.log(yPercentageOnShooter)
 
-    this.y = this.shooter.y + yPercentageOnShooter * this.shooter.height * 2;
-  }
-
-  static straightShotAngle(shooter){
-    return (shooter.isFriendly) ? 270 : 90;
-  }
-
-  static rightShotAngle(shooter){
-    return (shooter.isFriendly) ? 270 + Bullet.shotAngle : 90 - Bullet.shotAngle;
-  }
-
-  static leftShotAngle(shooter){
-    return (shooter.isFriendly) ? 270 - Bullet.shotAngle : 90 + Bullet.shotAngle;
+    this.y = this.shooter.y + yPercentageOnShooter * this.shooter.height;
   }
 
 }

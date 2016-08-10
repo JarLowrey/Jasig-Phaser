@@ -1,0 +1,9 @@
+{
+  "default":{
+    "key":"sprites",
+    "frame":"circle",
+    "isTinted":true,
+    "width":20,
+    "speed":800
+  }
+}

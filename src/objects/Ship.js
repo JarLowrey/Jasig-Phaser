@@ -12,7 +12,7 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.gun = new Gun(this.game, this);
+    this.gun = new Gun(this.game, this, 'angledDualShot', 'default');
   }
 
   static initShipPool(game, preallocationNum = 20){

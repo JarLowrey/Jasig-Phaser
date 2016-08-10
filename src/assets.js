@@ -70,6 +70,14 @@ export default {
     type: 'json',
     url: 'json/ships.json'
   },{
+    key: 'guns',
+    type: 'json',
+    url: 'json/guns.json'
+  },{
+    key: 'bullets',
+    type: 'json',
+    url: 'json/bullets.json'
+  },{
   // {
   //   //  Example: Add an image.
   //   //

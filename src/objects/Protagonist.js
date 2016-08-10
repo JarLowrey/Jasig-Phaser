@@ -34,7 +34,7 @@ export default class Protagonist extends Ship {
 
   //due to the way onDown works, it is difficult to pass around the needed context to the gun. Thus, create a custom function for it that will have the proper
   shootGun(){
-    this.gun.startShooting( this.gun.shootStraight );
+    this.gun.startShooting();
   }
 
 
