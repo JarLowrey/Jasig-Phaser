@@ -5,19 +5,14 @@
  */
 
 import Gun from '../objects/Gun';
+import Unit from '../objects/Unit';
 
-export default class Ship extends Phaser.Sprite {
+export default class Ship extends Unit {
 
   constructor(game){
     super(game);
 
-    this.game.physics.arcade.enableBody(this);
-  }
-
-  update(){
-    if(this.isFriendly){
-      this.game.physics.arcade.moveToPointer(this, 200);
-    }
+    this.gun = new Gun(this.game, this);
   }
 
   static initShipPool(game, preallocationNum = 20){
@@ -37,22 +32,8 @@ export default class Ship extends Phaser.Sprite {
   }
 
   revive(x, y, isFriendly, key, frame){
-    super.revive();
-
-    this.loadTexture(key, frame);
-
-    this.gun = new Gun(this.game);
-    this.isFriendly = isFriendly;
-
-    this.x = x;
-    this.y = y;
-
-    this.setAnchor(isFriendly);
+    super.revive(x, y, isFriendly, key, frame);
   }
 
-  setAnchor(isFriendly){
-    const yAnchor = (isFriendly) ? 1 : 0.5;
-    this.anchor.setTo(0.5,yAnchor);
-  }
 
 }

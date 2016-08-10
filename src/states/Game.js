@@ -7,6 +7,7 @@
 
 import Stars from '../objects/Stars';
 import Ship from '../objects/Ship';
+import Protagonist from '../objects/Protagonist';
 import UiHandler from '../objects/UiHandler';
 
 export default class Game extends Phaser.State {
@@ -18,8 +19,10 @@ export default class Game extends Phaser.State {
     this.UiHandler = new UiHandler(this.game);
 
     Ship.initShipPool(this.game);
-    this.protagonist = Ship.getNewShip();
-    this.protagonist.revive(this.game.world.centerX, this.game.world.centerY, true, 'sprites',this.game.ships.protagonist.frame );
+    
+    this.hero = new Protagonist(this.game);
+    this.hero.revive(this.game.world.centerX, this.game.world.centerY );
+
   }
 
   update(){

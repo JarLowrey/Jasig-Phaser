@@ -9,7 +9,7 @@ export default class Stars {
   constructor(game){
     this.game = game;
 
-    this.maxNumParticles = 100;
+    this.maxNumParticles = 75;
     this.lifespan = 10000;
     this.emitFreq = 150;
     this.numEmitPer = 2;
@@ -26,7 +26,7 @@ export default class Stars {
     emitter.width = this.game.world.width ;
     emitter.height = this.game.world.height ;
 
-    emitter.makeParticles('sprites','star');
+    emitter.makeParticles('sprites','circle');
 
     emitter.minParticleSpeed.set(0, 5);
     emitter.maxParticleSpeed.set(0, 15);
