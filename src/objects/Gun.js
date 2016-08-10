@@ -19,7 +19,6 @@ export default class Gun {
     this.canShoot = true;
     this.shooter = shooter;
     this.cooldownTimer = game.time.create(false);
-    this.freq = 500;
   }
 
   changeGun(gunType, bulletType){
@@ -40,6 +39,12 @@ export default class Gun {
     }
   }
 
+  static bulletCollision(bullet, unit){
+    console.log('Bullet hit');
+    bullet.kill();
+    unit.damage(bullet.dmg);
+  }
+
   startShooting(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null){
     if(!this.canShoot) return;
     this.canShoot = false;
@@ -52,7 +57,7 @@ export default class Gun {
   }
 
   stopShooting(){
-    const remainingTime = this.cooldownTimer.duration;
+    //const remainingTime = this.cooldownTimer.duration;
 
     this.cooldownTimer.stop();
     this.cooldownTimer.add(this.gunInfo.cooldown, this.canShootAgain, this);
@@ -79,7 +84,7 @@ export default class Gun {
   shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget){
     for(var shotName in this.gunInfo.shots){
       var shot = this.gunInfo.shots[shotName];
-      this.createBullet(this.bulletType, xPercentageOnShooter + shot["x%Diff"], yPercentageOnShooter, trackingTarget, shot["angle"]);
+      this.createBullet(this.bulletType, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, trackingTarget, shot['angle']);
     }
   }
 

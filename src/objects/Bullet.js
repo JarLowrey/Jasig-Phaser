@@ -30,6 +30,7 @@ export default class Bullet extends Phaser.Sprite{
   }
 
   revive(bulletType, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
+    this.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collision could be messed up
     super.revive();
 
     this.shooter = shooter;
@@ -50,6 +51,10 @@ export default class Bullet extends Phaser.Sprite{
 
     this.setXPos(xPercentageOnShooter);
     this.setYPos(yPercentageOnShooter);
+
+    this.dmg = 25;
+
+    this.body.setSize(this.width,this.height); //set body to new sprite size, otherwise collisions (and other physics actions) will be messed up
   }
 
   //assume that shooter and bullet will have an anchor of 0.5x

@@ -15,6 +15,8 @@ export default class Protagonist extends Ship {
 
     this.speed = 300;
     this.bufferAbovePointer = 5;
+
+    Ship.friendlyShips.add(this);
   }
 
   update(){
