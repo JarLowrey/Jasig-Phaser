@@ -10,24 +10,7 @@ export default class Unit extends Phaser.Sprite {
     super(game);
 
     this.game.physics.arcade.enableBody(this);
-
-
-    //Emit an explosion upon death
-    var emitter = this.game.add.emitter(0,0, 5);
-
-    emitter.makeParticles('sprites','circle'); //cannot change texture on the fly. Prob would be better to define an emitter per explosion texture desired (with lots of particles), and emit only a few of the particles upon death 
-
-    emitter.minParticleSpeed.set(0, 50);
-    emitter.maxParticleSpeed.set(0, 100);
-    emitter.gravity = 0;
-
-    emitter.setRotation(0, 0);
-    emitter.setAlpha(0.75, 1);
-
-    emitter.minParticleScale = .5;
-    emitter.maxParticleScale = .75;
-
-    this.emitter = emitter;
+    Unit.initUnitPool(game);
   }
 
 
@@ -36,6 +19,9 @@ export default class Unit extends Phaser.Sprite {
       Unit.pool = new Phaser.Group(game);
       Unit.pool.classType = Unit;
       Unit.pool.createMultiple(preallocationNum);
+
+      Unit.explosionGroups = {};
+      Unit.addExplosionEmitter('explosion1', game);
     }
   }
 
@@ -47,10 +33,11 @@ export default class Unit extends Phaser.Sprite {
     return unit;
   }
 
-  revive(x, y, isFriendly, key, frame){
+  revive(x, y, isFriendly, key, frame, explosionFrame){
     super.revive();
 
     this.loadTexture(key, frame);
+    Unit.addExplosionEmitter(explosionFrame, this.game);
 
     this.isFriendly = isFriendly;
 
@@ -69,11 +56,39 @@ export default class Unit extends Phaser.Sprite {
   kill(){
     super.kill();
 
-    this.emitter.width = this.width ;
-    this.emitter.height = this.height ;
-    this.emitter.x = this.x;
-    this.emitter.y = this.y;
-    this.emitter.start(true, 1000);
+    this.showExplosion();
+  }
+
+  showExplosion(frame = 'explosion1'){
+    var emitter = Unit.explosionGroups[frame];
+
+    emitter.width = this.width ;
+    emitter.height = this.height ;
+    emitter.x = this.x;
+    emitter.y = this.y;
+
+    emitter.start(true, 500, null, 7);
+  }
+
+  static addExplosionEmitter(frame = 'explosion1', game){
+    if(frame in Unit.explosionGroups) return; //frame can not yet be added to the emitter hash
+
+    //Emit an explosion upon death
+    var emitter = game.add.emitter(0,0, 25);
+
+    emitter.makeParticles('sprites',frame); //cannot change texture on the fly. Prob would be better to define an emitter per explosion texture desired (with lots of particles), and emit only a few of the particles upon death
+
+    emitter.minParticleSpeed.set(-100, -100);
+    emitter.maxParticleSpeed.set(100, 100);
+    emitter.gravity = 0;
+
+    emitter.setRotation(0, 0);
+    emitter.setAlpha(0.75, 1);
+
+    emitter.minParticleScale = .05;
+    emitter.maxParticleScale = .1;
+
+    Unit.explosionGroups[frame] = emitter;
   }
 
 }
