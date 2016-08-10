@@ -21,16 +21,15 @@ export default class Gun {
 
   static initBulletPool(game, preallocationNum = 50){
     if(!Gun.bulletPool){
-      Gun.bulletPool = new Phaser.Group(game);
-      Gun.bulletPool.classType = Bullet;
-      Gun.bulletPool.createMultiple(preallocationNum);
+      Gun.friendlyBullets = new Phaser.Group(game);
+      Gun.enemyBullets = new Phaser.Group(game);
 
-      Gun.shotAngle = 10;
+      Gun.friendlyBullets.classType = Bullet;
+      Gun.enemyBullets.classType = Bullet;
+
+      Gun.friendlyBullets.createMultiple(preallocationNum);
+      Gun.enemyBullets.createMultiple(preallocationNum);
     }
-  }
-
-  shootStraight({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
-    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
   }
 
   startShooting(shootFn, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null){
@@ -62,10 +61,39 @@ export default class Gun {
   }
 
   createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, angleFunction){
-    var bullet = Gun.bulletPool.getFirstDead(true);
+    var bulletPool = (this.shooter.isFriendly) ? Gun.friendlyBullets : Gun.enemyBullets;
+
+    var bullet = bulletPool.getFirstDead(true);
     if(bullet.alive) bullet.kill(); //all the bullets were already alive, so a new one was created via getFirstDead's createIfNull's parameter being set to true
 
     bullet.revive(key, frame, this.shooter, trackingTarget, xPercentageOnShooter, yPercentageOnShooter, angleFunction(this.shooter) );
+  }
+
+  /*
+    TYPES OF GUNS
+    Below are functions that define different types of guns. Use these functions are the 'shootFn' parameter when calling 'startShooting'
+  */
+
+  straightShot({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+  }
+  straightDualShot({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
+    this.createBullet(key, frame, xPercentageOnShooter - 10, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter + 10, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+  }
+  straightTriShot({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
+    this.createBullet(key, frame, xPercentageOnShooter - 15, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter + 15, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+  }
+  triAngledShot({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.straightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.rightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.leftShotAngle);
+  }
+  dualAngledShot({key, frame, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null}){
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.rightShotAngle);
+    this.createBullet(key, frame, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, Bullet.leftShotAngle);
   }
 
 }

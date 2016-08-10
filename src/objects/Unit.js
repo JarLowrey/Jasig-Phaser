@@ -10,6 +10,24 @@ export default class Unit extends Phaser.Sprite {
     super(game);
 
     this.game.physics.arcade.enableBody(this);
+
+
+    //Emit an explosion upon death
+    var emitter = this.game.add.emitter(0,0, 5);
+
+    emitter.makeParticles('sprites','circle'); //cannot change texture on the fly. Prob would be better to define an emitter per explosion texture desired (with lots of particles), and emit only a few of the particles upon death 
+
+    emitter.minParticleSpeed.set(0, 50);
+    emitter.maxParticleSpeed.set(0, 100);
+    emitter.gravity = 0;
+
+    emitter.setRotation(0, 0);
+    emitter.setAlpha(0.75, 1);
+
+    emitter.minParticleScale = .5;
+    emitter.maxParticleScale = .75;
+
+    this.emitter = emitter;
   }
 
 
@@ -46,6 +64,16 @@ export default class Unit extends Phaser.Sprite {
   setAnchor(isFriendly){
     const yAnchor = (isFriendly) ? 1 : 0.5;
     this.anchor.setTo(0.5,yAnchor);
+  }
+
+  kill(){
+    super.kill();
+
+    this.emitter.width = this.width ;
+    this.emitter.height = this.height ;
+    this.emitter.x = this.x;
+    this.emitter.y = this.y;
+    this.emitter.start(true, 1000);
   }
 
 }

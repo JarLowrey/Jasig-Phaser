@@ -19,7 +19,7 @@ export default class Game extends Phaser.State {
     this.UiHandler = new UiHandler(this.game);
 
     Ship.initShipPool(this.game);
-    
+
     this.hero = new Protagonist(this.game);
     this.hero.revive(this.game.world.centerX, this.game.world.centerY );
 

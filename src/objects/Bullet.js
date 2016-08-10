@@ -17,6 +17,8 @@ export default class Bullet extends Phaser.Sprite{
     //kill sprite if it moves out of bounds of game screen
     this.checkWorldBounds = true;
     this.outOfBoundsKill = true;
+
+    Bullet.shotAngle = 10;
   }
 
   update(){
@@ -66,11 +68,11 @@ export default class Bullet extends Phaser.Sprite{
   }
 
   static rightShotAngle(shooter){
-    return (shooter.isFriendly) ? 270 + Gun.shotAngle : 90 - Gun.shotAngle;
+    return (shooter.isFriendly) ? 270 + Bullet.shotAngle : 90 - Bullet.shotAngle;
   }
 
   static leftShotAngle(shooter){
-    return (shooter.isFriendly) ? 270 - Gun.shotAngle : 90 + Gun.shotAngle;
+    return (shooter.isFriendly) ? 270 - Bullet.shotAngle : 90 + Bullet.shotAngle;
   }
 
 }
