@@ -10,7 +10,6 @@ export default class Protagonist extends Ship {
   constructor(game){
     super(game);
 
-    this.body.collideWorldBounds = true;
     this.game.world.add(this); //need to set the parent to the world group, as it is not done automatically
 
     this.speed = 300;
@@ -29,6 +28,8 @@ export default class Protagonist extends Ship {
 
   reset(x, y){
     super.reset(x, y, 1000, 50, 'sprites', this.game.ships.protagonist.frame, true);
+
+    this.body.collideWorldBounds = true;
 
     this.game.input.onDown.add(this.shootGun, this );
     this.game.input.onUp.add(this.gun.stopShooting, this.gun );

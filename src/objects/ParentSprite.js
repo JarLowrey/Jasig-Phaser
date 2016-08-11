@@ -8,15 +8,20 @@ export default class ParentSprite extends Phaser.Sprite {
 
   constructor(game){
     super(game);
-
-    this.game.physics.arcade.enableBody(this);
   }
 
-  reset(x, y, health, width, key, frame){
-    super.reset(x,y,health);
+  reset(x, y, health, width = 50, key, frame){
+    super.reset(x, y, health);
+    //this.body.reset();
 
     this.loadTexture(key, frame);
     this.setAreaMaintainAspectRatio(width);
+    this.body.velocity.x = 20;
+  }
+
+  update(){
+    this.game.debug.body(this,'rgba(255,0,0,0.8)');
+    //this.game.debug.bodyInfo(this, this.x, this.y);
   }
 
   //give the sprite a new size while maintaining aspec
@@ -24,11 +29,9 @@ export default class ParentSprite extends Phaser.Sprite {
     this.width = ParentSprite.dp(width);
     this.scale.y = Math.abs(this.scale.x);
 
-    //set body to new sprite size, otherwise collisions (and other physics actions) will be messed up
-    if(this.body) {
-      this.body.setSize(this.width,this.height);
-    }
-    console.log(this.width, this.height, this.body.width, this.body.height);
+    //due to the weird way Phaser works, this.body.setSize (and many other things) will cause the bounding box to be the wrong size after the Sprite's width/height changes
+    //Instead, completely re-enable the body phsics on this in order for the bounding box to match the image size
+    this.game.physics.arcade.enableBody(this);
   }
 
   //density independent pixels

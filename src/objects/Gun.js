@@ -40,7 +40,6 @@ export default class Gun {
   }
 
   static bulletCollision(bullet, unit){
-    console.log('Bullet hit');
     bullet.kill();
     unit.damage(bullet.dmg);
   }

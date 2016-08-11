@@ -1,5 +1,7 @@
 {
   "protagonist":{
-    "frame":"ship_protagonist"
+    "frame":"ship_protagonist",
+    "health":1000,
+    "width": 50
   }
 }
