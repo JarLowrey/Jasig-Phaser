@@ -3,5 +3,10 @@
     "frame":"ship_protagonist",
     "health":1000,
     "width": 50
+  },
+  "diagonal":{
+    "frame":"ship_enemy_diagonal_full_screen",
+    "health":100,
+    "width": 50
   }
 }

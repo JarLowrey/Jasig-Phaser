@@ -28,7 +28,7 @@ export default class Protagonist extends Ship {
   }
 
   reset(x, y){
-    super.reset(x, y, 1000, 50, 'sprites', this.game.ships.protagonist.frame, true);
+    super.reset('protagonist', x, y, true);
 
     this.body.collideWorldBounds = true;
 

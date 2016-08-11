@@ -30,7 +30,7 @@ export default class Game extends Phaser.State {
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     var enemy = ParentSprite.getNewSprite(Ship, false, this.game);
-    enemy.reset(this.game.world.centerX, this.game.world.centerY, 100, 50, 'sprites', 'ship_enemy_array_shooter', false);
+    enemy.reset('diagonal', this.game.world.centerX, this.game.world.centerY, false);
 
     //var bonus = Bonus.getNewBonus();
   }
