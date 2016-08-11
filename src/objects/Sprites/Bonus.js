@@ -21,7 +21,7 @@ export default class Bonus extends ParentSprite {
   }
 
   static bonusCollision(hero, bonus){
-    const bonusApplication = Bonus[this.bonusType];
+    const bonusApplication = Bonus[bonus.bonusType];
     bonusApplication(hero);
 
     bonus.kill();
