@@ -43,7 +43,7 @@ export default class IconText extends Phaser.Group {
     this.exists = false;
   }
 
-  revive(){
+  reset(){
     this.exists = true;
     this.alpha = 1;
   }

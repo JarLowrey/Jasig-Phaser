@@ -24,10 +24,10 @@ export default class Game extends Phaser.State {
     this.UiHandler = new UiHandler(this.game);
 
     this.hero = new Protagonist(this.game);
-    this.hero.revive(this.game.world.centerX, this.game.world.height );
+    this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     var enemy = Ship.getNewShip();
-    enemy.revive(this.game.world.centerX, this.game.world.centerY, false, 'sprites', 'ship_enemy_array_shooter');
+    enemy.reset(this.game.world.centerX, this.game.world.centerY, 100, 50, 'sprites', 'ship_enemy_array_shooter', false);
   }
 
   update(){

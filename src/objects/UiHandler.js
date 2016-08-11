@@ -5,6 +5,7 @@
  */
 
 import IconText from '../objects/IconText';
+import ParentSprite from '../objects/ParentSprite';
 
 export default class UiHandler {
 
@@ -38,7 +39,7 @@ export default class UiHandler {
 
       this.goldTextPool.add(goldText);
     }else{
-      goldText.revive();
+      goldText.reset();
     }
 
     return goldText;
@@ -60,8 +61,8 @@ export default class UiHandler {
       height = loadingBarDimen.height;
     }
 
-    width = UiHandler.dp(width, 'w');
-    height = UiHandler.dp(height, 'h');
+    width = ParentSprite.dp(width, 'w');
+    height = ParentSprite.dp(height, 'h');
 
     var img = game.add.image(x,y,key,frameName);
     img.width = width;
@@ -75,30 +76,6 @@ export default class UiHandler {
     img.anchor.setTo(0.5,0.5);
 
     return img;
-  }
-
-  //density independent pixels
-  static dp(length, heightOrWidth, parent){
-    var dp;
-
-    if(typeof length =='string' && length.includes('%')){ //string that contains '%'
-      dp = (heightOrWidth == 'h') ? UiHandler.percentHeightToPixels(length, parent) : UiHandler.percentWidthToPixels(length, parent);
-    }
-    else{ dp = length * window.devicePixelRatio;}
-
-    return dp;
-  }
-
-  static percentWidthToPixels(percent, parent){
-    const width = (parent) ? parent.width : window.innerWidth;
-
-    return width * (parseFloat(percent) / 100.0);
-  }
-
-  static percentHeightToPixels(percent, parent){
-    const height = (parent) ? parent.height : window.innerHeight;
-
-    return height * (parseFloat(percent) / 100.0);
   }
 
 }

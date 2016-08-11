@@ -4,12 +4,12 @@
  *
  */
 
-export default class Unit extends Phaser.Sprite {
+import ParentSprite from '../objects/ParentSprite';
+
+export default class Unit extends ParentSprite {
 
   constructor(game){
     super(game);
-
-    this.game.physics.arcade.enableBody(this);
 
     Unit.initUnitPool(game);
   }
@@ -41,22 +41,16 @@ export default class Unit extends Phaser.Sprite {
     return unit;
   }
 
-  revive(x, y, isFriendly, key, frame, explosionFrame){
-    this.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
-    super.revive();
+  reset(x, y, health, width, key, frame, isFriendly, explosionFrame){
+    super.reset(x, y, health, width, key, frame); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
-    this.loadTexture(key, frame);
     Unit.addExplosionEmitter(explosionFrame, this.game);
 
     this.isFriendly = isFriendly;
 
-    this.x = x;
-    this.y = y;
     this.speed = 300;
 
     this.setAnchor(isFriendly);
-
-    this.body.setSize(this.width,this.height); //set body to new sprite size, otherwise collisions (and other physics actions) will be messed up
   }
 
   kill(){

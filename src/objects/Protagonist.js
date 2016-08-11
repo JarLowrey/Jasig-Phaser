@@ -27,8 +27,8 @@ export default class Protagonist extends Ship {
     }
   }
 
-  revive(x, y){
-    super.revive(x, y, true, 'sprites', this.game.ships.protagonist.frame);
+  reset(x, y){
+    super.reset(x, y, 1000, 50, 'sprites', this.game.ships.protagonist.frame, true);
 
     this.game.input.onDown.add(this.shootGun, this );
     this.game.input.onUp.add(this.gun.stopShooting, this.gun );

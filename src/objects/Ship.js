@@ -40,9 +40,4 @@ export default class Ship extends Unit {
     return newShip;
   }
 
-  revive(x, y, isFriendly, key, frame){
-    super.revive(x, y, isFriendly, key, frame);
-  }
-
-
 }

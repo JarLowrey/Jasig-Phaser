@@ -78,7 +78,7 @@ export default class Gun {
     var bullet = bulletPool.getFirstDead(true);
     if(bullet.alive) bullet.kill(); //all the bullets were already alive, so a new one was created via getFirstDead's createIfNull's parameter being set to true
 
-    bullet.revive(bulletType, this.shooter, trackingTarget, xPercentageOnShooter, yPercentageOnShooter, angle );
+    bullet.reset(bulletType, this.shooter, trackingTarget, xPercentageOnShooter, yPercentageOnShooter, angle );
   }
 
   shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget){
