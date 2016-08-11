@@ -4,41 +4,23 @@
  *
  */
 
-import ParentSprite from '../objects/ParentSprite';
+import ParentSprite from '../Sprites/ParentSprite';
+import Bonus from '../Sprites/Bonus';
+
 
 export default class Unit extends ParentSprite {
 
   constructor(game){
     super(game);
 
-    Unit.initUnitPool(game);
+    Unit.initClass(game);
   }
 
-
-  static initUnitPool(game, preallocationNum = 20){
-    if(!Unit.enemyUnits && !Unit.explosionGroups){
-      //Unit.friendlyUnits = new Phaser.Group(game);
-      Unit.enemyUnits = new Phaser.Group(game);
-
-      //Unit.friendlyUnits.classType = Unit;
-      Unit.enemyUnits.classType = Unit;
-
-      //Unit.friendlyUnits.createMultiple(preallocationNum);
-      Unit.enemyUnits.createMultiple(preallocationNum);
-
+  static initClass(game){
+    if(!Unit.explosionGroups){
       Unit.explosionGroups = {};
       Unit.addExplosionEmitter('explosion1', game);
     }
-  }
-
-  static getNewUnit(newUnitIsFriendly = false){
-    var newUnitPool = (newUnitIsFriendly) ? Unit.friendlyUnits : Unit.enemyUnits;
-
-    var unit = newUnitPool.getFirstDead(true);
-    //all the sprites were already alive, so a new one was created via getFirstDead's createIfNull's parameter being set to true. Kill it
-    //if(unit.alive) unit.kill();
-
-    return unit;
   }
 
   reset(x, y, health, width, key, frame, isFriendly, explosionFrame){
@@ -56,6 +38,8 @@ export default class Unit extends ParentSprite {
   kill(){
     super.kill();
 
+    ParentSprite.getNewSprite(Bonus).reset('heal', this);
+
     this.showExplosion();
   }
 
@@ -65,8 +49,6 @@ export default class Unit extends ParentSprite {
   }
 
   static unitCollision(friendlyUnit, enemyUnit){
-    console.log('Units hit');
-
     enemyUnit.kill();
   }
 

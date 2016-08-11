@@ -5,7 +5,7 @@
  */
 
 import IconText from '../objects/IconText';
-import ParentSprite from '../objects/ParentSprite';
+import ParentSprite from '../objects/Sprites/ParentSprite';
 
 export default class UiHandler {
 

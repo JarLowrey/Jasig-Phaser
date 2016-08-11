@@ -41,14 +41,20 @@ export default class Preload extends Phaser.State {
 
   finishedSplashScreen(){
     this.splashScreenOver = true;
-    this.onLoadComplete();
+
+    this.moveOnToNextState();
   }
 
   onLoadComplete(){
     this.game.ships = this.game.cache.getJSON('ships');
     this.game.guns = this.game.cache.getJSON('guns');
     this.game.bullets = this.game.cache.getJSON('bullets');
+    this.game.bonuses = this.game.cache.getJSON('bonuses');
 
+    this.moveOnToNextState();
+  }
+
+  moveOnToNextState(){
     if(this.splashScreenOver && this.load.hasLoaded){ //splash screen has been shown for a minimum amount of time, and loading assets is finished
       this.state.start('Menu');
     }

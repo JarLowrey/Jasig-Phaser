@@ -78,6 +78,10 @@ export default {
     type: 'json',
     url: 'json/bullets.json'
   },{
+    key: 'bonuses',
+    type: 'json',
+    url: 'json/bonuses.json'
+  },{
   // {
   //   //  Example: Add an image.
   //   //

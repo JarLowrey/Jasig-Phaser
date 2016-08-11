@@ -3,8 +3,7 @@
  * ====
  *
  */
-
-import ParentSprite from '../objects/ParentSprite';
+import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Bullet extends ParentSprite{
 
@@ -32,10 +31,10 @@ export default class Bullet extends ParentSprite{
   reset(bulletType, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
     this.bulletInfo = this.game.bullets[bulletType];
 
-    this.shooter = shooter;//set shooter before calling getX/YPos functions
-    super.reset(this.getXPos(xPercentageOnShooter), this.getYPos(yPercentageOnShooter), 1,
-      this.bulletInfo.width, this.bulletInfo.key, this.bulletInfo.frame); //reset the physics body in addition to reviving the sprite. Otherwise collision could be messed up
+    super.reset(Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter),
+      1,this.bulletInfo.width, this.bulletInfo.key, this.bulletInfo.frame); //reset the physics body in addition to reviving the sprite. Otherwise collision could be messed up
 
+    this.shooter = shooter;
     this.target = target;
 
     if(this.bulletInfo.isTinted){
@@ -49,20 +48,25 @@ export default class Bullet extends ParentSprite{
   }
 
   //assume that shooter and bullet will have an anchor of 0.5x
-  getXPos(xPercentageOnShooter = 50){
+  static getXPos(xPercentageOnShooter = 50, shooter){
     xPercentageOnShooter -= 50;
     xPercentageOnShooter /= 100;
 
-    return this.shooter.x + xPercentageOnShooter * this.shooter.width;
+    return shooter.x + xPercentageOnShooter * shooter.width;
   }
 
   //assume that shooter and bullet will have an anchor of 0.5y
-  getYPos(yPercentageOnShooter = 50){
+  static getYPos(yPercentageOnShooter = 50, shooter){
     yPercentageOnShooter -= 50;
     yPercentageOnShooter /= 100;
     //console.log(yPercentageOnShooter)
 
-    return this.shooter.y + yPercentageOnShooter * this.shooter.height;
+    return shooter.y + yPercentageOnShooter * shooter.height;
+  }
+
+  static bulletCollision(bullet, unit){
+    bullet.kill();
+    unit.damage(bullet.dmg);
   }
 
 }

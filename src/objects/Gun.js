@@ -4,14 +4,13 @@
  *
  */
 
-import Bullet from '../objects/Bullet';
+import Bullet from '../objects/Sprites/Bullet';
+import ParentSprite from '../objects/Sprites/ParentSprite';
 
 export default class Gun {
 
   constructor(game, shooter, gunType, bulletType){
     this.game = game;
-
-    Gun.initBulletPool(game);
 
     this.gunInfo = this.game.guns[gunType];
     this.bulletType = bulletType;
@@ -26,29 +25,12 @@ export default class Gun {
     this.bulletType = bulletType || this.bulletType;
   }
 
-  static initBulletPool(game, preallocationNum = 50){
-    if(!Gun.bulletPool){
-      Gun.friendlyBullets = new Phaser.Group(game);
-      Gun.enemyBullets = new Phaser.Group(game);
-
-      Gun.friendlyBullets.classType = Bullet;
-      Gun.enemyBullets.classType = Bullet;
-
-      Gun.friendlyBullets.createMultiple(preallocationNum);
-      Gun.enemyBullets.createMultiple(preallocationNum);
-    }
-  }
-
-  static bulletCollision(bullet, unit){
-    bullet.kill();
-    unit.damage(bullet.dmg);
-  }
-
   startShooting(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null){
     if(!this.canShoot) return;
     this.canShoot = false;
-
-    this.shoot(xPercentageOnShooter, yPercentageOnShooter, trackingTarget);
+    
+    this.target = trackingTarget;
+    this.shoot(xPercentageOnShooter, yPercentageOnShooter);
 
     this.cooldownTimer.add(this.gunInfo.cooldown, this.canShootAgain, this, true, xPercentageOnShooter, yPercentageOnShooter, trackingTarget);
     this.cooldownTimer.start();
@@ -71,19 +53,13 @@ export default class Gun {
     }
   }
 
-  createBullet(bulletType, xPercentageOnShooter, yPercentageOnShooter, trackingTarget, angle){
-    var bulletPool = (this.shooter.isFriendly) ? Gun.friendlyBullets : Gun.enemyBullets;
-
-    var bullet = bulletPool.getFirstDead(true);
-    if(bullet.alive) bullet.kill(); //all the bullets were already alive, so a new one was created via getFirstDead's createIfNull's parameter being set to true
-
-    bullet.reset(bulletType, this.shooter, trackingTarget, xPercentageOnShooter, yPercentageOnShooter, angle );
-  }
-
-  shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget){
+  shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0){
     for(var shotName in this.gunInfo.shots){
-      var shot = this.gunInfo.shots[shotName];
-      this.createBullet(this.bulletType, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, trackingTarget, shot['angle']);
+      const shot = this.gunInfo.shots[shotName];
+
+      var bullet = ParentSprite.getNewSprite(Bullet, this.shooter.isFriendly);
+
+      bullet.reset(this.bulletType, this.shooter, this.target, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, shot['angle']);
     }
   }
 

@@ -3,7 +3,8 @@
  * ====
  *
  */
-import Ship from '../objects/Ship';
+import Ship from '../Sprites/Ship';
+import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Protagonist extends Ship {
 
@@ -15,7 +16,7 @@ export default class Protagonist extends Ship {
     this.speed = 300;
     this.bufferAbovePointer = 5;
 
-    Ship.friendlyShips.add(this);
+    ParentSprite.getPool(Ship, true, this.game).add(this);
   }
 
   update(){
