@@ -53,14 +53,51 @@ export default class Unit extends ParentSprite {
   }
 
   showExplosion(frame = 'explosion1'){
-    var emitter = Unit.explosionGroups[frame];
+    var emitter = Unit.getExplosionEmitter(frame);
+    const fastSpeed = ParentSprite.dp(400);
+    const slowSpeed = fastSpeed * 0.75;
 
+    //put the emitter on top of the thing that is exploding
     emitter.width = this.width ;
     emitter.height = this.height ;
     emitter.x = this.x;
     emitter.y = this.y;
+    emitter.minParticleScale = this.getParticleScale(frame);
+    emitter.maxParticleScale = this.getParticleScale(frame);
 
-    emitter.start(true, 500, null, 7);
+    //explode stationary
+    emitter.minParticleSpeed.set(-slowSpeed, -slowSpeed);
+    emitter.maxParticleSpeed.set(slowSpeed, slowSpeed);
+    emitter.start(true, 500, null, 2);
+
+    //explode down
+    emitter.minParticleSpeed.set(-slowSpeed, slowSpeed);
+    emitter.maxParticleSpeed.set(slowSpeed, fastSpeed);
+    emitter.start(true, 500, null, 3);
+    //explode up
+    emitter.minParticleSpeed.set(-slowSpeed, -fastSpeed);
+    emitter.maxParticleSpeed.set(slowSpeed, -slowSpeed);
+    emitter.start(true, 500, null, 3);
+
+    //explode left
+    emitter.minParticleSpeed.set(-fastSpeed, -slowSpeed);
+    emitter.maxParticleSpeed.set(-slowSpeed, slowSpeed);
+    emitter.start(true, 500, null, 3);
+    //explode right
+    emitter.minParticleSpeed.set(slowSpeed, -slowSpeed);
+    emitter.maxParticleSpeed.set(fastSpeed, slowSpeed);
+    emitter.start(true, 500, null, 3);
+  }
+
+  getParticleScale(particleFrame){
+    const particleWidth = this.game.cache.getImage('sprites',particleFrame).base.width;
+
+    const ratioDefaultParticleWidthToCurrentSpriteWidth = this.width / particleWidth;
+    return ratioDefaultParticleWidthToCurrentSpriteWidth;
+  }
+
+  static getExplosionEmitter(frame = 'explosion1'){
+    return Unit.explosionGroups[frame];
   }
 
   static addExplosionEmitter(frame = 'explosion1', game){
@@ -71,15 +108,10 @@ export default class Unit extends ParentSprite {
 
     emitter.makeParticles('sprites',frame); //cannot change texture on the fly. Prob would be better to define an emitter per explosion texture desired (with lots of particles), and emit only a few of the particles upon death
 
-    emitter.minParticleSpeed.set(-100, -100);
-    emitter.maxParticleSpeed.set(100, 100);
     emitter.gravity = 0;
 
     emitter.setRotation(0, 0);
     emitter.setAlpha(0.75, 1);
-
-    emitter.minParticleScale = .05;
-    emitter.maxParticleScale = .1;
 
     Unit.explosionGroups[frame] = emitter;
   }
