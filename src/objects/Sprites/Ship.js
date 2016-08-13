@@ -14,9 +14,8 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.healthbar = new Healthbar(this.game, null, this);
-    this.healthbar.hide(); //since many sprites are preallocated in a pool, you need to manually hide the healthbar upon creation
-    this.healthbar.show();
+    this.healthbar = new Healthbar(this.game, this);
+    this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
   }
 
   update(){

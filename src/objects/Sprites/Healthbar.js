@@ -23,44 +23,28 @@
 
 
 export default class HealthBar {
-  constructor(game, providedConfig, parent, barShrinksRightToLeft = false, animationDuration = 200, ){
+
+  constructor(game, parent, barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false ){
     this.game = game;
     this.parent = parent;
     this.barHeight = HealthBar.densityPixels(7);
     this.flipped = barShrinksRightToLeft;
+    this.animationDuration = animationDuration;
 
-    this.setupConfiguration(providedConfig);
     this.drawBackground();
     this.drawHealthBar();
-    this.setFixedToCamera(this.config.isFixedToCamera);
+    this.setFixedToCamera(isFixedToCamera);
+    this.reset();
   }
 
   reset(){
-    this.barSprite.width = this.parent.width;
     this.bgSprite.width = this.parent.width;
 
-    this.setBarColor(100);
-  }
-
-  setupConfiguration(providedConfig){
-    this.config = this.mergeWithDefaultConfiguration(providedConfig);
-    this.flipped = this.config.flipped;
+    this.setPercent(100);
   }
 
   static densityPixels(pixel){
     return pixel * window.window.devicePixelRatio;
-  }
-
-  mergeWithDefaultConfiguration(newConfig){
-    var defaultConfig= {
-      animationDuration: 10,
-      flipped: false,
-      isFixedToCamera: false
-    };
-
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-    //Properties in the target will be overwritten by properties in the sources if they have the same key.  Later sources' properties will similarly overwrite earlier ones.
-    return Object.assign(defaultConfig,newConfig);
   }
 
   drawBackground(){
@@ -119,6 +103,7 @@ export default class HealthBar {
   setPercent(newValue){
     if(newValue < 0)       { newValue = 0; }
     else if(newValue > 100){ newValue = 100; }
+
     this.setBarColor(newValue);
 
     var newWidth =  (newValue * this.parent.width) / 100;
@@ -130,7 +115,7 @@ export default class HealthBar {
     if(this.flipped) {
       newWidth = -1 * newWidth;
     }
-    this.game.add.tween(this.barSprite).to( { width: newWidth }, this.config.animationDuration, Phaser.Easing.Linear.None, true);
+    this.game.add.tween(this.barSprite).to( { width: newWidth }, this.animationDuration, Phaser.Easing.Linear.None, true);
   }
 
   hide(){
