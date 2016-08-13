@@ -20,6 +20,8 @@ export default class Protagonist extends Ship {
   }
 
   update(){
+    super.update();
+
     if(Phaser.Point.distance(this, this.game.input.activePointer.position) > this.bufferAbovePointer ){
       this.game.physics.arcade.moveToPointer(this, this.speed);
     }else{
@@ -34,6 +36,11 @@ export default class Protagonist extends Ship {
 
     this.game.input.onDown.add(this.startShooting.bind(this), this );
     this.game.input.onUp.add(this.stopShooting.bind(this), this.gun );
+  }
+
+  heal(){
+    super.heal();
+    console.log("I've been healed!");
   }
 
 }

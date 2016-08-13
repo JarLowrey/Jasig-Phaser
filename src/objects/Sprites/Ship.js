@@ -6,16 +6,31 @@
 
 import Gun from '../../objects/Gun';
 import Unit from '../Sprites/Unit';
+import Healthbar from '../Sprites/Healthbar';
+import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Ship extends Unit {
 
   constructor(game){
     super(game);
+
+    this.healthbar = new Healthbar(this.game, null, this);
+    this.healthbar.hide(); //since many sprites are preallocated in a pool, you need to manually hide the healthbar upon creation
+    this.healthbar.show();
+  }
+
+  update(){
+    if(!this.alive) return;
+
+    this.healthbar.setPositionToTopOfParent( ParentSprite.dp(10) );
   }
 
   reset(shipType, x, y, isFriendly){
     this.shipInfo = this.game.ships[shipType];
     super.reset(x, y, this.shipInfo.health, this.shipInfo.width, 'sprites', this.shipInfo.frame, isFriendly, this.shipInfo.explosionFrame);
+
+    this.healthbar.reset();
+    this.healthbar.show();
 
     this.guns = [];
     for(var gunName in this.shipInfo.guns){
@@ -36,8 +51,17 @@ export default class Ship extends Unit {
     });
   }
 
+  damage(amount){
+    super.damage(amount);
+
+    const healthPercentLeft = 100 * (this.health / this.maxHealth);
+    this.healthbar.setPercent(healthPercentLeft);
+  }
+
   kill(){
     super.kill();
+
+    this.healthbar.hide();
 
     this.stopShooting();
   }

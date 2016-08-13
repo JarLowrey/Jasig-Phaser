@@ -49,13 +49,16 @@ export default class Unit extends ParentSprite {
   }
 
   static unitCollision(friendlyUnit, enemyUnit){
-    enemyUnit.kill();
+    friendlyUnit.damage(1);
+    enemyUnit.damage(10);
   }
 
   showExplosion(frame = 'explosion1'){
     var emitter = Unit.getExplosionEmitter(frame);
     const fastSpeed = ParentSprite.dp(400);
     const slowSpeed = fastSpeed * 0.75;
+    const particleLifeSpan = 400;
+    const numParticlesEmittedPerDirection = 3;
 
     //put the emitter on top of the thing that is exploding
     emitter.width = this.width ;
@@ -73,20 +76,20 @@ export default class Unit extends ParentSprite {
     //explode down
     emitter.minParticleSpeed.set(-slowSpeed, slowSpeed);
     emitter.maxParticleSpeed.set(slowSpeed, fastSpeed);
-    emitter.start(true, 500, null, 3);
+    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
     //explode up
     emitter.minParticleSpeed.set(-slowSpeed, -fastSpeed);
     emitter.maxParticleSpeed.set(slowSpeed, -slowSpeed);
-    emitter.start(true, 500, null, 3);
+    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
 
     //explode left
     emitter.minParticleSpeed.set(-fastSpeed, -slowSpeed);
     emitter.maxParticleSpeed.set(-slowSpeed, slowSpeed);
-    emitter.start(true, 500, null, 3);
+    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
     //explode right
     emitter.minParticleSpeed.set(slowSpeed, -slowSpeed);
     emitter.maxParticleSpeed.set(fastSpeed, slowSpeed);
-    emitter.start(true, 500, null, 3);
+    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
   }
 
   getParticleScale(particleFrame){

@@ -18,6 +18,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   update(){
+    //this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
     //this.game.debug.body(this,'rgba(255,0,0,0.8)');
     //this.game.debug.bodyInfo(this, this.x, this.y);
   }
@@ -42,15 +43,8 @@ export default class ParentSprite extends Phaser.Sprite {
   */
 
   //density independent pixels
-  static dp(length, heightOrWidth, parent){
-    var dp;
-
-    if(typeof length =='string' && length.includes('%')){ //string that contains '%'
-      dp = (heightOrWidth == 'h') ? ParentSprite.percentHeightToPixels(length, parent) : ParentSprite.percentWidthToPixels(length, parent);
-    }
-    else{ dp = length * window.devicePixelRatio;}
-
-    return dp;
+  static dp(pixels){
+    return pixels * window.devicePixelRatio;
   }
 
   static percentWidthToPixels(percent, parent){
