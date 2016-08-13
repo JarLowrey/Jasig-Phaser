@@ -13,7 +13,7 @@ import Ship from '../objects/Sprites/Ship';
 import Protagonist from '../objects/Sprites/Protagonist';
 
 import Stars from '../objects/Stars';
-import UiHandler from '../objects/UiHandler';
+import UiHelper from '../objects/UI/UiHelper';
 
 export default class Game extends Phaser.State {
 
@@ -24,19 +24,17 @@ export default class Game extends Phaser.State {
     this.game.time.advancedTiming = true;
 
 
-    this.UiHandler = new UiHandler(this.game);
+    this.UiHelper = new UiHelper(this.game);
 
     this.hero = new Protagonist(this.game);
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     var enemy = ParentSprite.getNewSprite(Ship, false, this.game);
     enemy.reset('diagonal', this.game.world.centerX, this.game.world.centerY, false);
-
-    //var bonus = Bonus.getNewBonus();
   }
 
   update(){
-    //this.UiHandler.showGold(10,window.innerWidth * Math.random(),this.game.world.centerY);
+    //this.UiHelper.showGold(10,window.innerWidth * Math.random(),this.game.world.centerY);
 
     this.collisionDectection();
   }

@@ -8,15 +8,16 @@
  */
 
 import assets from '../assets';
-import UiHandler from '../objects/UiHandler';
+import UiHelper from '../objects/UI/UiHelper';
 
 export default class Preload extends Phaser.State {
 
   preload() {
+    this.minSplashScreenShowTime = 0; //seconds
+
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.showSplashScreen();
     this.load.pack('game', null, assets);
-
   }
 
   create() {
@@ -29,14 +30,13 @@ export default class Preload extends Phaser.State {
 
   showSplashScreen() {
     //add logo and loading bar
-    UiHandler.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 0.5, 'preload_sprites', 'j_tron_labs_logo');
-    const loadingBar =  UiHandler.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
+    UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 0.5, 'preload_sprites', 'j_tron_labs_logo');
+    const loadingBar =  UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
     this.load.setPreloadSprite(loadingBar);
-
 
     //show splash screen for a few seconds. then call onLoadComplete
     this.splashScreenOver = false;
-    this.game.time.events.add(Phaser.Timer.SECOND * 0, this.finishedSplashScreen, this);
+    this.game.time.events.add(Phaser.Timer.SECOND * this.minSplashScreenShowTime, this.finishedSplashScreen, this);
   }
 
   finishedSplashScreen(){

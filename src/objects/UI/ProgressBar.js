@@ -22,12 +22,12 @@
   */
 
 
-export default class HealthBar {
+export default class ProgressBar {
 
   constructor(game, parent, backgroundBarColor = '#651828', barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
     this.parent = parent;
-    this.barHeight = HealthBar.densityPixels(7);
+    this.barHeight = ProgressBar.densityPixels(7);
     this.flipped = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
     this.bgBarColor = backgroundBarColor;
@@ -78,7 +78,7 @@ export default class HealthBar {
     }
   }
 
-  setPositionToTopOfParent(margin = HealthBar.densityPixels(10) ){
+  setPositionToTopOfParent(margin = ProgressBar.densityPixels(10) ){
     this.setPosition(this.parent.x, this.parent.top - this.bgSprite.height / 2 - margin);
   }
 

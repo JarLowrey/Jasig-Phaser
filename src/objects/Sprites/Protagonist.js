@@ -38,9 +38,4 @@ export default class Protagonist extends Ship {
     this.game.input.onUp.add(this.stopShooting.bind(this), this.gun );
   }
 
-  heal(){
-    super.heal();
-    console.log("I've been healed!");
-  }
-
 }

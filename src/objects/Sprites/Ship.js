@@ -6,7 +6,7 @@
 
 import Gun from '../../objects/Gun';
 import Unit from '../Sprites/Unit';
-import Healthbar from '../Sprites/Healthbar';
+import ProgressBar from '../../objects/UI/ProgressBar';
 import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Ship extends Unit {
@@ -14,7 +14,7 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.healthbar = new Healthbar(this.game, this);
+    this.healthbar = new ProgressBar(this.game, this);
     this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
   }
 
@@ -53,6 +53,16 @@ export default class Ship extends Unit {
   damage(amount){
     super.damage(amount);
 
+    this.setHealthBarPercentage();
+  }
+
+  heal(amount){
+    super.heal(amount);
+
+    this.setHealthBarPercentage();
+  }
+
+  setHealthBarPercentage(){
     const healthPercentLeft = 100 * (this.health / this.maxHealth);
     this.healthbar.setPercent(healthPercentLeft);
   }
