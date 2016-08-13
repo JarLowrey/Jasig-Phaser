@@ -24,12 +24,13 @@
 
 export default class HealthBar {
 
-  constructor(game, parent, barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false ){
+  constructor(game, parent, backgroundBarColor = '#651828', barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
     this.parent = parent;
     this.barHeight = HealthBar.densityPixels(7);
     this.flipped = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
+    this.bgBarColor = backgroundBarColor;
 
     this.drawBackground();
     this.drawHealthBar();
@@ -49,7 +50,7 @@ export default class HealthBar {
 
   drawBackground(){
     var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
-    bmd.ctx.fillStyle = '#651828';
+    bmd.ctx.fillStyle = this.bgBarColor;
     bmd.ctx.beginPath();
     bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
     bmd.ctx.fill();
@@ -64,7 +65,7 @@ export default class HealthBar {
 
   drawHealthBar(){
     var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
-    bmd.ctx.fillStyle = '#ffffff';
+    bmd.ctx.fillStyle = '#ffffff'; //this front bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
     bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
     bmd.ctx.fill();
