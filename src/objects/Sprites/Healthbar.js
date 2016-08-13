@@ -77,7 +77,7 @@ export default class HealthBar {
     }
   }
 
-  setPositionToTopOfParent(margin = 10){
+  setPositionToTopOfParent(margin = HealthBar.densityPixels(10) ){
     this.setPosition(this.parent.x, this.parent.top - this.bgSprite.height / 2 - margin);
   }
 
@@ -95,9 +95,9 @@ export default class HealthBar {
   }
 
   setBarColor(healthPercentageRemaining){
-    if( healthPercentageRemaining < 25 )     { this.barSprite.tint = '0xff0000'; }
-    else if( healthPercentageRemaining < 50 ){ this.barSprite.tint = '0xffff00'; }
-    else                                     { this.barSprite.tint = '0x00ff00'; }
+    if( healthPercentageRemaining < 25 )     { this.barSprite.tint = '0xff0000'; } //red
+    else if( healthPercentageRemaining < 50 ){ this.barSprite.tint = '0xffff00'; } //yellow
+    else                                     { this.barSprite.tint = '0x00ff00'; } //green
   }
 
   setPercent(newValue){
