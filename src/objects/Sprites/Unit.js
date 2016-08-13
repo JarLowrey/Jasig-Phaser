@@ -36,12 +36,12 @@ export default class Unit extends ParentSprite {
     this.setAnchor(isFriendly);
   }
 
-  kill(){
+  kill(showExplosion = true){
     super.kill();
 
     ParentSprite.getNewSprite(Bonus).reset('heal', this);
 
-    this.showExplosion();
+    if(showExplosion) this.showExplosion();
   }
 
   setAnchor(isFriendly){

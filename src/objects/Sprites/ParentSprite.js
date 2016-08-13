@@ -15,6 +15,7 @@ export default class ParentSprite extends Phaser.Sprite {
 
     this.loadTexture(key, frame);
     this.setAreaMaintainAspectRatio(width);
+    this.alpha = 1;
   }
 
   update(){

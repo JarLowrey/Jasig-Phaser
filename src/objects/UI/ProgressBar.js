@@ -116,7 +116,7 @@ export default class ProgressBar {
 
     //allow Bar's color to change at different progressPercentageRemaining values
     if(typeof this.barColor != 'string'){
-      this.barColor.sort(function(a,b){ return a.threshold - b.threshold } );
+      this.barColor.sort(function(a,b){ return a.threshold - b.threshold; } );
 
       //loop thru all the elements in the barColor array, starting at the smallest theshold. If progressPercentageRemaining is under a threshold, set the color and exit the loop.
       for(var i=0; i<this.barColor.length; i++){

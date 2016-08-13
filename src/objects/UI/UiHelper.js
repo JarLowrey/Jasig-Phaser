@@ -33,7 +33,7 @@ export default class UiHelper {
       goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
         'score', 'text', 'sprites', 'resources', 'left', 0);
 
-      goldText.goldTween = this.game.add.tween(goldText).to({y:'-'+UiHelper.dp(25), //tween it relative to the current position. Needs to be a string
+      goldText.goldTween = this.game.add.tween(goldText).to({y:'-'+ParentSprite.dp(25), //tween it relative to the current position. Needs to be a string
        alpha: 0}, 750, Phaser.Easing.Linear.In);
       goldText.goldTween.onComplete.add(this.goldTextOver, this);
 

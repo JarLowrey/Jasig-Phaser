@@ -16,6 +16,16 @@ export default class Ship extends Unit {
 
     this.healthbar = new ProgressBar(this.game, this);
     this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
+
+    //setup tween to be played upon this.kill()
+    this.deathTween = this.game.add.tween(this)
+      .to({x:'-'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
+      .to({x:'+'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In)
+      .repeatAll(1);
+    this.deathTween.onComplete.add(function(){
+      this.visible = false; //in this.kill() visible will be set to true before calling the tween and after calling super.kill()
+      this.showExplosion();
+    }, this);
   }
 
   update(){
@@ -68,11 +78,13 @@ export default class Ship extends Unit {
   }
 
   kill(){
-    super.kill();
-
+    this.stopShooting();
+    super.kill(false); //do not show explosion upon death, instead show it after deathTween completes
     this.healthbar.hide();
 
-    this.stopShooting();
+    //deathTween will set visibility to false
+    this.visible = true;
+    this.deathTween.start();
   }
 
 }
