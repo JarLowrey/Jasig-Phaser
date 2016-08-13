@@ -66,9 +66,9 @@ export default class Unit extends ParentSprite {
     emitter.maxParticleScale = this.getParticleScale(frame);
 
     //explode stationary
-    emitter.minParticleSpeed.set(-slowSpeed, -slowSpeed);
-    emitter.maxParticleSpeed.set(slowSpeed, slowSpeed);
-    emitter.start(true, 500, null, 2);
+    //emitter.minParticleSpeed.set(-slowSpeed, -slowSpeed);
+    //emitter.maxParticleSpeed.set(slowSpeed, slowSpeed);
+    //emitter.start(true, 500, null, 2);
 
     //explode down
     emitter.minParticleSpeed.set(-slowSpeed, slowSpeed);

@@ -32,14 +32,8 @@ export default class Protagonist extends Ship {
 
     this.body.collideWorldBounds = true;
 
-    this.game.input.onDown.add(this.shootGun, this );
-    this.game.input.onUp.add(this.gun.stopShooting, this.gun );
+    this.game.input.onDown.add(this.startShooting.bind(this), this );
+    this.game.input.onUp.add(this.stopShooting.bind(this), this.gun );
   }
-
-  //due to the way onDown works, it is difficult to pass around the needed context to the gun. Thus, create a custom function for it that will have the proper
-  shootGun(){
-    this.gun.startShooting();
-  }
-
 
 }

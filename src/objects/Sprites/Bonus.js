@@ -16,32 +16,28 @@ export default class Bonus extends ParentSprite {
     super.reset(enemy.x, enemy.y, 1, 50, 'sprites', this.bonusInfo.frame);
 
     this.body.velocity.y = ParentSprite.dp(100);
-
-    this.bonusType = bonusType;
   }
 
   static bonusCollision(hero, bonus){
-    const bonusApplication = Bonus[bonus.bonusType];
-    bonusApplication(hero);
+    bonus.bonusFunction(hero);
 
     bonus.kill();
   }
 
   /*
-    STATIC METHODS FOR BONUS APPLICATION UPON COLLISION
-    NOTE: name of the bonus function must exactly match the name of the entry in the 'bonuses.json' hash
+    METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
   */
 
-  static heal(){
-    return function(hero){
-      hero.heal(hero.maxHealth / 2);
-    };
+  bonusFunction(hero){
+    return Bonus[this.bonusInfo.bonusFunctionName](hero); //choose the bonus function and call it
   }
 
-  static money(){
-    return function(hero){
-      hero.heal(hero.maxHealth / 2);
-    };
+  static applyHeal(hero){
+    hero.heal(hero.maxHealth / 2);
+  }
+
+  static addResources(){
+    //add money
   }
 
 }

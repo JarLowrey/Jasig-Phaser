@@ -1,12 +1,14 @@
 {
   "heal":{
     "frame":"heal",
+    "bonusFunctionName":"applyHeal",
     "background_color":"0#ffffff",
     "stroke_color":"0#ff0000",
     "probability":0.5
   },
   "money":{
     "frame":"resources",
+    "bonusFunctionName":"addResources",
     "background_color":"0#ffffff",
     "stroke_color":"0#ff0000",
     "probability":0.5
