@@ -30,7 +30,7 @@ export default class Game extends Phaser.State {
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     var enemy = ParentSprite.getNewSprite(Ship, false, this.game);
-    enemy.reset('diagonal', this.game.world.centerX, this.game.world.centerY, false);
+    enemy.reset('diagonal', this.game.world.centerX, 0, false);
   }
 
   update(){
@@ -61,8 +61,8 @@ export default class Game extends Phaser.State {
       Bullet.bulletCollision, null, this);
 
     this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Bullet, true, this.game, 25),  //enemy bullets
-      ParentSprite.getPool(Ship, false, this.game),       //friendly ships
+      ParentSprite.getPool(Bullet, false, this.game, 25),  //enemy bullets
+      ParentSprite.getPool(Ship, true, this.game),       //friendly ships
       Bullet.bulletCollision, null, this);
 
     this.game.physics.arcade.overlap(

@@ -32,8 +32,14 @@ export default class ParentSprite extends Phaser.Sprite {
     //due to the weird way Phaser works, this.body.setSize (and many other things) will cause the bounding box to be the wrong size after the Sprite's width/height changes
     //Instead, completely re-enable the body phsics on this in order for the bounding box to match the image size
     this.game.physics.arcade.enableBody(this);
+    //kill sprite if it moves out of bounds of game screen
+    this.checkWorldBounds = true;
+    this.events.onOutOfBounds.add(this.silentKill, this);
   }
 
+  silentKill(){
+    this.kill(false);
+  }
 
 
 

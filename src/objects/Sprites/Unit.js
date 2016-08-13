@@ -12,36 +12,38 @@ export default class Unit extends ParentSprite {
 
   constructor(game){
     super(game);
-
-    Unit.initClass(game);
   }
 
-  static initClass(game){
-    if(!Unit.explosionGroups){
-      Unit.explosionGroups = {};
-      Unit.addExplosionEmitter('explosion1', game);
+  update(){
+    if(!this.alive) return;
+
+    if( !this.reachedYDestination && Math.abs(this.y - this.yDestination) < ParentSprite.dp(5)){
+      this.arrivedAtYDestionation();
     }
   }
 
-  reset(x, y, health, width, key, frame, isFriendly, explosionFrame){
+  reset(x, y, health, width, key, frame, isFriendly, explosionFrame, destYInPercentOfScreen = 50){
     super.reset(x, y, health, width, key, frame); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
     this.maxHealth = health;
 
     Unit.addExplosionEmitter(explosionFrame, this.game);
 
     this.isFriendly = isFriendly;
-
-    this.speed = 300;
-
     this.setAnchor(isFriendly);
+
+    this.yDestination = (destYInPercentOfScreen < 100) ? (destYInPercentOfScreen / 100) * this.game.world.height : Number.MAX_SAFE_INTEGER;
+
+    this.body.velocity.y = 300;
+    this.reachedYDestination = false;
   }
 
-  kill(showExplosion = true){
+  kill(showCoolStuff = true){
     super.kill();
+    ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
 
-    ParentSprite.getNewSprite(Bonus).reset('heal', this);
-
-    if(showExplosion) this.showExplosion();
+    if(showCoolStuff){
+      this.showExplosion();
+    }
   }
 
   setAnchor(isFriendly){
@@ -49,10 +51,25 @@ export default class Unit extends ParentSprite {
     this.anchor.setTo(0.5,yAnchor);
   }
 
+  arrivedAtYDestionation(){
+    this.reachedYDestination = true;
+    this.body.velocity.y = 0;
+
+    this.startShooting();
+  }
+
   static unitCollision(friendlyUnit, enemyUnit){
-    friendlyUnit.damage(15);
+    friendlyUnit.damage(50);
     enemyUnit.damage(10);
   }
+
+
+
+
+
+  /*
+    EXPLOSION EMITTER RELATED METHODS
+  */
 
   showExplosion(frame = 'explosion1'){
     var emitter = Unit.getExplosionEmitter(frame);
@@ -105,6 +122,11 @@ export default class Unit extends ParentSprite {
   }
 
   static addExplosionEmitter(frame = 'explosion1', game){
+    if(!Unit.explosionGroups){ //initialize the explosion groups if not already initialized
+      Unit.explosionGroups = {};
+      Unit.addExplosionEmitter('explosion1', game);
+    }
+
     if(frame in Unit.explosionGroups) return; //frame can not yet be added to the emitter hash
 
     //Emit an explosion upon death

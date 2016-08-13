@@ -1,0 +1,12 @@
+{
+  "meteor":{
+    "frame":"meteor",
+    "health":20,
+    "width": 20
+  },
+  "giant_meteor":{
+    "frame":"meteor",
+    "health":50,
+    "width": 75
+  }
+}

@@ -21,6 +21,8 @@ export default class Ship extends Unit {
     this.deathTween = this.game.add.tween(this)
       .to({x:'-'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
       .to({x:'+'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In)
+      .to({angle: -20}, 50, Phaser.Easing.Linear.In)
+      .to({angle:  20}, 50, Phaser.Easing.Linear.In)
       .repeatAll(1);
     this.deathTween.onComplete.add(function(){
       this.visible = false; //in this.kill() visible will be set to true before calling the tween and after calling super.kill()
@@ -31,12 +33,13 @@ export default class Ship extends Unit {
   update(){
     if(!this.alive) return;
 
+    super.update();
     this.healthbar.setPositionToTopOfParent( ParentSprite.dp(10) );
   }
 
   reset(shipType, x, y, isFriendly){
     this.shipInfo = this.game.ships[shipType];
-    super.reset(x, y, this.shipInfo.health, this.shipInfo.width, 'sprites', this.shipInfo.frame, isFriendly, this.shipInfo.explosionFrame);
+    super.reset(x, y, this.shipInfo.health, this.shipInfo.width, 'sprites', this.shipInfo.frame, isFriendly, this.shipInfo.explosionFrame, this.shipInfo.destYInPercentOfScreen);
 
     this.healthbar.reset();
     this.healthbar.show();
@@ -77,14 +80,16 @@ export default class Ship extends Unit {
     this.healthbar.setPercent(healthPercentLeft);
   }
 
-  kill(){
+  kill(showCoolStuff = true){
     this.stopShooting();
     super.kill(false); //do not show explosion upon death, instead show it after deathTween completes
     this.healthbar.hide();
 
-    //deathTween will set visibility to false
-    this.visible = true;
-    this.deathTween.start();
+    if(showCoolStuff){
+      //super.kill() sets visibilty to false. But we want to show our deathTween. So set it to true and assume deathTween.onComplete will set visibility back to false
+      this.visible = true;
+      this.deathTween.start();
+    }
   }
 
 }

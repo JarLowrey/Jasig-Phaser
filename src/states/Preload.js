@@ -46,6 +46,7 @@ export default class Preload extends Phaser.State {
   }
 
   onLoadComplete(){
+    this.game.units = this.game.cache.getJSON('units');
     this.game.ships = this.game.cache.getJSON('ships');
     this.game.guns = this.game.cache.getJSON('guns');
     this.game.bullets = this.game.cache.getJSON('bullets');

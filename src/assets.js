@@ -70,6 +70,10 @@ export default {
     type: 'json',
     url: 'json/ships.json'
   },{
+    key: 'units',
+    type: 'json',
+    url: 'json/units.json'
+  },{
     key: 'guns',
     type: 'json',
     url: 'json/guns.json'
