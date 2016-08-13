@@ -24,7 +24,6 @@ export default class Unit extends ParentSprite {
   }
 
   reset(x, y, health, width, key, frame, isFriendly, explosionFrame){
-    console.log(health)
     super.reset(x, y, health, width, key, frame); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
     this.maxHealth = health;
 
@@ -53,8 +52,6 @@ export default class Unit extends ParentSprite {
   static unitCollision(friendlyUnit, enemyUnit){
     friendlyUnit.damage(15);
     enemyUnit.damage(10);
-
-    console.log(friendlyUnit.health);
   }
 
   showExplosion(frame = 'explosion1'){

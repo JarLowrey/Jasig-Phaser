@@ -61,8 +61,8 @@ export default class UiHelper {
       height = imgInfo.height;
     }
 
-    width = ParentSprite.percentWidthToPixels(width);
-    height = ParentSprite.percentWidthToPixels(height);
+    if(typeof width == 'string' && width.includes('%')) width = ParentSprite.percentWidthToPixels(width);
+    if(typeof height == 'string' && height.includes('%')) height = ParentSprite.percentWidthToPixels(height);
 
     var img = game.add.image(x,y,key,frameName);
     img.width = width;

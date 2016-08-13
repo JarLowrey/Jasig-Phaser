@@ -1,14 +1,14 @@
 /**
  Copyright (c) 2015 Belahcen Marwane (b.marwane@gmail.com)
  Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
+ of this software and associated documentation files (the 'Software'), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
  The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -24,13 +24,17 @@
 
 export default class ProgressBar {
 
-  constructor(game, parent, backgroundBarColor = '#651828', barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
+  constructor(game, parent,
+      backgroundBarColor = '0x651828', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
+      barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
     this.parent = parent;
+
     this.barHeight = ProgressBar.densityPixels(7);
     this.flipped = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
-    this.bgBarColor = backgroundBarColor;
+    this.backgroundBarColor = backgroundBarColor;
+    this.barColor = barColor;
 
     this.drawBackground();
     this.drawHealthBar();
@@ -50,7 +54,7 @@ export default class ProgressBar {
 
   drawBackground(){
     var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
-    bmd.ctx.fillStyle = this.bgBarColor;
+    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
     bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
     bmd.ctx.fill();
@@ -65,7 +69,7 @@ export default class ProgressBar {
 
   drawHealthBar(){
     var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
-    bmd.ctx.fillStyle = '#ffffff'; //this front bar must have pure white bitmap data in order to be tinted effectively
+    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
     bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
     bmd.ctx.fill();
@@ -95,10 +99,40 @@ export default class ProgressBar {
     }
   }
 
-  setBarColor(healthPercentageRemaining){
-    if( healthPercentageRemaining < 25 )     { this.barSprite.tint = '0xff0000'; } //red
-    else if( healthPercentageRemaining < 50 ){ this.barSprite.tint = '0xffff00'; } //yellow
-    else                                     { this.barSprite.tint = '0x00ff00'; } //green
+  /**
+    Set background and foreground bar colors to a variety of options: Static or dynamic (depends upon healthPercentageRemaining)
+    Examples:
+      this.setBarColor(100);
+        In this example, bars are set to default colors defined in the constructor
+      this.setBarColor(100, '0x123456', '0xffffff');
+        In this example, background bar is bluish, foreground bar is white
+      this.setBarColor(100, '0xffffff', [{'threshold':50, 'color': '0xff0000'}, {'threshold':100, 'color': '0x00ff00'}]);
+        In this example, background bar is white, foreground is green at 50-100% and red at 0-50%. Since health% is 100, the bar is green. You can have any number of threshold/colorCombos.
+  */
+  setBarColor(healthPercentageRemaining, backgroundBarColor, barColor){
+    //optional arguments to change colors
+    if(backgroundBarColor) this.backgroundBarColor = backgroundBarColor;
+    if(barColor) this.barColor = barColor;
+
+    //allow Bar's color to change at different healthPercentageRemaining values
+    if(typeof this.barColor != 'string'){
+      this.barColor.sort(function(a,b){ return a.threshold - b.threshold } );
+
+      //loop thru all the elements in the barColor array, starting at the smallest theshold. If healthPercentageRemaining is under a threshold, set the color and exit the loop.
+      for(var i=0; i<this.barColor.length; i++){
+        const barColorInstance = this.barColor[i];
+        if(healthPercentageRemaining <= barColorInstance.threshold){
+          this.barSprite.tint = barColorInstance.color;
+          break;
+        }
+      }
+    }
+    //Bar has a static color
+    else{
+      this.barSprite.tint = this.barColor;
+    }
+
+    this.bgSprite.tint = this.backgroundBarColor;
   }
 
   setPercent(newValue){
