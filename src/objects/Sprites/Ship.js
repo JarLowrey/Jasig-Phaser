@@ -24,10 +24,7 @@ export default class Ship extends Unit {
       .to({angle: -20}, 50, Phaser.Easing.Linear.In)
       .to({angle:  20}, 50, Phaser.Easing.Linear.In)
       .repeatAll(1);
-    this.deathTween.onComplete.add(function(){
-      this.visible = false; //in this.kill() visible will be set to true before calling the tween and after calling super.kill()
-      this.showExplosion();
-    }, this);
+    this.deathTween.onComplete.add(this.postDeathTween, this);
   }
 
   update(){
@@ -37,16 +34,16 @@ export default class Ship extends Unit {
     this.healthbar.setPositionToTopOfParent( ParentSprite.dp(10) );
   }
 
-  reset(shipType, x, y, isFriendly){
-    this.shipInfo = this.game.ships[shipType];
-    super.reset(x, y, this.shipInfo.health, this.shipInfo.width, 'sprites', this.shipInfo.frame, isFriendly, this.shipInfo.explosionFrame, this.shipInfo.destYInPercentOfScreen);
+  reset(shipName, x, y, isFriendly){
+    //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
+    super.reset('ships', shipName, x, y, isFriendly);
 
     this.healthbar.reset();
     this.healthbar.show();
 
     this.guns = [];
-    for(var gunName in this.shipInfo.guns){
-      const gun = this.shipInfo.guns[gunName];
+    for(var gunName in this.jsonInfo.guns){
+      const gun = this.jsonInfo.guns[gunName];
       this.guns.push( new Gun(this.game, this, gun.gunType, gun.bulletType) ); //NOT YET FROM A POOL OF GUNS!
     }
   }
@@ -90,6 +87,12 @@ export default class Ship extends Unit {
       this.visible = true;
       this.deathTween.start();
     }
+  }
+
+  postDeathTween(){
+    this.goldText.showGoldText(this.jsonInfo.resourceValue, this.x, this.y);
+    this.visible = false; //in this.kill() visible will be set to true before calling the tween and after calling super.kill()
+    this.showExplosion();
   }
 
 }

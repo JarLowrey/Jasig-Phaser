@@ -28,21 +28,18 @@ export default class Bullet extends ParentSprite{
     }
   }
 
-  reset(bulletType, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
-    this.bulletInfo = this.game.bullets[bulletType];
-
-    super.reset(Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter),
-      1,this.bulletInfo.width, this.bulletInfo.key, this.bulletInfo.frame); //reset the physics body in addition to reviving the sprite. Otherwise collision could be messed up
+  reset(bulletName, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
+    super.reset('bullets', bulletName, Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter))
 
     this.shooter = shooter;
     this.target = target;
 
-    if(this.bulletInfo.isTinted){
+    if(this.jsonInfo.isTinted){
       this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
     }
 
     shootingAngle = (this.shooter.isFriendly) ? 360 - shootingAngle : shootingAngle; //correct angle in bulletInfo for friendliness
-    this.game.physics.arcade.velocityFromAngle(shootingAngle, this.bulletInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
+    this.game.physics.arcade.velocityFromAngle(shootingAngle, this.jsonInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
 
     this.dmg = 25;
   }

@@ -6,12 +6,17 @@
 
 import ParentSprite from '../Sprites/ParentSprite';
 import Bonus from '../Sprites/Bonus';
+import IconText from '../../objects/UI/IconText';
 
 
 export default class Unit extends ParentSprite {
 
   constructor(game){
     super(game);
+
+    this.goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
+      'score', 'text', 'sprites', 'resources', 'left', 0);
+    this.goldText.kill();
   }
 
   update(){
@@ -22,15 +27,13 @@ export default class Unit extends ParentSprite {
     }
   }
 
-  reset(x, y, health, width, key, frame, isFriendly, explosionFrame, destYInPercentOfScreen = 50){
-    super.reset(x, y, health, width, key, frame); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
-    this.maxHealth = health;
-
-    Unit.addExplosionEmitter(explosionFrame, this.game);
+  reset(jsonType, jsonInfo, x, y, isFriendly){
+    super.reset(jsonType, jsonInfo, x, y); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
     this.isFriendly = isFriendly;
     this.setAnchor(isFriendly);
 
+    const destYInPercentOfScreen = this.jsonInfo.destYInPercentOfScreen || 50;
     this.yDestination = (destYInPercentOfScreen < 100) ? (destYInPercentOfScreen / 100) * this.game.world.height : Number.MAX_SAFE_INTEGER;
 
     this.body.velocity.y = 300;
@@ -42,6 +45,7 @@ export default class Unit extends ParentSprite {
     ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
 
     if(showCoolStuff){
+      this.goldText.showGoldText(this);
       this.showExplosion();
     }
   }
@@ -71,12 +75,12 @@ export default class Unit extends ParentSprite {
     EXPLOSION EMITTER RELATED METHODS
   */
 
-  showExplosion(frame = 'explosion1'){
+  showExplosion(frame = 'explosion1', explosionSpeed = 400, numParticlesEmittedPerDirection = 3, particleLifeSpan = 400){
+    Unit.addExplosionEmitter(frame, this.game); //checks to see if the emitter has been added yet. If not, it does so.
+
     var emitter = Unit.getExplosionEmitter(frame);
-    const fastSpeed = ParentSprite.dp(400);
-    const slowSpeed = fastSpeed * 0.75;
-    const particleLifeSpan = 400;
-    const numParticlesEmittedPerDirection = 3;
+    const fastSpeed = ParentSprite.dp(explosionSpeed);
+    const slowSpeed = explosionSpeed * 0.75;
 
     //put the emitter on top of the thing that is exploding
     emitter.width = this.width ;

@@ -5,7 +5,7 @@
     "width": 50,
     "guns":{
       "startingGun":{
-        "gunType":"straightShot",
+        "gunType":"angledTriShot",
         "bulletType":"default",
         "x%Pos":50
       }
@@ -15,6 +15,7 @@
     "frame":"ship_enemy_diagonal_full_screen",
     "health":100,
     "width": 50,
+    "resourceValue": 50,
     "guns":{
       "startingGun":{
         "gunType":"straightShot",

@@ -3,6 +3,8 @@
  * ====
  *
  */
+import ParentSprite from '../../objects/Sprites/ParentSprite';
+
 
 export default class IconText extends Phaser.Group {
 
@@ -33,6 +35,11 @@ export default class IconText extends Phaser.Group {
 
     this.add(this.text);
     this.add(this.image);
+
+    //Common usage of IconText will  be to show the gold amount when an enemy ship dies. Set up variables for that use-case below.
+    this.goldTween = this.game.add.tween(this).to({y:'-'+ParentSprite.dp(25), //tween it relative to the current position. Needs to be a string
+     alpha: 0}, 750, Phaser.Easing.Linear.In);
+    this.goldTween.onComplete.add(function(){ this.kill(); }, this);
   }
 
   setText(txt){
@@ -41,10 +48,29 @@ export default class IconText extends Phaser.Group {
 
   kill(){
     this.exists = false;
+
+    this.image.kill();
+    this.text.kill();
   }
 
   reset(){
     this.exists = true;
     this.alpha = 1;
+
+    this.image.reset();
+    this.text.reset();
+  }
+
+  showGoldText(resourceValue, x, y){
+    if(!resourceValue || resourceValue <= 0) return;
+
+    this.reset();
+
+    this.setText(resourceValue);
+
+    this.x = x;
+    this.y = y;
+
+    this.goldTween.start();
   }
 }

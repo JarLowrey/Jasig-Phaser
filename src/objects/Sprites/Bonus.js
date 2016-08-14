@@ -12,8 +12,7 @@ export default class Bonus extends ParentSprite {
   }
 
   reset(bonusType, enemy){
-    this.bonusInfo = this.game.bonuses[bonusType];
-    super.reset(enemy.x, enemy.y, 1, 50, 'sprites', this.bonusInfo.frame);
+    super.reset('bonuses', bonusType, enemy.x, enemy.y);
 
     this.body.velocity.y = ParentSprite.dp(100);
   }
@@ -29,7 +28,7 @@ export default class Bonus extends ParentSprite {
   */
 
   bonusFunction(hero){
-    return Bonus[this.bonusInfo.bonusFunctionName](hero); //choose the bonus function and call it
+    return Bonus[this.jsonInfo.bonusFunctionName](hero); //choose the bonus function and call it
   }
 
   static applyHeal(hero){
