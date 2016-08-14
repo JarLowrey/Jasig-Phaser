@@ -12,6 +12,8 @@ import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
 import Protagonist from '../objects/Sprites/Protagonist';
 
+import WaveHandler from '../objects/Waves/WaveHandler';
+
 import Stars from '../objects/Stars';
 import UiHelper from '../objects/UI/UiHelper';
 
@@ -29,8 +31,8 @@ export default class Game extends Phaser.State {
     this.hero = new Protagonist(this.game);
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
-    var enemy = ParentSprite.getNewSprite(Ship, false, this.game);
-    enemy.reset('diagonal', this.game.world.centerX, 0, false);
+    this.waveHandler = new WaveHandler(this.game);
+    this.waveHandler.spawn();
   }
 
   update(){

@@ -27,17 +27,32 @@ export default class Unit extends ParentSprite {
     }
   }
 
-  reset(jsonType, jsonInfo, x, y, isFriendly){
+  reset(jsonInfo, x, y, isFriendly, jsonType = 'units'){
     super.reset(jsonType, jsonInfo, x, y); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
     this.isFriendly = isFriendly;
     this.setAnchor(isFriendly);
-
-    const destYInPercentOfScreen = this.jsonInfo.destYInPercentOfScreen || 50;
-    this.yDestination = (destYInPercentOfScreen < 100) ? (destYInPercentOfScreen / 100) * this.game.world.height : Number.MAX_SAFE_INTEGER;
+    this.setYDestination();
 
     this.body.velocity.y = 300;
     this.reachedYDestination = false;
+  }
+
+  setYDestination(){
+    //get the defined destination in the JSON file. default to 100 (moving off the bottom of the screen)
+    var destYInPercentOfScreen = this.jsonInfo.destYInPercentOfScreen || 100;
+
+    if(typeof destYInPercentOfScreen != 'number'){ //destination is not a number, must be an object. Get the min and max destination values and choose a random position in between
+      const min = this.jsonInfo.destYInPercentOfScreen.min || 10;
+      const max = this.jsonInfo.destYInPercentOfScreen.max || 50;
+      destYInPercentOfScreen = min + (max-min) * Math.random();
+    }else if( destYInPercentOfScreen >= 100 ){ //needs to move off the bottom of screen
+      destYInPercentOfScreen = 1000000;
+    }else if( destYInPercentOfScreen <= 0   ){ //needs to move off the top of screen
+      destYInPercentOfScreen = - 1000000;
+    }
+
+    this.yDestination = (destYInPercentOfScreen / 100) * this.game.world.height;
   }
 
   kill(showCoolStuff = true){
@@ -58,8 +73,6 @@ export default class Unit extends ParentSprite {
   arrivedAtYDestionation(){
     this.reachedYDestination = true;
     this.body.velocity.y = 0;
-
-    this.startShooting();
   }
 
   static unitCollision(friendlyUnit, enemyUnit){

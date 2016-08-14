@@ -38,7 +38,7 @@ export default class Ship extends Unit {
 
   reset(shipName, x, y, isFriendly){
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
-    super.reset('ships', shipName, x, y, isFriendly);
+    super.reset(shipName, x, y, isFriendly, 'ships');
 
     this.healthbar.reset();
     this.healthbar.show();
@@ -48,6 +48,12 @@ export default class Ship extends Unit {
       const gun = this.jsonInfo.guns[gunName];
       this.guns.push( new Gun(this.game, this, gun.gunType, gun.bulletType) ); //NOT YET FROM A POOL OF GUNS!
     }
+  }
+
+  arrivedAtYDestionation(){
+    super.arrivedAtYDestionation();
+
+    this.startShooting();
   }
 
   startShooting(){

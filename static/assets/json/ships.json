@@ -16,6 +16,10 @@
     "health":100,
     "width": 50,
     "resourceValue": 50,
+    "destYInPercentOfScreen": {
+      "min": 5,
+      "max": 50
+    },
     "guns":{
       "startingGun":{
         "gunType":"straightShot",

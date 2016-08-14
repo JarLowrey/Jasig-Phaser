@@ -23,6 +23,8 @@ export default class ParentSprite extends Phaser.Sprite {
     this.loadTexture('sprites', this.jsonInfo.frame);
     this.setAreaMaintainAspectRatio(this.jsonInfo.width);
     this.alpha = 1;
+    this.angle = 0;
+    this.visible = true;
   }
 
   update(){
@@ -46,6 +48,10 @@ export default class ParentSprite extends Phaser.Sprite {
 
   silentKill(){
     this.kill(false);
+  }
+
+  getValue(){
+    return this.jsonInfo.resourceValue || 0;
   }
 
 
@@ -126,5 +132,16 @@ export default class ParentSprite extends Phaser.Sprite {
     return ParentSprite.getPool(childClass, newSpriteIsFriendly, game, preallocationNum).getFirstDead(true);
   }
 
+  /*
+    STATIC METHODS FOR SCALING SPRITE ATTRIBUTES BASED UPON WAVE NUMBER
+  */
+
+  static scaleHealthByWave(wave, health){
+    return wave+health;
+  }
+
+  static scaleValueByWave(wave, value){
+    return wave+value;
+  }
 
 }
