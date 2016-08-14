@@ -4,7 +4,6 @@
  *
  */
 
-import IconText from '../UI/IconText';
 import ParentSprite from '../../objects/Sprites/ParentSprite';
 
 export default class UiHelper {
@@ -12,8 +11,6 @@ export default class UiHelper {
 
   constructor(game){
     this.game = game;
-
-    this.goldTextPool = new Phaser.Group(game);
   }
 
   static addImage(game, x, y, key, frameName, width, height){

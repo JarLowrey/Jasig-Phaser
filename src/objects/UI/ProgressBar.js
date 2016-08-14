@@ -24,13 +24,19 @@
 
 export default class ProgressBar {
 
-  constructor(game, parent,
+  constructor(game, {parentSprite, x, y, width, height},
       backgroundBarColor = '0x651828', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
       barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
-    this.parent = parent;
 
-    this.barHeight = ProgressBar.densityPixels(7);
+    if(parentSprite){
+      this.parent = parentSprite;
+      this.setSize(this.parent.width, height);
+    }else{
+      this.setPosition(x, y);
+      this.setSize(width, height);
+    }
+
     this.flipped = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
     this.backgroundBarColor = backgroundBarColor;
@@ -42,9 +48,22 @@ export default class ProgressBar {
     this.reset();
   }
 
-  reset(){
-    this.bgSprite.width = this.parent.width;
+  setSize(width, height = ProgressBar.densityPixels(7)){
+    this.width = width;
+    this.height = height;
+  }
+  getWidth(){
+    return this.width;
+  }
+  getBarHeight(){
+    return this.height;
+  }
 
+  reset(){
+    if(this.parent) this.setSize(this.parent.width);
+
+    //setPercent only changes the front bar, need to change the size of the back bar too as the parent may have changed width
+    this.bgSprite.width = this.getWidth();
     this.setPercent(100);
   }
 
@@ -53,10 +72,10 @@ export default class ProgressBar {
   }
 
   drawBackground(){
-    var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
+    var bmd = this.game.add.bitmapData(this.getWidth(), this.getBarHeight());
     bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
+    bmd.ctx.rect(0, 0, this.getWidth(), this.getBarHeight());
     bmd.ctx.fill();
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
@@ -68,10 +87,10 @@ export default class ProgressBar {
   }
 
   drawProgressBar(){
-    var bmd = this.game.add.bitmapData(this.parent.width, this.barHeight);
+    var bmd = this.game.add.bitmapData(this.getWidth(), this.getBarHeight());
     bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.parent.width, this.barHeight);
+    bmd.ctx.rect(0, 0, this.getWidth(), this.getBarHeight());
     bmd.ctx.fill();
 
     this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, bmd);
@@ -82,7 +101,7 @@ export default class ProgressBar {
     }
   }
 
-  setPositionToTopOfParent(margin = ProgressBar.densityPixels(10) ){
+  setPositionToTopOfParent(margin = ProgressBar.densityPixels(5) ){
     this.setPosition(this.parent.x, this.parent.top - this.bgSprite.height / 2 - margin);
   }
 
@@ -90,11 +109,12 @@ export default class ProgressBar {
     this.x = x;
     this.y = y;
 
+    //for when setting the position in the constructor, before the bars are created
     if(this.bgSprite !== undefined && this.barSprite !== undefined){
       this.bgSprite.x = x;
       this.bgSprite.y = y;
 
-      this.barSprite.x = x - this.parent.width/2;
+      this.barSprite.x = x - this.getWidth()/2;
       this.barSprite.y = y;
     }
   }
@@ -102,14 +122,16 @@ export default class ProgressBar {
   /**
     Set background and foreground bar colors to a variety of options: Static or dynamic (depends upon progressPercentageRemaining)
     Examples:
+      this.setBarColor();
+        In this example, bars are set to default colors. progressPercentageRemaining defaults to 0 value.
       this.setBarColor(100);
-        In this example, bars are set to default colors defined in the constructor
-      this.setBarColor(100, '0x123456', '0xffffff');
+        In this example, bars are set to default colors. If this.barColor is not static, the correct color will be chosen using progressPercentageRemaining.
+      this.setBarColor(this_param_is_ignored, '0x123456', '0xffffff');
         In this example, background bar is bluish, foreground bar is white
       this.setBarColor(100, '0xffffff', [{'threshold':50, 'color': '0xff0000'}, {'threshold':100, 'color': '0x00ff00'}]);
         In this example, background bar is white, foreground is green at 50-100% and red at 0-50%. Since progress% is 100, the bar is green. You can have any number of threshold/colorCombos.
   */
-  setBarColor(progressPercentageRemaining, backgroundBarColor, barColor){
+  setBarColor(progressPercentageRemaining = 0, backgroundBarColor, barColor){
     //optional arguments to change colors
     if(backgroundBarColor) this.backgroundBarColor = backgroundBarColor;
     if(barColor) this.barColor = barColor;
@@ -141,7 +163,7 @@ export default class ProgressBar {
 
     this.setBarColor(newValue);
 
-    var newWidth =  (newValue * this.parent.width) / 100;
+    var newWidth =  (newValue * this.getWidth()) / 100;
 
     this.setWidth(newWidth);
   }

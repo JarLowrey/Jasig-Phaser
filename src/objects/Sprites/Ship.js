@@ -14,7 +14,7 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.healthbar = new ProgressBar(this.game, this);
+    this.healthbar = new ProgressBar(this.game, {"parentSprite": this});
     this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
 
     //setup tween to be played upon this.kill()
@@ -31,7 +31,7 @@ export default class Ship extends Unit {
     if(!this.alive) return;
 
     super.update();
-    this.healthbar.setPositionToTopOfParent( ParentSprite.dp(10) );
+    this.healthbar.setPositionToTopOfParent();
   }
 
   reset(shipName, x, y, isFriendly){

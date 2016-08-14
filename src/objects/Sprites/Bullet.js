@@ -29,7 +29,7 @@ export default class Bullet extends ParentSprite{
   }
 
   reset(bulletName, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
-    super.reset('bullets', bulletName, Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter))
+    super.reset('bullets', bulletName, Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter));
 
     this.shooter = shooter;
     this.target = target;
