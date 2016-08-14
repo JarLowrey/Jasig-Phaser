@@ -48,9 +48,9 @@ export default class ProgressBar {
     this.reset();
   }
 
-  setSize(width, height = ProgressBar.densityPixels(7)){
-    this.width = width;
-    this.height = height;
+  setSize(width, height = 7){
+    this.width = ProgressBar.densityPixels(width);
+    this.height = ProgressBar.densityPixels(height);
   }
   getWidth(){
     return this.width;

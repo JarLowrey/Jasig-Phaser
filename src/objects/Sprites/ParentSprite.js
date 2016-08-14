@@ -3,7 +3,7 @@
  * ====
  *
  */
- 
+
 import JsonInfo from '../../objects/JsonInfo';
 
 
@@ -18,6 +18,7 @@ export default class ParentSprite extends Phaser.Sprite {
 
     super.reset(x, y, this.jsonInfo.health);
     this.maxHealth = this.jsonInfo.health;
+    this.anchor.setTo(0.5,0.5);
 
     this.loadTexture('sprites', this.jsonInfo.frame);
     this.setAreaMaintainAspectRatio(this.jsonInfo.width);

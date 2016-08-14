@@ -14,15 +14,17 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.healthbar = new ProgressBar(this.game, {"parentSprite": this});
+    this.healthbar = new ProgressBar(this.game, {'parentSprite': this});
     this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
 
     //setup tween to be played upon this.kill()
+    const xTweenLen = ParentSprite.dp(20) * Math.random() + ParentSprite.dp(20);
+    const tweenAngle = 20 + 20 * Math.random();
     this.deathTween = this.game.add.tween(this)
-      .to({x:'-'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
-      .to({x:'+'+ParentSprite.dp(25)}, 50, Phaser.Easing.Linear.In)
-      .to({angle: -20}, 50, Phaser.Easing.Linear.In)
-      .to({angle:  20}, 50, Phaser.Easing.Linear.In)
+      .to({x:'-'+xTweenLen}, 50, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
+      .to({x:'+'+xTweenLen}, 50, Phaser.Easing.Linear.In)
+      .to({angle: -tweenAngle}, 50, Phaser.Easing.Linear.In)
+      .to({angle:  tweenAngle}, 50, Phaser.Easing.Linear.In)
       .repeatAll(1);
     this.deathTween.onComplete.add(this.postDeathTween, this);
   }

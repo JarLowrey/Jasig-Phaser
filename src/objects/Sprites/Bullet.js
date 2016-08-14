@@ -10,8 +10,6 @@ export default class Bullet extends ParentSprite{
   constructor(game, x, y){
     super(game,x,y);
 
-    this.anchor.setTo(0.5,0.5);
-
     //kill sprite if it moves out of bounds of game screen
     this.checkWorldBounds = true;
     this.outOfBoundsKill = true;

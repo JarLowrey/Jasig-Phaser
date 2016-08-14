@@ -1,6 +1,7 @@
 {
   "heal":{
     "frame":"heal",
+    "width": 40,
     "bonusFunctionName":"applyHeal",
     "background_color":"0#ffffff",
     "stroke_color":"0#ff0000",
@@ -8,6 +9,7 @@
   },
   "money":{
     "frame":"resources",
+    "width": 40,
     "bonusFunctionName":"addResources",
     "background_color":"0#ffffff",
     "stroke_color":"0#ff0000",
