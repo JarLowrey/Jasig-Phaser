@@ -7,6 +7,8 @@ import ParentSprite from '../../objects/Sprites/ParentSprite';
 import Unit from '../../objects/Sprites/Unit';
 import Ship from '../../objects/Sprites/Ship';
 
+import ProgressBar from '../../objects/UI/ProgressBar';
+
 export default class WaveHandler {
 
   constructor(game){
@@ -25,6 +27,29 @@ export default class WaveHandler {
     //variables to control spawn timing
     this.timeToCheckForNewSpawn = 1000;
     this.spawnTimer = game.time.create(false);
+    this.waveTimer = game.time.create(false);
+
+    const countDownJson = this.game.dimen['game_countdown'];
+    this.progressBar = new ProgressBar(game, countDownJson, '0xcccccc', '0x75c9e5');
+    this.progressBar.setPositionOfLeftEdge(countDownJson.x, countDownJson.y);
+  }
+
+  updateProgress(){
+    const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.wave) ;
+    this.progressBar.setPercent(percentLeft * 100);
+  }
+
+  startWave(){
+    this.spawn();
+    this.waveTimer.add(WaveHandler.timeNeededToEndWave(this.wave), this.endWave, this);
+    this.waveTimer.start();
+  }
+
+  endWave(){
+    this.spawnTimer.stop();
+    this.wave++;
+    //TODO save wave variables and stats to local storage
+    this.game.state.start('Store');
   }
 
   spawn(){
@@ -62,15 +87,11 @@ export default class WaveHandler {
     return {'newEnemyJsonName': newEnemyJsonName, 'newEnemyClass': newEnemyClass};
   }
 
-  stop(){
-    this.spawnTimer.stop();
-  }
-
   //min time = 30s, max time = 90s, wave increments time by 2.5s
   static timeNeededToEndWave(wave){
-    var time = Phaser.Second * 30;
+    var time = 1000 * 8;
     time += wave * 2.5;
-    return Math.min(time, Phaser.Second * 90);
+    return Math.min(time, 1000 * 90);
   }
 
   livingEnemiesTotalValue(){

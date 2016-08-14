@@ -32,12 +32,12 @@ export default class Game extends Phaser.State {
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     this.waveHandler = new WaveHandler(this.game);
-    this.waveHandler.spawn();
+    this.waveHandler.startWave();
   }
 
   update(){
     //this.UiHelper.showGold(10,window.innerWidth * Math.random(),this.game.world.centerY);
-
+    this.waveHandler.updateProgress();
     this.collisionDectection();
   }
 

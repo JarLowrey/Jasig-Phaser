@@ -40,4 +40,9 @@ export default class Protagonist extends Ship {
     this.game.input.onUp.add(this.stopShooting.bind(this), this.gun );
   }
 
+  finishKill(){
+    super.finishKill();
+    this.game.state.start('GameOver');
+  }
+
 }

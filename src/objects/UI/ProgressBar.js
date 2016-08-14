@@ -49,6 +49,9 @@ export default class ProgressBar {
   }
 
   setSize(width, height = 7){
+    if(typeof width == 'string') width = this.percentWidthToPixels(width);
+    if(typeof height == 'string') height = this.percentWidthToPixels(height);
+
     this.width = ProgressBar.densityPixels(width);
     this.height = ProgressBar.densityPixels(height);
   }
@@ -71,6 +74,14 @@ export default class ProgressBar {
     return pixel * window.window.devicePixelRatio;
   }
 
+  percentWidthToPixels(percent, parent = this.game.world){
+    return parent.width * (parseFloat(percent) / 100.0);
+  }
+
+  percentHeightToPixels(percent, parent = this.game.world){
+    return parent.height * (parseFloat(percent) / 100.0);
+  }
+
   drawBackground(){
     var bmd = this.game.add.bitmapData(this.getWidth(), this.getBarHeight());
     bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
@@ -79,7 +90,7 @@ export default class ProgressBar {
     bmd.ctx.fill();
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
-    this.bgSprite.anchor.set(0.5);
+    this.bgSprite.anchor.setTo(0.5);
 
     if(this.flipped){
       this.bgSprite.scale.x = -1;
@@ -104,8 +115,14 @@ export default class ProgressBar {
   setPositionToTopOfParent(margin = ProgressBar.densityPixels(5) ){
     this.setPosition(this.parent.x, this.parent.top - this.bgSprite.height / 2 - margin);
   }
+  setPositionOfLeftEdge(x,y){
+    this.setPosition(x + this.width / 2, y);
+  }
+  setPositionOfRightEdge(x,y){
+    this.setPosition(x - this.width / 2, y);
+  }
 
-  setPosition(x,y){
+  setPosition(x = this.x,y = this.y){
     this.x = x;
     this.y = y;
 
