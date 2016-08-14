@@ -60,8 +60,8 @@ export default class Bullet extends ParentSprite{
   }
 
   static bulletCollision(bullet, unit){
-    bullet.kill();
-    unit.damage(bullet.dmg);
+    if( unit.isAlive() ) bullet.kill();
+    if( unit.isAlive() ) unit.damage(bullet.dmg);
   }
 
 }

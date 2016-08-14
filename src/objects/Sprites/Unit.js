@@ -36,6 +36,7 @@ export default class Unit extends ParentSprite {
 
     this.body.velocity.y = 300;
     this.reachedYDestination = false;
+    this.isBeingKilled = false;
   }
 
   setYDestination(){
@@ -56,6 +57,8 @@ export default class Unit extends ParentSprite {
   }
 
   kill(showCoolStuff = true){
+    if(this.isBeingKilled) return;
+
     super.kill();
     ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
 
@@ -76,8 +79,13 @@ export default class Unit extends ParentSprite {
   }
 
   static unitCollision(friendlyUnit, enemyUnit){
-    friendlyUnit.damage(50);
-    enemyUnit.damage(10);
+    //apply their damages, so long as they are still alive
+    if( enemyUnit.isAlive() ) friendlyUnit.damage(50);
+    if( friendlyUnit.isAlive() ) enemyUnit.damage(10);
+  }
+
+  isAlive(){
+    return !this.isBeingKilled && this.alive;
   }
 
 

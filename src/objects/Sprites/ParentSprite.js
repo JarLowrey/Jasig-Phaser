@@ -22,9 +22,9 @@ export default class ParentSprite extends Phaser.Sprite {
 
     this.loadTexture('sprites', this.jsonInfo.frame);
     this.setAreaMaintainAspectRatio(this.jsonInfo.width);
+
     this.alpha = 1;
     this.angle = 0;
-    this.visible = true;
   }
 
   update(){
