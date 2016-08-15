@@ -12,7 +12,7 @@ import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
 import Protagonist from '../objects/Sprites/Protagonist';
 
-import WaveHandler from '../objects/Waves/WaveHandler';
+import WaveHandler from '../objects/WaveHandler';
 
 import Stars from '../objects/Stars';
 import UiHelper from '../objects/UI/UiHelper';
@@ -31,13 +31,13 @@ export default class Game extends Phaser.State {
     this.hero = new Protagonist(this.game);
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
-    this.waveHandler = new WaveHandler(this.game);
-    this.waveHandler.startWave();
+    this.game.waveHandler = new WaveHandler(this.game);
+    this.game.waveHandler.startWave();
   }
 
   update(){
     //this.UiHelper.showGold(10,window.innerWidth * Math.random(),this.game.world.centerY);
-    this.waveHandler.updateProgress();
+    this.game.waveHandler.updateProgress();
     this.collisionDectection();
   }
 

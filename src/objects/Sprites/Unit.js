@@ -8,7 +8,6 @@ import ParentSprite from '../Sprites/ParentSprite';
 import Bonus from '../Sprites/Bonus';
 import IconText from '../../objects/UI/IconText';
 
-
 export default class Unit extends ParentSprite {
 
   constructor(game){
@@ -17,6 +16,8 @@ export default class Unit extends ParentSprite {
     this.goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
       'score', 'text', 'sprites', 'resources', 'left', 0);
     this.goldText.kill();
+
+    this.explosionParticleLifeSpan = 400;
   }
 
   update(){
@@ -61,11 +62,21 @@ export default class Unit extends ParentSprite {
 
     super.kill();
     ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
+    if( this.game.waveHandler.livingEnemiesTotalValue() == 0 && this.game.waveHandler.isWaveOver() ){
+      this.startNextStateAfterDeath('Store');
+    }
 
     if(showCoolStuff){
       this.goldText.showGoldText(this);
       this.showExplosion();
     }
+  }
+
+  //allow the user to view the last item's explosion before starting the next state
+  startNextStateAfterDeath(state){
+    this.game.time.events.add(this.explosionParticleLifeSpan, function(){
+      this.game.state.start(state);
+    }, this, 'Store');
   }
 
   setAnchor(isFriendly){
@@ -96,7 +107,7 @@ export default class Unit extends ParentSprite {
     EXPLOSION EMITTER RELATED METHODS
   */
 
-  showExplosion(frame = 'explosion1', explosionSpeed = 400, numParticlesEmittedPerDirection = 3, particleLifeSpan = 400){
+  showExplosion(frame = 'explosion1', explosionSpeed = 400, numParticlesEmittedPerDirection = 3){
     Unit.addExplosionEmitter(frame, this.game); //checks to see if the emitter has been added yet. If not, it does so.
 
     var emitter = Unit.getExplosionEmitter(frame);
@@ -119,20 +130,20 @@ export default class Unit extends ParentSprite {
     //explode down
     emitter.minParticleSpeed.set(-slowSpeed, slowSpeed);
     emitter.maxParticleSpeed.set(slowSpeed, fastSpeed);
-    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
+    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
     //explode up
     emitter.minParticleSpeed.set(-slowSpeed, -fastSpeed);
     emitter.maxParticleSpeed.set(slowSpeed, -slowSpeed);
-    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
+    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
 
     //explode left
     emitter.minParticleSpeed.set(-fastSpeed, -slowSpeed);
     emitter.maxParticleSpeed.set(-slowSpeed, slowSpeed);
-    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
+    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
     //explode right
     emitter.minParticleSpeed.set(slowSpeed, -slowSpeed);
     emitter.maxParticleSpeed.set(fastSpeed, slowSpeed);
-    emitter.start(true, particleLifeSpan, null, numParticlesEmittedPerDirection);
+    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
   }
 
   getParticleScale(particleFrame){

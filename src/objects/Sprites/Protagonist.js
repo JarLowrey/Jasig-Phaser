@@ -52,7 +52,7 @@ export default class Protagonist extends Ship {
 
   finishKill(){
     super.finishKill();
-    this.game.state.start('GameOver');
+    this.startNextStateAfterDeath('GameOver');
   }
 
 }

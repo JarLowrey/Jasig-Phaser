@@ -3,18 +3,18 @@
  * ====
  *
  */
-import ParentSprite from '../../objects/Sprites/ParentSprite';
-import Unit from '../../objects/Sprites/Unit';
-import Ship from '../../objects/Sprites/Ship';
+import ParentSprite from '../objects/Sprites/ParentSprite';
+import Unit from '../objects/Sprites/Unit';
+import Ship from '../objects/Sprites/Ship';
 
-import ProgressBar from '../../objects/UI/ProgressBar';
+import ProgressBar from '../objects/UI/ProgressBar';
 
 export default class WaveHandler {
 
   constructor(game){
     this.game = game;
 
-    this.wave = 0;
+    this.wave = 10;
 
     //variables to determine how much stuff can be on screen at once
     this.minMeteors = 4;
@@ -44,28 +44,34 @@ export default class WaveHandler {
     this.spawn();
     this.waveTimer.add(WaveHandler.timeNeededToEndWave(this.wave), this.endWave, this);
     this.waveTimer.start();
+    this.waveIsOver = false;
   }
 
   endWave(){
     this.spawnTimer.stop();
     this.wave++;
     //TODO save wave variables and stats to local storage
-    this.game.state.start('Store');
+    this.waveIsOver = true;
+  }
+
+  isWaveOver(){
+    return this.waveIsOver;
   }
 
   spawn(){
-    const enemyTotal = this.livingEnemiesTotalValue();
+    var enemyTotal = this.livingEnemiesTotalValue();
     const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
-    if( enemyTotal < this.minShipThreshold() + meteorsThresholdValue ){
-      this.spawnSprite('meteor', Unit);
-    }
+
     if( enemyTotal < enemiesThresholdValue + meteorsThresholdValue ){
+      this.spawnSprite('meteor', Unit);
+      enemyTotal += ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.resourceValue);
+    }
+    if( enemyTotal < enemiesThresholdValue ){
       const enemyInfo = this.chooseEnemy();
       this.spawnSprite( enemyInfo.newEnemyJsonName, enemyInfo.newEnemyClass );
     }
-    //console.log(enemyTotal, enemiesThresholdValue , meteorsThresholdValue)
 
     this.spawnTimer.add(this.timeToCheckForNewSpawn, this.spawn, this);
     this.spawnTimer.start();
@@ -97,7 +103,9 @@ export default class WaveHandler {
 
   livingEnemiesTotalValue(){
     var total = 0;
-    const addToTotal = function(child){ total += child.getValue(); };
+    const addToTotal = function(child){
+      if(!child.isFriendly) total += child.getValue();
+    };
 
     ParentSprite.getPool(Unit, false, this.game).forEachAlive(addToTotal);       //enemy units
     ParentSprite.getPool(Ship, false, this.game).forEachAlive(addToTotal);       //enemy ships
@@ -113,12 +121,6 @@ export default class WaveHandler {
     numBasicShips = Math.min(numBasicShips, this.maxShips);
 
     return numBasicShips * basicShipValue;
-  }
-
-  //power level of the minimum amount of ships
-  minShipThreshold(){
-    const basicShipValue = ParentSprite.scaleValueByWave(this.wave, this.game.ships.diagonal.resourceValue);
-    return this.minShips * basicShipValue;
   }
 
   //about how much basic meteor 'Power' can be on screen at once in a given wave.
