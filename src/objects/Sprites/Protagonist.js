@@ -37,7 +37,7 @@ export default class Protagonist extends Ship {
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
     //setup healthbar
-    const healthbarJson = this.game.dimen['game_countdown'];
+    const healthbarJson = this.game.dimen['game_health'];
     this.healthbar.parent = null;
     this.healthbar.flip();
     this.healthbar.setSize(healthbarJson.width, healthbarJson.height);

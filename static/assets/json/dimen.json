@@ -8,7 +8,7 @@
     },
     "game_countdown":{
       "x": 25,
-      "y": 25,
+      "y": 55,
       "width":"25%",
       "height":18
     },

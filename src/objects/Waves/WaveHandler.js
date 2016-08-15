@@ -31,7 +31,8 @@ export default class WaveHandler {
 
     const countDownJson = this.game.dimen['game_countdown'];
     this.progressBar = new ProgressBar(game, countDownJson, '0xcccccc', '0x75c9e5');
-    this.progressBar.setPositionOfLeftEdge(countDownJson.x, countDownJson.y);
+    this.progressBar.flip();
+    this.progressBar.setPositionOfRightEdge(this.game.world.width - countDownJson.x, countDownJson.y);
   }
 
   updateProgress(){
