@@ -48,12 +48,19 @@ export default class ProgressBar {
     this.reset();
   }
 
-  setSize(width, height = 7){
-    if(typeof width == 'string') width = this.percentWidthToPixels(width);
-    if(typeof height == 'string') height = this.percentWidthToPixels(height);
+  setSize(width, height = 7, parent){
+    if(typeof width == 'string'){   this.width = this.percentWidthToPixels(width, parent); }
+    else{                           this.width = ProgressBar.densityPixels(width);}
+    if(typeof height == 'string'){  this.height = this.percentWidthToPixels(height, parent); }
+    else{                           this.height = ProgressBar.densityPixels(height);}
 
-    this.width = ProgressBar.densityPixels(width);
-    this.height = ProgressBar.densityPixels(height);
+    //for when setting the position in the constructor, before the bars are created
+    if(this.bgSprite !== undefined && this.barSprite !== undefined){
+      this.bgSprite.width = this.getWidth();
+      this.bgSprite.width = this.getWidth();
+      this.barSprite.height = this.getBarHeight();
+      this.bgSprite.height = this.getBarHeight();
+    }
   }
   getWidth(){
     return this.width;
@@ -66,8 +73,12 @@ export default class ProgressBar {
     if(this.parent) this.setSize(this.parent.width);
 
     //setPercent only changes the front bar, need to change the size of the back bar too as the parent may have changed width
-    this.bgSprite.width = this.getWidth();
     this.setPercent(100);
+  }
+
+  flip(){
+    this.flipped = !this.flipped;
+    this.barSprite.scale.x = (this.flipped) ? -1 : 0;
   }
 
   static densityPixels(pixel){
@@ -90,7 +101,7 @@ export default class ProgressBar {
     bmd.ctx.fill();
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
-    this.bgSprite.anchor.setTo(0.5);
+    this.bgSprite.anchor.setTo(0.5,0.5);
 
     if(this.flipped){
       this.bgSprite.scale.x = -1;
@@ -122,7 +133,7 @@ export default class ProgressBar {
     this.setPosition(x - this.width / 2, y);
   }
 
-  setPosition(x = this.x,y = this.y){
+  setPosition(x = this.x, y = this.y){
     this.x = x;
     this.y = y;
 
@@ -131,7 +142,9 @@ export default class ProgressBar {
       this.bgSprite.x = x;
       this.bgSprite.y = y;
 
-      this.barSprite.x = x - this.getWidth()/2;
+      this.barSprite.x = x;
+      //bgSprite has X anchor=0.5 while barSprites anchor is 0 (flipped) or 1 (not flipped/normal). Apply an offset so their x positions match each other
+      this.barSprite.x += (this.flipped) ? this.getWidth()/2 : - this.getWidth()/2;
       this.barSprite.y = y;
     }
   }

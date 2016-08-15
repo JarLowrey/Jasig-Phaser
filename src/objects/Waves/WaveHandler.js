@@ -87,9 +87,9 @@ export default class WaveHandler {
     return {'newEnemyJsonName': newEnemyJsonName, 'newEnemyClass': newEnemyClass};
   }
 
-  //min time = 30s, max time = 90s, wave increments time by 2.5s
+  //min time = 20s, max time = 90s, wave increments time by 2.5s
   static timeNeededToEndWave(wave){
-    var time = 1000 * 8;
+    var time = 1000 * 20;
     time += wave * 2.5;
     return Math.min(time, 1000 * 90);
   }

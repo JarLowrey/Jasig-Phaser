@@ -22,7 +22,7 @@ export default class Ship extends Unit {
     if(!this.alive) return;
 
     super.update();
-    this.healthbar.setPositionToTopOfParent();
+    if(this.getClassName() != 'Protagonist') this.healthbar.setPositionToTopOfParent();
   }
 
   reset(shipName, x, y, isFriendly){

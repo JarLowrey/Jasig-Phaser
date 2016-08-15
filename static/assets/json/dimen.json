@@ -11,5 +11,11 @@
       "y": 25,
       "width":"25%",
       "height":18
+    },
+    "game_health":{
+      "x": 25,
+      "y": 25,
+      "width":"25%",
+      "height":18
     }
 }

@@ -33,6 +33,10 @@ export default class ParentSprite extends Phaser.Sprite {
     //this.game.debug.bodyInfo(this, this.x, this.y);
   }
 
+  getClassName(){
+    return this.constructor.name;
+  }
+
   //give the sprite a new size while maintaining aspec
   setAreaMaintainAspectRatio(width){
     this.width = ParentSprite.dp(width);
