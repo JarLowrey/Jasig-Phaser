@@ -24,7 +24,7 @@
 
 export default class ProgressBar {
 
-  constructor(game, x, y, width, height,
+  constructor(game, x, y, width = 15, height = 7,
       backgroundBarColor = '0x651828', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
       barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
@@ -32,7 +32,7 @@ export default class ProgressBar {
     this.setPosition(x, y);
     this.setSize(width, height);
 
-    this.barShrinksRightToLeft = barShrinksRightToLeft;
+    this.barShrinksLeftToRight = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
     this.backgroundBarColor = backgroundBarColor;
     this.barColor = barColor;
@@ -43,17 +43,27 @@ export default class ProgressBar {
     this.setPercent(100);
   }
 
-  setSize(width = 15, height = 7, parent){
-    if(typeof width == 'string'&& width.charAt(width.length-1) =='%'){      this.width = this.percentWidthToPixels(width, parent); }
-    else{                                                                   this.width = ProgressBar.densityPixels(width);}
-    if(typeof height == 'string' && height.charAt(height.length-1) =='%'){  this.height = this.percentHeightToPixels(height, parent); }
-    else{                                                                   this.height = ProgressBar.densityPixels(height);}
+  setSize(width, height, parent){
+    if(!parent) console.log(width, this.width,this.barSprite,this.bgSprite)
 
-    //for when setting the position in the constructor, before the bars are created
+    //set width/height variables
+    if(typeof width == 'string' && width.charAt(width.length-1) =='%'){     this.width = this.percentWidthToPixels(width, parent); }
+    else if(width){                                                         this.width = ProgressBar.densityPixels(width);}
+    if(typeof height == 'string' && height.charAt(height.length-1) =='%'){  this.height = this.percentHeightToPixels(height, parent); }
+    else if(height){                                                        this.height = ProgressBar.densityPixels(height);}
+    if(!parent) console.log(width, this.width,this.barSprite,this.bgSprite)
+
+    //set underlying Sprites width/height
+    //check is for when setting the position in the constructor, before the bars are created
     if(this.bgSprite !== undefined && this.barSprite !== undefined){
-      this.bgSprite.width = this.getWidth();
-      this.bgSprite.width = this.getWidth();
+      //must reset cropping before setting size. When cropping is applied, size will not be set effectively
+      this.applyCrop(1)
+
+      this.barSprite.width = this.getWidth();
       this.barSprite.height = this.getBarHeight();
+      if(!parent) console.log(width, this.width,this.barSprite,this.bgSprite)
+
+      this.bgSprite.width = this.getWidth();
       this.bgSprite.height = this.getBarHeight();
     }
   }
@@ -65,9 +75,9 @@ export default class ProgressBar {
   }
 
   flip(){
-    this.barShrinksRightToLeft = !this.barShrinksRightToLeft;
-    this.barSprite.scale.x = (this.barShrinksRightToLeft) ? -1 : 0;
-    this.bgSprite.scale.x *= -1;
+    this.barShrinksLeftToRight = !this.barShrinksLeftToRight;
+    this.barSprite.scale.x = (this.barShrinksLeftToRight) ? -1 : 0;
+    //this.bgSprite.scale.x *= -1;
   }
 
   static densityPixels(pixel){
@@ -81,21 +91,30 @@ export default class ProgressBar {
   }
 
   drawBackground(){
-    this.bgSprite = this.game.add.sprite(this.x, this.y, this.getRectangleBitmapData());
+    this.bgSprite = this.game.add.sprite(this.x, this.y, this.getBitmapData());
     this.bgSprite.anchor.setTo(0.5,0.5);
 
-    if(this.barShrinksRightToLeft){
+    if(this.barShrinksLeftToRight){
       this.bgSprite.scale.x = -1;
     }
   }
 
   drawProgressBar(){
-    this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, this.getRectangleBitmapData() );
+    this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, this.getBitmapData() );
     this.barSprite.anchor.y = 0.5;
 
-    if(this.barShrinksRightToLeft){
+    if(this.barShrinksLeftToRight){
       this.barSprite.scale.x = -1;
     }
+  }
+
+  getBitmapData(width = this.getWidth(), height = this.getBarHeight()){
+    var bmd = this.game.add.bitmapData(width, height);
+    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
+    bmd.ctx.beginPath();
+    bmd.ctx.rect(0, 0, width, height);
+    bmd.ctx.fill();
+    return bmd;
   }
 
   getRectangleBitmapData(width = this.getWidth(), height = this.getBarHeight()){
@@ -129,7 +148,7 @@ export default class ProgressBar {
 
       this.barSprite.x = x;
       //bgSprite has X anchor=0.5 while barSprites anchor is 0 (flipped) or 1 (not flipped/normal). Apply an offset so their x positions match each other
-      this.barSprite.x += (this.barShrinksRightToLeft) ? this.getWidth()/2 : - this.getWidth()/2;
+      this.barSprite.x += (this.barShrinksLeftToRight) ? this.getWidth()/2 : - this.getWidth()/2;
       this.barSprite.y = y;
     }
   }
@@ -172,19 +191,26 @@ export default class ProgressBar {
     this.bgSprite.tint = this.backgroundBarColor;
   }
 
-  setPercent(newPercent){
+  setPercent(newPercent,a){
     if(newPercent < 0)       { newPercent = 0; }
     else if(newPercent > 100){ newPercent = 100; }
 
     this.setBarColor(newPercent);
 
-    var newWidth =  (newPercent * this.getWidth()) / 100;
+    this.applyCrop(newPercent / 100,a);
+  }
 
-    //perform the resizing
-    const cropRect =  new Phaser.Rectangle(0, 0, newWidth, this.getBarHeight());
+  applyCrop(percentWidth){
+    //no idea why, but if the X scale is negative, crop needs to be a pixel value. If it is positive it is a percent value
+    var newWidth;
+    if(this.barShrinksLeftToRight) newWidth = this.getWidth() * (percentWidth);
+    else newWidth = percentWidth;
+
+    //perform the resizing via crop
+    console.log(this.barSprite.width, newWidth);
+    const cropRect =  new Phaser.Rectangle(0, 0, newWidth, this.barSprite.height);
     this.barSprite.crop(cropRect);
-    console.log(cropRect)
-    this.barSprite.updateCrop();
+    console.log(this.barSprite.width, newWidth);
   }
 
   hide(){

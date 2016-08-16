@@ -1,6 +1,6 @@
 {
   "straightShot":{
-    "cooldown":500,
+    "cooldown":700,
     "shots":{
       "straightShot":{
         "angle":90,
@@ -22,7 +22,7 @@
     }
   },
   "straightTriShot":{
-    "cooldown":800,
+    "cooldown":700,
     "shots":{
       "leftShot":{
         "angle":90,

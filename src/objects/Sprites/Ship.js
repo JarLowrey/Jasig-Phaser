@@ -29,7 +29,7 @@ export default class Ship extends Unit {
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, x, y, isFriendly, 'ships');
 
-    this.healthbar.setSize(this.width);
+    this.healthbar.setSize('100%', null, this);
     this.healthbar.setPercent(100);
     this.healthbar.show();
 
@@ -44,7 +44,7 @@ export default class Ship extends Unit {
   arrivedAtYDestionation(){
     super.arrivedAtYDestionation();
 
-    this.startShooting();
+    //this.startShooting();
   }
 
   startShooting(){
