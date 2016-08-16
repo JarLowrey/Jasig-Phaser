@@ -29,8 +29,9 @@ export default class Ship extends Unit {
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, x, y, isFriendly, 'ships');
 
-    this.healthbar.setSize('100%', null, this);
+    this.healthbar.setSize('100%', null, 0, this);
     this.healthbar.setPercent(100);
+    this.healthbar.setText( this.health );
     this.healthbar.show();
 
     //add all the guns from the json file
@@ -64,7 +65,18 @@ export default class Ship extends Unit {
   damage(amount){
     super.damage(amount);
 
+/*
+    //little tween to show damage occurred
+    const xTweenLen = ParentSprite.dp(5) * Math.random() + ParentSprite.dp(5);
+    var tween = this.game.add.tween(this)
+      .to({x:'-'+xTweenLen}, 50, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
+      .to({x:'+'+xTweenLen}, 50, Phaser.Easing.Linear.In)
+      .repeatAll(1);
+    tween.start();
+*/
+
     this.setHealthBarPercentage();
+    this.healthbar.setText( this.health );
   }
 
   heal(amount){

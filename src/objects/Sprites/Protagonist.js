@@ -39,14 +39,15 @@ export default class Protagonist extends Ship {
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
     //setup healthbar
-    console.log(this.healthbar)
     const healthbarJson = this.game.dimen['game_health'];
-    this.healthbar.setSize(healthbarJson.width, healthbarJson.height);
-    console.log(this.healthbar)
+    this.healthbar.setSize(healthbarJson.width, healthbarJson.height, healthbarJson.strokeLength);
     this.healthbar.flip();
     this.healthbar.setBarColor(100, '0xcccccc');
     this.healthbar.setPositionOfRightEdge(this.game.world.width - healthbarJson.x, healthbarJson.y);
-    this.healthbar.setPercent(100)
+    this.healthbar.setPercent(100);
+    this.healthbar.setTextStyle(this.game.fonts['ui_progress_bars']);
+    this.healthbar.setText( this.health + '/' + this.maxHealth );
+
     //setup begin/end shooting events
     this.game.input.onDown.add(this.startShooting.bind(this), this );
     this.game.input.onUp.add(this.stopShooting.bind(this), this.gun );
@@ -60,6 +61,11 @@ export default class Protagonist extends Ship {
   kill(){
     super.kill();
     this.healthbar.show(); //leave healthbar showing while this is dying
+  }
+
+  damage(amt){
+    super.damage(amt);
+    this.healthbar.setText( this.health + '/' + this.maxHealth );
   }
 
 }

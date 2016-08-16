@@ -30,7 +30,7 @@ export default class WaveHandler {
     this.waveTimer = game.time.create(false);
 
     const countDownJson = this.game.dimen['game_countdown'];
-    this.progressBar = new ProgressBar(game, 0,0, countDownJson.width, countDownJson.height, '0xcccccc', '0x75c9e5');
+    this.progressBar = new ProgressBar(game, 0,0, countDownJson.width, countDownJson.height, countDownJson.strokeLength, '0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.flip();
     this.progressBar.setPositionOfRightEdge(this.game.world.width - countDownJson.x, countDownJson.y);
   }
@@ -38,6 +38,7 @@ export default class WaveHandler {
   updateProgress(){
     const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.wave) ;
     this.progressBar.setPercent(percentLeft * 100);
+    this.progressBar.setText(Math.round(this.waveTimer.duration / 1000) );
   }
 
   startWave(){
