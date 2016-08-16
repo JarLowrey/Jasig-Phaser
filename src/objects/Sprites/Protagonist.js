@@ -21,15 +21,17 @@ export default class Protagonist extends Ship {
   update(){
     super.update();
 
-    const activePointerPos = this.game.input.activePointer.position;
+    this.game.physics.arcade.moveToPointer(this, this.getSpeed());
+  }
+
+  getSpeed(activePointer = this.game.input.activePointer){
+    const activePointerPos = activePointer.position;
     const distToPointer = Phaser.Point.distance(this, activePointerPos);
-    if(distToPointer > 0){
-      var speed = distToPointer * this.speed;
-      speed = Math.max(speed, ParentSprite.dp(50)); //set a min speed. This causes a shaking effect when still
-      this.game.physics.arcade.moveToPointer(this, speed);
-    }else if(this.y <  activePointerPos.y){
-      this.body.velocity.setTo(0,0);
-    }
+
+    var speed = distToPointer * this.speed;
+    speed = Math.max(speed, ParentSprite.dp(50)); //set a min speed. This causes a shaking effect when still
+
+    return speed;
   }
 
   reset(x, y){
@@ -46,7 +48,7 @@ export default class Protagonist extends Ship {
     this.healthbar.setPositionOfRightEdge(this.game.world.width - healthbarJson.x, healthbarJson.y);
     this.healthbar.setPercent(100);
     this.healthbar.setTextStyle(this.game.fonts['ui_progress_bars']);
-    this.healthbar.setText( this.health + '/' + this.maxHealth );
+    this.healthbar.setText( this.getHealthbarText() );
 
     //setup begin/end shooting events
     this.game.input.onDown.add(this.startShooting.bind(this), this );
@@ -63,9 +65,8 @@ export default class Protagonist extends Ship {
     this.healthbar.show(); //leave healthbar showing while this is dying
   }
 
-  damage(amt){
-    super.damage(amt);
-    this.healthbar.setText( this.health + '/' + this.maxHealth );
+  getHealthbarText(){
+    return Math.max(this.health,0) + '/' + this.maxHealth;
   }
 
 }

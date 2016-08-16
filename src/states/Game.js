@@ -14,6 +14,8 @@ import Protagonist from '../objects/Sprites/Protagonist';
 
 import WaveHandler from '../objects/WaveHandler';
 
+import ProgressPie from '../objects/UI/ProgressPie';
+
 import Stars from '../objects/Stars';
 import UiHelper from '../objects/UI/UiHelper';
 
@@ -33,6 +35,8 @@ export default class Game extends Phaser.State {
 
     this.game.waveHandler = new WaveHandler(this.game);
     this.game.waveHandler.startWave();
+
+    new ProgressPie(this.game, this.game.world.centerX, this.game.world.centerY);
   }
 
   update(){

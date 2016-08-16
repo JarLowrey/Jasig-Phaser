@@ -31,7 +31,7 @@ export default class Ship extends Unit {
 
     this.healthbar.setSize('100%', null, 0, this);
     this.healthbar.setPercent(100);
-    this.healthbar.setText( this.health );
+    this.healthbar.setText( this.getHealthbarText() );
     this.healthbar.show();
 
     //add all the guns from the json file
@@ -40,6 +40,10 @@ export default class Ship extends Unit {
       const gun = this.jsonInfo.guns[gunName];
       this.guns.push( new Gun(this.game, this, gun.gunType, gun.bulletType) ); //NOT YET FROM A POOL OF GUNS!
     }
+  }
+
+  getHealthbarText(){
+    return Math.max(this.health,0);
   }
 
   arrivedAtYDestionation(){
@@ -76,13 +80,14 @@ export default class Ship extends Unit {
 */
 
     this.setHealthBarPercentage();
-    this.healthbar.setText( this.health );
+    this.healthbar.setText( this.getHealthbarText() );
   }
 
   heal(amount){
     super.heal(amount);
 
     this.setHealthBarPercentage();
+    this.healthbar.setText( this.getHealthbarText() );
   }
 
   setHealthBarPercentage(){
