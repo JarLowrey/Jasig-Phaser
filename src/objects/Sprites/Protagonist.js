@@ -38,11 +38,9 @@ export default class Protagonist extends Ship {
 
     //setup healthbar
     const healthbarJson = this.game.dimen['game_health'];
-    this.healthbar.parent = null;
     this.healthbar.flip();
     this.healthbar.setSize(healthbarJson.width, healthbarJson.height);
     this.healthbar.setBarColor(100, '0xcccccc');
-    this.healthbar.reset();
     this.healthbar.setPositionOfRightEdge(this.game.world.width - healthbarJson.x, healthbarJson.y);
 
     //setup begin/end shooting events

@@ -14,7 +14,7 @@ export default class Ship extends Unit {
   constructor(game){
     super(game);
 
-    this.healthbar = new ProgressBar(this.game, {'parentSprite': this});
+    this.healthbar = new ProgressBar(this.game);
     this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
   }
 
@@ -22,14 +22,15 @@ export default class Ship extends Unit {
     if(!this.alive) return;
 
     super.update();
-    if(this.getClassName() != 'Protagonist') this.healthbar.setPositionToTopOfParent();
+    if(this.getClassName() != 'Protagonist') this.healthbar.setPositionToTopOfParent(this);
   }
 
   reset(shipName, x, y, isFriendly){
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, x, y, isFriendly, 'ships');
 
-    this.healthbar.reset();
+    this.healthbar.setSize(this.width);
+    this.healthbar.setPercent(100);
     this.healthbar.show();
 
     //add all the guns from the json file

@@ -24,20 +24,15 @@
 
 export default class ProgressBar {
 
-  constructor(game, {parentSprite, x, y, width, height},
+  constructor(game, x, y, width, height,
       backgroundBarColor = '0x651828', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
       barShrinksRightToLeft = false, animationDuration = 50, isFixedToCamera = false){
     this.game = game;
 
-    if(parentSprite){
-      this.parent = parentSprite;
-      this.setSize(this.parent.width, height);
-    }else{
-      this.setPosition(x, y);
-      this.setSize(width, height);
-    }
+    this.setPosition(x, y);
+    this.setSize(width, height);
 
-    this.flipped = barShrinksRightToLeft;
+    this.barShrinksRightToLeft = barShrinksRightToLeft;
     this.animationDuration = animationDuration;
     this.backgroundBarColor = backgroundBarColor;
     this.barColor = barColor;
@@ -45,14 +40,14 @@ export default class ProgressBar {
     this.drawBackground();
     this.drawProgressBar();
     this.setFixedToCamera(isFixedToCamera);
-    this.reset();
+    this.setPercent(100);
   }
 
-  setSize(width, height = 7, parent){
-    if(typeof width == 'string'){   this.width = this.percentWidthToPixels(width, parent); }
-    else{                           this.width = ProgressBar.densityPixels(width);}
-    if(typeof height == 'string'){  this.height = this.percentWidthToPixels(height, parent); }
-    else{                           this.height = ProgressBar.densityPixels(height);}
+  setSize(width = 15, height = 7, parent){
+    if(typeof width == 'string'&& width.charAt(width.length-1) =='%'){      this.width = this.percentWidthToPixels(width, parent); }
+    else{                                                                   this.width = ProgressBar.densityPixels(width);}
+    if(typeof height == 'string' && height.charAt(height.length-1) =='%'){  this.height = this.percentHeightToPixels(height, parent); }
+    else{                                                                   this.height = ProgressBar.densityPixels(height);}
 
     //for when setting the position in the constructor, before the bars are created
     if(this.bgSprite !== undefined && this.barSprite !== undefined){
@@ -69,62 +64,52 @@ export default class ProgressBar {
     return this.height;
   }
 
-  reset(){
-    if(this.parent) this.setSize(this.parent.width);
-
-    //setPercent only changes the front bar, need to change the size of the back bar too as the parent may have changed width
-    this.setPercent(100);
-  }
-
   flip(){
-    this.flipped = !this.flipped;
-    this.barSprite.scale.x = (this.flipped) ? -1 : 0;
+    this.barShrinksRightToLeft = !this.barShrinksRightToLeft;
+    this.barSprite.scale.x = (this.barShrinksRightToLeft) ? -1 : 0;
+    this.bgSprite.scale.x *= -1;
   }
 
   static densityPixels(pixel){
     return pixel * window.window.devicePixelRatio;
   }
-
   percentWidthToPixels(percent, parent = this.game.world){
     return parent.width * (parseFloat(percent) / 100.0);
   }
-
   percentHeightToPixels(percent, parent = this.game.world){
     return parent.height * (parseFloat(percent) / 100.0);
   }
 
   drawBackground(){
-    var bmd = this.game.add.bitmapData(this.getWidth(), this.getBarHeight());
-    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
-    bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.getWidth(), this.getBarHeight());
-    bmd.ctx.fill();
-
-    this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
+    this.bgSprite = this.game.add.sprite(this.x, this.y, this.getRectangleBitmapData());
     this.bgSprite.anchor.setTo(0.5,0.5);
 
-    if(this.flipped){
+    if(this.barShrinksRightToLeft){
       this.bgSprite.scale.x = -1;
     }
   }
 
   drawProgressBar(){
-    var bmd = this.game.add.bitmapData(this.getWidth(), this.getBarHeight());
-    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
-    bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.getWidth(), this.getBarHeight());
-    bmd.ctx.fill();
-
-    this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, bmd);
+    this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, this.getRectangleBitmapData() );
     this.barSprite.anchor.y = 0.5;
 
-    if(this.flipped){
+    if(this.barShrinksRightToLeft){
       this.barSprite.scale.x = -1;
     }
   }
 
-  setPositionToTopOfParent(margin = ProgressBar.densityPixels(5) ){
-    this.setPosition(this.parent.x, this.parent.top - this.bgSprite.height / 2 - margin);
+  getRectangleBitmapData(width = this.getWidth(), height = this.getBarHeight()){
+    var bmd = this.game.add.bitmapData(width, height);
+    bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
+    bmd.ctx.beginPath();
+    bmd.ctx.rect(0, 0, width, height);
+    bmd.ctx.fill();
+
+    return bmd;
+  }
+
+  setPositionToTopOfParent(parent, margin = ProgressBar.densityPixels(5) ){
+    this.setPosition(parent.x, parent.top - this.bgSprite.height / 2 - margin);
   }
   setPositionOfLeftEdge(x,y){
     this.setPosition(x + this.width / 2, y);
@@ -133,7 +118,7 @@ export default class ProgressBar {
     this.setPosition(x - this.width / 2, y);
   }
 
-  setPosition(x = this.x, y = this.y){
+  setPosition(x = 0, y = 0){
     this.x = x;
     this.y = y;
 
@@ -144,7 +129,7 @@ export default class ProgressBar {
 
       this.barSprite.x = x;
       //bgSprite has X anchor=0.5 while barSprites anchor is 0 (flipped) or 1 (not flipped/normal). Apply an offset so their x positions match each other
-      this.barSprite.x += (this.flipped) ? this.getWidth()/2 : - this.getWidth()/2;
+      this.barSprite.x += (this.barShrinksRightToLeft) ? this.getWidth()/2 : - this.getWidth()/2;
       this.barSprite.y = y;
     }
   }
@@ -187,22 +172,19 @@ export default class ProgressBar {
     this.bgSprite.tint = this.backgroundBarColor;
   }
 
-  setPercent(newValue){
-    if(newValue < 0)       { newValue = 0; }
-    else if(newValue > 100){ newValue = 100; }
+  setPercent(newPercent){
+    if(newPercent < 0)       { newPercent = 0; }
+    else if(newPercent > 100){ newPercent = 100; }
 
-    this.setBarColor(newValue);
+    this.setBarColor(newPercent);
 
-    var newWidth =  (newValue * this.getWidth()) / 100;
+    var newWidth =  (newPercent * this.getWidth()) / 100;
 
-    this.setWidth(newWidth);
-  }
-
-  setWidth(newWidth){
-    if(this.flipped) {
-      newWidth = -1 * newWidth;
-    }
-    this.game.add.tween(this.barSprite).to( { width: newWidth }, this.animationDuration, Phaser.Easing.Linear.None, true);
+    //perform the resizing
+    const cropRect =  new Phaser.Rectangle(0, 0, newWidth, this.getBarHeight());
+    this.barSprite.crop(cropRect);
+    console.log(cropRect)
+    this.barSprite.updateCrop();
   }
 
   hide(){
