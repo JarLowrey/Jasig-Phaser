@@ -53,6 +53,7 @@ export default class Ship extends Unit {
       weapon.fireRate = weaponInfo.fireRate;
       weapon.autoFire = true;
 
+      weapon.bullets.dmg = 25; //this is
 
       const offset = (weaponInfo.xPercentOffset || 50) / 100;
       weapon.trackSprite(this, this.width * offset, 0);
@@ -151,6 +152,11 @@ export default class Ship extends Unit {
     super.kill(false); //do not show explosion upon death, instead show it after deathTween completes
     this.goldText.showGoldText(this.jsonInfo.resourceValue, this.x, this.y);
     this.showExplosion();
+  }
+
+  static bulletCollision(bullet, unit){
+    if( unit.isAlive() ) bullet.kill();
+    if( unit.isAlive() ) unit.damage(bullet.parent.dmg);
   }
 
 }

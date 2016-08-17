@@ -6,7 +6,7 @@
  */
 
 import ParentSprite from '../objects/Sprites/ParentSprite';
-import Bullet from '../objects/Sprites/Bullet';
+//import Bullet from '../objects/Sprites/Bullet';
 import Bonus from '../objects/Sprites/Bonus';
 import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
@@ -46,35 +46,45 @@ export default class Game extends Phaser.State {
   }
 
   collisionDectection(){
+    const friendlyShips = ParentSprite.getPool(Ship, true, this.game);
+    const enemyShips = ParentSprite.getPool(Ship, false, this.game);
+
+    //const friendlyUnits = ParentSprite.getPool(Unit, true, this.game);
+    const enemyUnits = ParentSprite.getPool(Unit, false, this.game);
+
+    const bonuses = ParentSprite.getPool(Bonus, null, this.game);
+
     this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Ship, true, this.game),        //friendly ships
-      ParentSprite.getPool(Unit, false, this.game),       //enemy units
+      friendlyShips,
+      enemyUnits,
       Unit.unitCollision, null, this);
 
     this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Ship, true, this.game),        //friendly ships
-      ParentSprite.getPool(Ship, false, this.game),       //enemy ships
+      friendlyShips,
+      enemyShips,
       Unit.unitCollision, null, this);
 
-    this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Bullet, true, this.game, 25),  //friendly bullets
-      ParentSprite.getPool(Unit, false, this.game),       //enemy units
-      Bullet.bulletCollision, null, this);
+    this.overlapBullets(enemyShips, friendlyShips);
+    this.overlapBullets(friendlyShips, enemyUnits);
+    this.overlapBullets(friendlyShips, enemyShips);
 
     this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Bullet, true, this.game, 25),  //friendly bullets
-      ParentSprite.getPool(Ship, false, this.game),       //enemy ships
-      Bullet.bulletCollision, null, this);
-
-    this.game.physics.arcade.overlap(
-      ParentSprite.getPool(Bullet, false, this.game, 25),  //enemy bullets
-      ParentSprite.getPool(Ship, true, this.game),       //friendly ships
-      Bullet.bulletCollision, null, this);
-
-    this.game.physics.arcade.overlap(
-      this.hero,                                          //hero
-      ParentSprite.getPool(Bonus, null, this.game),       //bonuses
+      this.hero,
+      bonuses,
       Bonus.bonusCollision, null, this);
+  }
+
+  //each ship has a list of weapons, and each weapon has its own pool of bullets
+  overlapBullets(ships, overlapGroup){
+    for(var i=0;i<ships.length;i++){
+      const ship = ships.getChildAt(i);
+
+      if(ship.alive){
+        ship.weapons.forEach(function(weapon){
+          this.game.physics.arcade.overlap(weapon.bullets, overlapGroup, Ship.bulletCollision, null, this);
+        }.bind(this));
+      }
+    }
   }
 
   render(){
