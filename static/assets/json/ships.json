@@ -3,10 +3,9 @@
     "frame":"ship_protagonist",
     "health":1000,
     "width": 50,
-    "guns":{
+    "weapons":{
       "startingGun":{
-        "gunType":"angledTriShot",
-        "bulletType":"default",
+        "weaponName":"angledTriShot",
         "x%Pos":50
       }
     }
@@ -20,10 +19,9 @@
       "min": 5,
       "max": 50
     },
-    "guns":{
+    "weapons":{
       "startingGun":{
-        "gunType":"straightShot",
-        "bulletType":"default",
+        "weaponName":"straightShot",
         "x%Pos":50
       }
     }

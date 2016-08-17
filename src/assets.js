@@ -74,9 +74,9 @@ export default {
     type: 'json',
     url: 'json/units.json'
   },{
-    key: 'guns',
+    key: 'weapons',
     type: 'json',
-    url: 'json/guns.json'
+    url: 'json/weapons.json'
   },{
     key: 'bullets',
     type: 'json',

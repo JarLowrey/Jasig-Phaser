@@ -43,6 +43,8 @@ export default class WaveHandler {
 
   startWave(){
     this.spawn();
+
+    //timer to end the wave
     this.waveTimer.add(WaveHandler.timeNeededToEndWave(this.wave), this.endWave, this);
     this.waveTimer.start();
     this.waveIsOver = false;

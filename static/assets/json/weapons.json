@@ -1,6 +1,6 @@
 {
   "straightShot":{
-    "cooldown":700,
+    "fireRate":700,
     "shots":{
       "straightShot":{
         "angle":90,
@@ -9,7 +9,7 @@
     }
   },
   "straightDualShot":{
-    "cooldown":800,
+    "fireRate":800,
     "shots":{
       "leftShot":{
         "angle":90,
@@ -22,7 +22,7 @@
     }
   },
   "straightTriShot":{
-    "cooldown":700,
+    "fireRate":700,
     "shots":{
       "leftShot":{
         "angle":90,
@@ -39,7 +39,7 @@
     }
   },
   "angledDualShot":{
-    "cooldown":800,
+    "fireRate":800,
     "shots":{
       "rightShot":{
         "angle":80,
@@ -52,7 +52,7 @@
     }
   },
   "angledTriShot":{
-    "cooldown":800,
+    "fireRate":800,
     "shots":{
       "leftShot":{
         "angle":100,

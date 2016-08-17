@@ -18,7 +18,7 @@ export default class Gun {
 
     this.canShoot = true;
     this.shooter = shooter;
-    this.cooldownTimer = game.time.create(false);
+    this.fireRate = game.time.create(false);
   }
 
   changeGun(gunName, bulletName){
@@ -33,17 +33,17 @@ export default class Gun {
     this.target = trackingTarget;
     this.shoot(xPercentageOnShooter, yPercentageOnShooter);
 
-    this.cooldownTimer.add(this.jsonInfo.cooldown, this.canShootAgain, this, true, xPercentageOnShooter, yPercentageOnShooter, trackingTarget);
-    this.cooldownTimer.start();
+    this.fireRate.add(this.jsonInfo.fireRate, this.canShootAgain, this, true, xPercentageOnShooter, yPercentageOnShooter, trackingTarget);
+    this.fireRate.start();
 
   }
 
   stopShooting(){
-    //const remainingTime = this.cooldownTimer.duration;
+    //const remainingTime = this.fireRate.duration;
 
-    this.cooldownTimer.stop();
-    this.cooldownTimer.add(this.jsonInfo.cooldown, this.canShootAgain, this);
-    this.cooldownTimer.start();
+    this.fireRate.stop();
+    this.fireRate.add(this.jsonInfo.fireRate, this.canShootAgain, this);
+    this.fireRate.start();
   }
 
   canShootAgain(fireShot = false, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget){
