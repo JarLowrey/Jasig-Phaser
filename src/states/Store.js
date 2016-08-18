@@ -1,11 +1,18 @@
 /*
  * Store state
  */
+ import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
+ import ProgressPie from '../objects/UI/ProgressPie';
+
 
 export default class Store extends Phaser.State {
 
   create() {
     this.text = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Store',{'fill':'#ffffff'});
+
+    var item = new UpgradableStoreItem(this.game, 75, 200, 15, 6, 'sprites', 'upgrade_inc_gun');
+    item.x = this.game.world.centerX / 2;
+    item.y = this.game.world.centerY;
   }
 
   update() {
