@@ -45,7 +45,8 @@ export default class Protagonist extends Ship {
     this.healthbar.setSize(healthbarJson.width, healthbarJson.height, healthbarJson.strokeLength);
     this.healthbar.flip();
     this.healthbar.setBarColor(100, '0xcccccc');
-    this.healthbar.setPositionOfRightEdge(this.game.world.width - healthbarJson.x, healthbarJson.y);
+    this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width,
+    this.healthbar.y = healthbarJson.y - this.healthbar.height;
     this.healthbar.setPercent(100);
     this.healthbar.setTextStyle(this.game.fonts['ui_progress_bars']);
     this.healthbar.setText( this.getHealthbarText() );

@@ -36,7 +36,6 @@ export default class UpgradableStoreItem extends Phaser.Group {
     const bulletHeightPlusMargin = totalHeightForBullets / maxUpgradesNum;
     const bulletHeight = bulletHeightPlusMargin / 2;
     const bulletMargin = bulletHeightPlusMargin - bulletHeight;
-    console.log(totalHeightForBullets, bulletHeightPlusMargin, bulletHeight, bulletMargin);
 
     const bmpData = this.getUpgradeBitmapData(this.groupWidth / 2, bulletHeightPlusMargin / 2);
     for(var i=0; i<maxUpgradesNum; i++){

@@ -14,14 +14,17 @@ export default class Ship extends Unit {
     super(game);
 
     this.healthbar = new ProgressBar(this.game);
-    this.healthbar.hide(); //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
+    this.healthbar.visible = false; //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
   }
 
   update(){
     if(!this.alive) return;
 
     super.update();
-    if(this.getClassName() != 'Protagonist') this.healthbar.setPositionToTopOfParent(this);
+    if(this.getClassName() != 'Protagonist'){
+      this.healthbar.x = this.x;
+      this.healthbar.y = this.top - this.healthbar.height / 2;
+    }
     if(this.canShoot) this.fireWeapons();
   }
 
@@ -32,7 +35,7 @@ export default class Ship extends Unit {
     this.healthbar.setSize('100%', null, 0, this);
     this.healthbar.setPercent(100);
     this.healthbar.setText( this.getHealthbarText() );
-    this.healthbar.show();
+    this.healthbar.visible = false;
 
     this.canShoot = false;
 
