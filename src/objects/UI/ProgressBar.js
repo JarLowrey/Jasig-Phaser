@@ -3,23 +3,13 @@
 export default class ProgressBar extends Phaser.Group{
 
   constructor(game, width = 500, height = 100, barShrinksTowardsLeft = true, outlineLength = 8,
-      backgroundBarColor = '0x651828', outlineColor = '0xffffff', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
-      fontStyle = game.fonts['progress_bar'], text ='', radius = 50){
+      backgroundBarColor = '0x651828', outlineBarColor = '0xffffff', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
+      fontStyle = game.fonts['progress_bar'], text =''){
     super(game);
 
     this.strokeLength = outlineLength;
     this.barShrinksTowardsLeft = barShrinksTowardsLeft;
 
-    this.backgroundBarColor = backgroundBarColor;
-    this.outlineBarColor = outlineColor;
-    this.barColor = barColor;
-
-    this.setRadius(radius, width, height);
-
-    this.createNewBackgroundGraphic(width, height);
-    this.createNewBarGraphic(width, height);
-
-/*
     //Create sprites. The bars must use different texture, otherwise the cropping in setPercent will affect them all
     this.outlineSprite = this.game.add.sprite(0, 0, this.getRectangleBitmapData(width, height));
     this.outlineSprite.anchor.setTo(0.5,0.5);
@@ -32,82 +22,17 @@ export default class ProgressBar extends Phaser.Group{
     this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getRectangleBitmapData(width, height));
     this.barSprite.anchor.setTo(this.getBarXAnchor(),0.5);
     this.addChild(this.barSprite);
-*/
+
     this.text = this.game.add.text(0,0);
     this.text.anchor.setTo(0.5,0.4);
     this.addChild(this.text);
 
     //set sprite properties
-    this.setBarColor(null, backgroundBarColor, outlineColor, barColor);
+    this.setBarColor(null, backgroundBarColor, outlineBarColor, barColor);
     this.setTextStyle(fontStyle);
     this.setText(text);
     this.setSize(width, height, outlineLength);
-    this.setPercent(10); //this also sets bar color, not that the bars are defined
-  }
-
-  setRadius(radius, width, height){
-    //these extra vars are only for use in the constructor, where this.width and this.height will be set after the radius
-    if(this.width > 0) width = this.width;
-    if(this.height > 0) height = this.width;
-
-    const max_dimen = Math.min(width, height); //cannot be >= Max_Dimension / 2
-    radius = Math.min(radius, 50); //max radius is 50%
-
-    this.radius = max_dimen * (radius / 100) - 1;
-  }
-
-  createNewBackgroundGraphic(width, height){
-    if(this.bgGraphic){
-      this.removeChild(this.bgGraphic);
-      this.bgGraphic.kill();
-    }
-
-    this.bgGraphic = this.getNewBar(width, height, this.strokeLength, //need to multiply by 2, as the front bar will overlap half of the background bar
-      this.backgroundBarColor, this.outlineBarColor);
-
-    this.addChild(this.bgGraphic);
-  }
-
-  createNewBarGraphic(width, height, percent){
-    if(this.barGraphic){
-      this.removeChild(this.barGraphic);
-      this.barGraphic.kill();
-    }
-
-    //colors must be white for tint to apply. Apply a stroke, otherwise it won't overlap well.
-    this.barGraphic = this.getNewBar(width,height, 0, 0xffffff, 0xffffff, percent);
-
-    this.barGraphic.anchor.x = 0;
-    this.barGraphic.tint = '0xffffff';
-    this.addChild(this.barGraphic);
-  }
-
-  getNewBar(width, height, strokeLen, bgColor, outlineColor, percent = 100){
-    var bar = this.game.add.graphics(- width / 2, - height / 2);
-    bar.anchor.setTo(0.5,0.5);
-
-    percent /= 100;
-
-    const newWidth = percent * width;
-    const x = (this.barShrinksTowardsLeft) ? 0 : width - newWidth;
-
-    bar.boundsPadding = 0;
-    bar.lineStyle(strokeLen, outlineColor, 1);
-
-    if(this.radius > 0){ //radius is provided, draw a rounded rectangle
-      bar.drawRoundedRect(x, 0, newWidth, height, this.radius);
-
-      //draw fill
-      bar.beginFill(bgColor);
-      bar.drawRoundedRect(x, 0, newWidth, height, this.radius);
-      bar.endFill();
-    }else{ //0 radius => draw normal rectangle
-      bar.beginFill(bgColor);
-      bar.drawRect(x,0,newWidth,height);
-      bar.endFill();
-    }
-
-    return bar;
+    this.setPercent(100); //this also sets bar color, not that the bars are defined
   }
 
   setSize(width, height, outlineLength, parent){
@@ -118,13 +43,25 @@ export default class ProgressBar extends Phaser.Group{
     else if(typeof height == 'number'){                                     height = ProgressBar.densityPixels(height);}
     if(typeof outlineLength == 'number'){                                   this.strokeLength = ProgressBar.densityPixels(outlineLength); }
 
-    this.width = width;
-    this.height = height;
+    this.barSprite.width = width - this.strokeLength;
+    this.barSprite.height = height - this.strokeLength;
+
+    this.bgSprite.width = width - this.strokeLength;
+    this.bgSprite.height = height - this.strokeLength;
+
+    this.outlineSprite.width = width;
+    this.outlineSprite.height = height;
+
     this.setTextSizeToBarSize();
   }
 
   flip(){
     this.barShrinksTowardsLeft = !this.barShrinksTowardsLeft;
+
+    this.barSprite.anchor.x = this.getBarXAnchor();
+    this.barSprite.scale.x *= -1;
+    this.barSprite.x = this.getBarXPosition();
+
   }
 
   getBarXAnchor(){
@@ -195,17 +132,18 @@ export default class ProgressBar extends Phaser.Group{
       for(var i=0; i<this.barColor.length; i++){
         const barColorInstance = this.barColor[i];
         if(progressPercentageRemaining <= barColorInstance.threshold){
-          this.barGraphic.tint = barColorInstance.color;
+          this.barSprite.tint = barColorInstance.color;
           break;
         }
       }
     }
     //Bar has a static color
     else{
-      this.barGraphic.tint = this.barColor;
+      this.barSprite.tint = this.barColor;
     }
 
-    this.bgGraphic.tint = this.backgroundBarColor;
+    this.outlineSprite.tint = this.outlineBarColor;
+    this.bgSprite.tint = this.backgroundBarColor;
   }
 
   setPercent(newPercent){
@@ -216,13 +154,9 @@ export default class ProgressBar extends Phaser.Group{
 
     const newWidth = (newPercent / 100) * this.width;
 
-    if(this.barGraphic instanceof Phaser.Sprite ){
-      const cropRect = new Phaser.Rectangle(0, 0, newWidth, this.height);
-      this.barGraphic.crop(cropRect);
-      this.barGraphic.x = this.getBarXPosition();
-    }else{       //crop does not apply to graphics objects
-      //this.barGraphic.width = newWidth; //distorts the sprite
-      //this.createNewBarGraphic(this.width, this.height, newPercent); // does not work when radius is too small
-    }
+
+    const cropRect = new Phaser.Rectangle(0, 0, newWidth, this.height);
+    this.barSprite.crop(cropRect);
+    this.barSprite.x = this.getBarXPosition();
   }
 }

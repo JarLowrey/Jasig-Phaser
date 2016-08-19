@@ -18,7 +18,7 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.upgradePicFrame = upgradePicFrame;
 
     //setup background
-    this.backgroundGraphic = game.add.graphics(0, - height / 2);
+    this.backgroundGraphic = game.add.graphics(- width / 2, - height / 2);
     this.setBackgroundGraphicProperties(width, height);
     this.addChild(this.backgroundGraphic);
 
@@ -51,7 +51,6 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.icon.anchor.setTo(0.5,0.5);
     this.icon.width = this.width * 0.75;
     this.icon.height = this.icon.width;
-    this.icon.x = this.width / 2;
     this.icon.y = this.height / 2 - this.icon.height / 2 - this.marginFromSides;
   }
 
