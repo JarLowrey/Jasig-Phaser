@@ -32,9 +32,21 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.setNumberUpgradeBullets(currentUpgradeNum, maxUpgradesNum);
   }
 
-  setBackgroundGraphicProperties(width, height, lineWidth = 5, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radius = width / 2){
+  getRadiusFromPercent(radiusPercent, width, height){
+      //these extra vars are only for use in the constructor, where this.width and this.height will be set after the radius
+      if(this.width > 0) width = this.width;
+      if(this.height > 0) height = this.width;
+
+      const min_dimen = Math.min(width, height); //cannot be >= Max_Dimension / 2
+      radiusPercent = Math.min(radiusPercent, 50); //max radius is 50%
+
+      const radius = min_dimen * (radiusPercent / 100) - 1;
+      return Math.max(0.1,radius); //radius must be >0 to be a rectangle
+    }
+
+  setBackgroundGraphicProperties(width, height, lineWidth = 3, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radiusPercent = 25){
     this.backgroundGraphic.anchor.setTo(0.5,0.5);
-    radius = Math.min(radius, width / 2 - 1, height / 2 - 1); //cannot be >= Max_Dimension / 2
+    const radius = this.getRadiusFromPercent(radiusPercent, width, height);
 
     //draw outline
     this.backgroundGraphic.boundsPadding = 0;

@@ -2,7 +2,7 @@
 
 export default class ProgressBar extends Phaser.Group{
 
-  constructor(game, width = 500, height = 100, barShrinksTowardsLeft = true, outlineLength = 8,
+  constructor(game, width = 100, height = 12, barShrinksTowardsLeft = true, outlineLength = 4,
       backgroundBarColor = '0x651828', outlineBarColor = '0xffffff', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
       fontStyle = game.fonts['progress_bar'], text =''){
     super(game);
@@ -11,15 +11,15 @@ export default class ProgressBar extends Phaser.Group{
     this.barShrinksTowardsLeft = barShrinksTowardsLeft;
 
     //Create sprites. The bars must use different texture, otherwise the cropping in setPercent will affect them all
-    this.outlineSprite = this.game.add.sprite(0, 0, this.getRectangleBitmapData(width, height));
+    this.outlineSprite = this.game.add.sprite(0, 0, this.getBarBitmapData(width, height));
     this.outlineSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.outlineSprite);
 
-    this.bgSprite = this.game.add.sprite(0, 0, this.getRectangleBitmapData(width - this.strokeLength, height - this.strokeLength));
+    this.bgSprite = this.game.add.sprite(0, 0, this.getBarBitmapData(width - this.strokeLength, height - this.strokeLength));
     this.bgSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.bgSprite);
 
-    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getRectangleBitmapData(width - this.strokeLength, height - this.strokeLength));
+    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getBarBitmapData(width - this.strokeLength, height - this.strokeLength));
     this.barSprite.anchor.setTo(this.getBarXAnchor(),0.5);
     this.addChild(this.barSprite);
 
@@ -34,19 +34,25 @@ export default class ProgressBar extends Phaser.Group{
     this.setPercent(100); //this also sets bar color, not that the bars are defined
   }
 
-  flip(){
-    this.barShrinksTowardsLeft = !this.barShrinksTowardsLeft;
+  setWidth(newWidth){
+    this.outlineSprite.width = newWidth;
+    this.bgSprite.width = newWidth - this.strokeLength;
+    this.barSprite.width = newWidth - this.strokeLength;
 
-    this.barSprite.anchor.x = this.getBarXAnchor();
-    this.barSprite.scale.x *= -1;
-    this.barSprite.x = this.getBarXPosition();
+    this.barSprite.x = this.getBarXPosition(newWidth);
+  }
+  setHeight(newHeight){
+    this.outlineSprite.height = newHeight;
+    this.bgSprite.height = newHeight;
+    this.barSprite.height = newHeight;
   }
 
   getBarXAnchor(){
     return (this.barShrinksTowardsLeft) ? 0 : 1;
   }
-  getBarXPosition(){
-    return (this.barShrinksTowardsLeft) ? - this.width / 2 + this.strokeLength / 2 : this.width / 2 - this.strokeLength / 2;
+  getBarXPosition(newWidth){
+    if(!newWidth) newWidth = this.width;
+    return (this.barShrinksTowardsLeft) ? - newWidth / 2 + this.strokeLength / 2: newWidth / 2 - this.strokeLength / 2;
   }
 
   static densityPixels(pixel){
@@ -68,11 +74,20 @@ export default class ProgressBar extends Phaser.Group{
     this.text.fontSize = this.height  * 0.45;
   }
 
-  getRectangleBitmapData(width, height){
+  /*
+    Edit this function to change the appearance of the bars. Peruse the bitmap data API for reference
+    http://phaser.io/docs/2.6.1/Phaser.BitmapData.html
+  */
+  getBarBitmapData(width, height){
+    const radius = height / 2;
     var bmd = this.game.add.bitmapData(width, height);
+
+    bmd.circle(radius, radius, radius,'#ffffff');
+    bmd.circle(width - radius, radius, radius,'#ffffff');
+
     bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, width, height);
+    bmd.ctx.rect(radius, 0, width - radius * 2, height);
     bmd.ctx.fill();
 
     return bmd;
@@ -119,16 +134,20 @@ export default class ProgressBar extends Phaser.Group{
   }
 
   setPercent(newPercent){
-    if(newPercent < 0)       { newPercent = 0; }
-    else if(newPercent > 100){ newPercent = 100; }
+    //artifacts show up if you crop <=0. Thus hide it and return instead
+    this.barSprite.visible = newPercent > 0;
+    if( !this.barSprite.visible ) return;
+
+    if(newPercent > 100){ newPercent = 100; }
 
     this.setBarColor(newPercent);
 
+    //Create the cropping parameters: set the new, cropped image properties.
     const newWidth = (newPercent / 100) * this.width;
+    const x = (this.barShrinksTowardsLeft) ? 0 : this.width - newWidth;
+    const cropRect = new Phaser.Rectangle(x, 0, newWidth, this.height);
 
-
-    const cropRect = new Phaser.Rectangle(0, 0, newWidth, this.height);
+    //perform the crop!
     this.barSprite.crop(cropRect);
-    this.barSprite.x = this.getBarXPosition();
   }
 }

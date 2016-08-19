@@ -32,10 +32,12 @@ export default class Ship extends Unit {
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, x, y, isFriendly, 'ships');
 
-    this.healthbar.width = this.width;
+    //this.healthbar.width = this.width;
     this.healthbar.setPercent(100);
     this.healthbar.setText( this.getHealthbarText() );
-    this.healthbar.visible = false;
+    this.healthbar.setWidth(this.width);
+    console.log(this.width, this.healthbar.width);
+    this.healthbar.visible = true;
 
     this.canShoot = false;
 
