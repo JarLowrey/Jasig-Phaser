@@ -32,7 +32,7 @@ export default class Ship extends Unit {
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, x, y, isFriendly, 'ships');
 
-    this.healthbar.setSize('100%', null, 0, this);
+    this.healthbar.width = this.width;
     this.healthbar.setPercent(100);
     this.healthbar.setText( this.getHealthbarText() );
     this.healthbar.visible = false;
@@ -82,7 +82,6 @@ export default class Ship extends Unit {
       if(bulletWasFired && this.game.bullets[weapon.bulletType].isTinted){
         const bullet = weapon.bullets.getChildAt(0); //TODO get the proper bullet, this is not right!!!!!!!!!!!!1111
         bullet.tint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-        console.log(bullet);
       }
     }.bind(this));
   }
@@ -94,12 +93,15 @@ export default class Ship extends Unit {
     super.damage(amount);
 
     //little tween to show damage occurred
-    const xTweenLen = ParentSprite.dp(6) * Math.random() + ParentSprite.dp(6);
-    const tweenTime = 7;
+    //const tempAngle = this.angle;
+    const resetAngle = function(){ this.angle = 0; }.bind(this);
+    const tweenAngle = 10 + 10 * Math.random();
+    const tweenTime = 4;
     var tween = this.game.add.tween(this)
-      .to({x:'-'+xTweenLen}, tweenTime, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
-      .to({x:'+'+xTweenLen}, tweenTime, Phaser.Easing.Linear.In)
+      .to({angle: -tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
+      .to({angle:  tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
       .repeatAll(1);
+    tween.onComplete.add(resetAngle, this);
     tween.start();
 
     this.setHealthBarPercentage();
@@ -126,7 +128,7 @@ export default class Ship extends Unit {
 
     this.isBeingKilled = true;
     this.stopShooting();
-    this.healthbar.hide();
+    this.healthbar.visible = false;
 
     if(showCoolStuff){
       this.visible = true;
@@ -136,7 +138,7 @@ export default class Ship extends Unit {
 
   playDeathTween(){
     //setup tween to be played upon this.kill()
-    const xTweenLen = ParentSprite.dp(10) * Math.random() + ParentSprite.dp(10);
+    const xTweenLen = ParentSprite.dp(15) * Math.random() + ParentSprite.dp(15);
     const tweenAngle = 30 + 30 * Math.random();
     const tweenTime = 35;
     var tween = this.game.add.tween(this)

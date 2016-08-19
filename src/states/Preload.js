@@ -57,7 +57,7 @@ export default class Preload extends Phaser.State {
 
   moveOnToNextState(){
     if(this.splashScreenOver && this.load.hasLoaded){ //splash screen has been shown for a minimum amount of time, and loading assets is finished
-      this.state.start('Store');
+      this.state.start('Game');
     }
   }
 

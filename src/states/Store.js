@@ -1,8 +1,8 @@
 /*
  * Store state
  */
- import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
- import ProgressBar from '../objects/UI/ProgressBar';
+import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
+import ProgressBar from '../objects/UI/ProgressBar';
 
 
 export default class Store extends Phaser.State {
@@ -21,8 +21,6 @@ export default class Store extends Phaser.State {
     bar.x = this.game.world.centerX;
     bar.y = this.game.world.centerY;
     bar.setText('asd');
-    //bar.setSize(healthbarJson.width, healthbarJson.height, healthbarJson.strokeLength);
-    console.log(bar);
   }
 
   update() {

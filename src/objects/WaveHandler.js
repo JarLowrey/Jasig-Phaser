@@ -30,9 +30,10 @@ export default class WaveHandler {
     this.waveTimer = game.time.create(false);
 
     const countDownJson = this.game.dimen['game_countdown'];
-    this.progressBar = new ProgressBar(game, 0,0, countDownJson.width, countDownJson.height, countDownJson.strokeLength, '0xcccccc', '0xffffff', '0x75c9e5');
-    this.progressBar.flip();
-    this.progressBar.setPositionOfRightEdge(this.game.world.width - countDownJson.x, countDownJson.y);
+    this.progressBar = new ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
+      false, countDownJson.strokeLength, '0xcccccc', '0xffffff', '0x75c9e5');
+    this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
+    this.progressBar.y = countDownJson.y;
   }
 
   updateProgress(){
@@ -81,7 +82,7 @@ export default class WaveHandler {
   }
 
   spawnSprite( newEnemyJsonName, newEnemyClass,
-      x = this.game.world.width * (Math.random() * 0.9 + 0.1) , //spawn in middle 90% of screen
+      x = (this.game.world.width * 0.9 + 0.1) * Math.random() , //spawn in middle 90% of screen
       y = - ParentSprite.dp(5), //spawn a bit offscreen
       isFriendly = false){
 

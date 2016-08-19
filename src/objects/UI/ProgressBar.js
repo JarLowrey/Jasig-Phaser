@@ -15,11 +15,11 @@ export default class ProgressBar extends Phaser.Group{
     this.outlineSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.outlineSprite);
 
-    this.bgSprite = this.game.add.sprite(0, 0, this.getRectangleBitmapData(width, height));
+    this.bgSprite = this.game.add.sprite(0, 0, this.getRectangleBitmapData(width - this.strokeLength, height - this.strokeLength));
     this.bgSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.bgSprite);
 
-    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getRectangleBitmapData(width, height));
+    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getRectangleBitmapData(width - this.strokeLength, height - this.strokeLength));
     this.barSprite.anchor.setTo(this.getBarXAnchor(),0.5);
     this.addChild(this.barSprite);
 
@@ -31,28 +31,7 @@ export default class ProgressBar extends Phaser.Group{
     this.setBarColor(null, backgroundBarColor, outlineBarColor, barColor);
     this.setTextStyle(fontStyle);
     this.setText(text);
-    this.setSize(width, height, outlineLength);
     this.setPercent(100); //this also sets bar color, not that the bars are defined
-  }
-
-  setSize(width, height, outlineLength, parent){
-    //set width/height variables
-    if(typeof width == 'string' && width.charAt(width.length-1) =='%'){     width = this.percentWidthToPixels(width, parent); }
-    else if(typeof width == 'number'){                                      width = ProgressBar.densityPixels(width);}
-    if(typeof height == 'string' && height.charAt(height.length-1) =='%'){  height = this.percentHeightToPixels(height, parent); }
-    else if(typeof height == 'number'){                                     height = ProgressBar.densityPixels(height);}
-    if(typeof outlineLength == 'number'){                                   this.strokeLength = ProgressBar.densityPixels(outlineLength); }
-
-    this.barSprite.width = width - this.strokeLength;
-    this.barSprite.height = height - this.strokeLength;
-
-    this.bgSprite.width = width - this.strokeLength;
-    this.bgSprite.height = height - this.strokeLength;
-
-    this.outlineSprite.width = width;
-    this.outlineSprite.height = height;
-
-    this.setTextSizeToBarSize();
   }
 
   flip(){
@@ -61,7 +40,6 @@ export default class ProgressBar extends Phaser.Group{
     this.barSprite.anchor.x = this.getBarXAnchor();
     this.barSprite.scale.x *= -1;
     this.barSprite.x = this.getBarXPosition();
-
   }
 
   getBarXAnchor(){
@@ -73,12 +51,6 @@ export default class ProgressBar extends Phaser.Group{
 
   static densityPixels(pixel){
     return pixel * window.window.devicePixelRatio;
-  }
-  percentWidthToPixels(percent, parent = this.game.world){
-    return parent.width * (parseFloat(percent) / 100.0);
-  }
-  percentHeightToPixels(percent, parent = this.game.world){
-    return parent.height * (parseFloat(percent) / 100.0);
   }
 
   setText(text){
@@ -93,7 +65,7 @@ export default class ProgressBar extends Phaser.Group{
   }
 
   setTextSizeToBarSize(){
-    this.text.fontSize = this.height / 2;
+    this.text.fontSize = this.height  * 0.45;
   }
 
   getRectangleBitmapData(width, height){

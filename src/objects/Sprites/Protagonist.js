@@ -5,6 +5,7 @@
  */
 import Ship from '../Sprites/Ship';
 import ParentSprite from '../Sprites/ParentSprite';
+import ProgressBar from '../../objects/UI/ProgressBar';
 
 export default class Protagonist extends Ship {
 
@@ -42,14 +43,16 @@ export default class Protagonist extends Ship {
 
     //setup healthbar
     const healthbarJson = this.game.dimen['game_health'];
-    this.healthbar.setSize(healthbarJson.width, healthbarJson.height, healthbarJson.strokeLength);
-    this.healthbar.flip();
-    this.healthbar.setBarColor(100, '0xcccccc');
-    this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width,
-    this.healthbar.y = healthbarJson.y - this.healthbar.height;
-    this.healthbar.setPercent(100);
-    this.healthbar.setTextStyle(this.game.fonts['ui_progress_bars']);
+    this.healthbar.destroy(); //delete the bar given to this by the parent, Ship
+    this.healthbar = new ProgressBar(this.game, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
+      false, healthbarJson.strokeLength);
     this.healthbar.setText( this.getHealthbarText() );
+    this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width / 2;
+    this.healthbar.y = healthbarJson.y;
+    this.healthbar.setTextSizeToBarSize();
+
+    this.body.mass = .001; //reduce the mass so collisions aren't as forceful
+    this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
 
     //setup begin/end shooting events
     this.game.input.onDown.add(this.startShooting.bind(this), this );
@@ -63,7 +66,7 @@ export default class Protagonist extends Ship {
 
   kill(){
     super.kill();
-    this.healthbar.show(); //leave healthbar showing while this is dying
+    this.healthbar.visible = true; //leave healthbar showing while this is dying
   }
 
   getHealthbarText(){

@@ -35,7 +35,11 @@ export default class Unit extends ParentSprite {
     this.setAnchor(isFriendly);
     this.setYDestination();
 
+    //set body related variables
     this.body.velocity.y = 300;
+    this.body.maxVelocity.setTo(600, 600);
+    this.body.drag.setTo(0,0);
+
     this.reachedYDestination = false;
     this.isBeingKilled = false;
   }
@@ -93,6 +97,10 @@ export default class Unit extends ParentSprite {
     //apply their damages, so long as they are still alive
     if( enemyUnit.isAlive() ) friendlyUnit.damage(50);
     if( friendlyUnit.isAlive() ) enemyUnit.damage(10);
+
+    //set a high drag after colliding so enemies dont go flying offscreen.
+    //NOTE: this will cause enemies to stop moving after colliding. It's not the best option but it's the best I got for now
+    //enemyUnit.body.drag.setTo(10000,10000);
   }
 
   isAlive(){
