@@ -16,7 +16,7 @@ import WaveHandler from '../objects/WaveHandler';
 
 import ProgressPie from '../objects/UI/ProgressPie';
 
-import Stars from '../objects/Stars';
+import Stars from '../objects/UI/Stars';
 import UiHelper from '../objects/UI/UiHelper';
 
 export default class Game extends Phaser.State {

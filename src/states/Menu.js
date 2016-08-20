@@ -2,7 +2,7 @@
  * Menu state
  */
 
-import Stars from '../objects/Stars';
+import Stars from '../objects/UI/Stars';
 
 export default class Menu extends Phaser.State {
 

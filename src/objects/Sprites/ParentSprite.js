@@ -20,7 +20,7 @@ export default class ParentSprite extends Phaser.Sprite {
     this.maxHealth = this.jsonInfo.health;
     this.anchor.setTo(0.5,0.5);
 
-    this.loadTexture('sprites', this.jsonInfo.frame);
+    this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);
     this.setAreaMaintainAspectRatio(this.jsonInfo.width);
 
     this.alpha = 1;

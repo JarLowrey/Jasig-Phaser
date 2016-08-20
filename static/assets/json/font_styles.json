@@ -1,6 +1,6 @@
 {
-  "title":{ "font": "82px Arial", "fill": "#ffffff", "align": "center", "stroke":"#000000", "strokeThickness":6},
-  "text":{ "font": "28px Arial", "fill": "#ffffff", "align": "center", "stroke":"#000000", "strokeThickness":3},
+  "title":{ "font": "52px Arial", "fill": "#ffffff", "align": "center", "stroke":"#000000", "strokeThickness":6},
+  "text":{ "font": "18px Arial", "fill": "#ffffff", "align": "center", "stroke":"#000000", "strokeThickness":3, "wordWrap": true},
   "score":{ "font": "45px Arial", "fill": "#ffffff", "stroke": "#535353", "strokeThickness": 10},
   "score_animating":{"font": "15px Arial", "fill": "#39d179", "stroke": "#ffffff", "strokeThickness": 4},
   "sprite_health":{"font": "Arial", "fill": "#ffffff", "stroke": "#000000", "strokeThickness": 2},

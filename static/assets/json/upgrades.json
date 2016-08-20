@@ -5,21 +5,21 @@
   "damage":{
     "title":"Damage",
     "msg":"Increase bullet damage",
-    "maxLevel":20,
+    "maxLevel":10,
     "baseCost":400,
-    "icon":"upgrade_inc_damage"
+    "icon":"explosion"
   },
   "fireRate":{
     "title":"Fire Rate",
     "msg":"Improve firing rate",
-    "maxLevel":20,
+    "maxLevel":10,
     "baseCost":400,
-    "icon":"upgrade_inc_freq"
+    "icon":"bullet"
   },
   "defense":{
     "title":"Defense",
     "msg":"Increase shield capacity",
-    "maxLevel":20,
+    "maxLevel":10,
     "baseCost":1000,
     "icon":"shield"
   },
@@ -28,7 +28,7 @@
     "msg":"Improve ability to gather space debris. Increases rate of resource retrieval.",
     "maxLevel":5,
     "baseCost":10000,
-    "icon":"resources"
+    "icon":"coins"
   },
   "repair":{
     "title":"Repair",
@@ -43,10 +43,10 @@
     "alt_msg":"Increase the freqeuncy of the beacon's signal to attract stronger allies.",
     "maxLevel":5,
     "baseCost":100,
-    "icon":"ship_ally_0"
+    "icon":"ally"
   },
   "guns":{
-    "icon":"upgrade_inc_gun",
+    "icon":"gun",
     "gunLevels":[
       {
       "msg":"The ship's main blaster was damaged on launch. It wouldn't take much to fix it up.",

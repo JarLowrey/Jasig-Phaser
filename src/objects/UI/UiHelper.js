@@ -8,9 +8,13 @@ import ParentSprite from '../../objects/Sprites/ParentSprite';
 
 export default class UiHelper {
 
-
   constructor(game){
     this.game = game;
+  }
+
+  //density independent pixels
+  static dp(pixels){
+    return pixels * window.devicePixelRatio;
   }
 
   static addImage(game, x, y, key, frameName, width, height){

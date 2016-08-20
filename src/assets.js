@@ -222,6 +222,11 @@ export default {
     //  assumed.
     //
     //  If `textureURL` is omitted, a pattern `<key>.png` is assumed.
+    key: 'icons',
+    type: 'atlasJSONHash',
+    atlasURL: 'spritesheets/icons.json',
+    textureURL: 'spritesheets/icons.png'
+  },{
     key: 'sprites',
     type: 'atlasJSONHash',
     atlasURL: 'spritesheets/game_sprites.json',

@@ -4,7 +4,9 @@
 
 export default class UpgradableStoreItem extends Phaser.Group {
 
-  constructor(game, width = 20, height = 100, currentUpgradeNum, maxUpgradesNum, upgradePicKey, upgradePicFrame) {
+  constructor(game, width = 20, height = 100, currentUpgradeNum, maxUpgradesNum, upgradePicKey, upgradePicFrame,
+    outlineWidth, outlineColor, bgColor,
+    outlineColorPressed, bgColorPressed) {
     super(game);
 
     this.maxUpgradesNum = maxUpgradesNum;
@@ -17,10 +19,13 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.upgradePicKey = upgradePicKey;
     this.upgradePicFrame = upgradePicFrame;
 
+    //setup pressed bg graphic
+    this.bgGraphicPressed = this.getBackgroundGraphic(width, height, outlineWidth, outlineColorPressed, bgColorPressed);
+    this.addChild(this.bgGraphicPressed);
+
     //setup background
-    this.backgroundGraphic = game.add.graphics(- width / 2, - height / 2);
-    this.setBackgroundGraphicProperties(width, height);
-    this.addChild(this.backgroundGraphic);
+    this.bgGraphic = this.getBackgroundGraphic(width, height, outlineWidth, outlineColor, bgColor);
+    this.addChild(this.bgGraphic);
 
     //add the upgrade image
     this.icon = game.add.image(0,0, upgradePicKey, upgradePicFrame);
@@ -30,6 +35,19 @@ export default class UpgradableStoreItem extends Phaser.Group {
     //add the upgrade fillers
     this.upgradeBullets = [];
     this.setNumberUpgradeBullets(currentUpgradeNum, maxUpgradesNum);
+
+    //register click listeners
+    this.setAll('inputEnabled', true);
+    this.callAll('events.onInputDown.add', 'events.onInputDown', this.onDown, this);
+    this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
+  }
+
+  onDown(){
+    this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
+  }
+
+  onUp(){
+    this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
   }
 
   getRadiusFromPercent(radiusPercent, width, height){
@@ -44,24 +62,28 @@ export default class UpgradableStoreItem extends Phaser.Group {
     return Math.max(0.1,radius); //radius must be >0 to be a rectangle
   }
 
-  setBackgroundGraphicProperties(width, height, lineWidth = 3, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radiusPercent = 25){
-    this.backgroundGraphic.anchor.setTo(0.5,0.5);
+  getBackgroundGraphic(width, height, lineWidth = 3, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radiusPercent = 25){
+    var graphic = this.game.add.graphics(- width / 2, - height / 2);
+
+    graphic.anchor.setTo(0.5,0.5);
     const radius = this.getRadiusFromPercent(radiusPercent, width, height);
 
     //draw outline
-    this.backgroundGraphic.boundsPadding = 0;
-    this.backgroundGraphic.lineStyle(lineWidth, outlineColor, 1);
-    this.backgroundGraphic.drawRoundedRect(0, 0, width, height, radius);
+    graphic.boundsPadding = 0;
+    graphic.lineStyle(lineWidth, outlineColor, 1);
+    graphic.drawRoundedRect(0, 0, width, height, radius);
 
     //draw fill
-    this.backgroundGraphic.beginFill(backgroundColor);
-    this.backgroundGraphic.drawRoundedRect(0, 0, width, height, radius);
-    this.backgroundGraphic.endFill();
+    graphic.beginFill(backgroundColor);
+    graphic.drawRoundedRect(0, 0, width, height, radius);
+    graphic.endFill();
+
+    return graphic;
   }
 
   setIconProperties(){
     this.icon.anchor.setTo(0.5,0.5);
-    this.icon.width = this.width * 0.75;
+    this.icon.width = this.width * 0.5;
     this.icon.height = this.icon.width;
     this.icon.y = this.height / 2 - this.icon.height / 2 - this.marginFromSides;
   }

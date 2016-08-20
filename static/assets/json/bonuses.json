@@ -1,5 +1,6 @@
 {
   "heal":{
+    "key":"icons",
     "frame":"heal",
     "width": 40,
     "bonusFunctionName":"applyHeal",
@@ -8,6 +9,7 @@
     "probability":0.5
   },
   "money":{
+    "key":"icons",
     "frame":"resources",
     "width": 40,
     "bonusFunctionName":"addResources",
