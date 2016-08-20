@@ -1,0 +1,86 @@
+{
+  "maxed_out":"Maximum upgrade attained",
+  "poor":"You lack the required resources",
+
+  "damage":{
+    "title":"Damage",
+    "msg":"Increase bullet damage",
+    "maxLevel":20,
+    "baseCost":400,
+    "icon":"upgrade_inc_damage"
+  },
+  "fireRate":{
+    "title":"Fire Rate",
+    "msg":"Improve firing rate",
+    "maxLevel":20,
+    "baseCost":400,
+    "icon":"upgrade_inc_freq"
+  },
+  "defense":{
+    "title":"Defense",
+    "msg":"Increase shield capacity",
+    "maxLevel":20,
+    "baseCost":1000,
+    "icon":"shield"
+  },
+  "scoreBoost":{
+    "title":"Resources",
+    "msg":"Improve ability to gather space debris. Increases rate of resource retrieval.",
+    "maxLevel":5,
+    "baseCost":10000,
+    "icon":"resources"
+  },
+  "repair":{
+    "title":"Repair",
+    "msg":"Repair hull damage",
+    "alt_msg":"Hull fully repaired",
+    "baseCost":100,
+    "icon":"heal"
+  },
+  "ally":{
+    "title":"Ally",
+    "msg":"Other ships were also sent on this mission. Unfortunately our homing beacon was destoyed on launch. Repair beacon and try to signal a ship.",
+    "alt_msg":"Increase the freqeuncy of the beacon's signal to attract stronger allies.",
+    "maxLevel":5,
+    "baseCost":100,
+    "icon":"ship_ally_0"
+  },
+  "guns":{
+    "icon":"upgrade_inc_gun",
+    "gunLevels":[
+      {
+      "msg":"The ship's main blaster was damaged on launch. It wouldn't take much to fix it up.",
+      "baseCost":100
+      },
+      {
+      "msg":"There's room for another gun here!",
+      "baseCost":100
+      },
+      {
+      "msg":"An upgrade to the phase annihilator would give us three shooty blastys!",
+      "baseCost":100
+      },
+      {
+      "msg":"The guns could be tilted outwards, but some major structural changes would need to be made.",
+      "baseCost":100
+      },
+      {
+      "msg":"Lets pump that middle gun up a notch.",
+      "baseCost":100
+      },
+      {
+      "msg":"Combining all the lasers could make one nasty alien killing machine.",
+      "baseCost":100
+      },
+      {
+      "msg":"A giant laser is nice, but a giant laser with some buddies is nicer!",
+      "baseCost":100
+      },
+      {
+      "msg":"Let's pump this up a notch and bring back the spread.",
+      "baseCost":100
+      }
+    ]
+  }
+
+}

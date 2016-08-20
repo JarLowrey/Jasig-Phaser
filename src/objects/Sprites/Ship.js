@@ -36,7 +36,6 @@ export default class Ship extends Unit {
     this.healthbar.setPercent(100);
     this.healthbar.setText( this.getHealthbarText() );
     this.healthbar.setWidth(this.width);
-    console.log(this.width, this.healthbar.width);
     this.healthbar.visible = true;
 
     this.canShoot = false;

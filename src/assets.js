@@ -86,6 +86,10 @@ export default {
     type: 'json',
     url: 'json/bonuses.json'
   },{
+    key: 'upgrades',
+    type: 'json',
+    url: 'json/upgrades.json'
+  },{
   // {
   //   //  Example: Add an image.
   //   //
