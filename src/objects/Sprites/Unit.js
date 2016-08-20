@@ -14,7 +14,7 @@ export default class Unit extends ParentSprite {
     super(game);
 
     this.goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
-      'score', 'text', 'sprites', 'resources', 'left', 0);
+      'score', 'text', 'icons', 'coins', 'left', 0);
     this.goldText.kill();
 
     this.explosionParticleLifeSpan = 400;
@@ -155,10 +155,9 @@ export default class Unit extends ParentSprite {
   }
 
   getParticleScale(particleFrame){
-    const particleWidth = this.game.cache.getImage('sprites',particleFrame).base.width;
-
-    const ratioDefaultParticleWidthToCurrentSpriteWidth = this.width / particleWidth;
-    return ratioDefaultParticleWidthToCurrentSpriteWidth;
+    const particleWidth = this.game.cache.getFrameByName('sprites',particleFrame).width;
+    const desiredWidth = 20;
+    return  desiredWidth / particleWidth;
   }
 
   static getExplosionEmitter(frame = 'explosion1'){
