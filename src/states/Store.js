@@ -33,6 +33,15 @@ export default class Store extends Phaser.State {
     this.upgrades.x = this.game.world.centerX;
     this.upgrades.y = 0 + this.upgrades.height/2;
 
+    this.healthbar = new ProgressBar(this.game, this.upgrades.width, btnLen, false, 4);
+    this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
+    this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game) );
+    this.healthbar.top = this.margin;
+    this.healthbar.x = this.upgrades.x;
+    this.upgrades.top = this.healthbar.bottom + this.margin;
+    this.healthbar.inputEnabled = true;
+    this.healthbar.makePressable(this.upgradePressed('repair','health'), bgColor, 0xff0000);
+
     const len = this.upgrades.width;
     this.createTextBox(this.game.world.centerX, this.upgrades.bottom + len/2 + margin, len, this.upgrades.width, outlineWidth,outlineColor,bgColor);
 
@@ -87,13 +96,26 @@ export default class Store extends Phaser.State {
     return function(){
       const currentMoney = this.game.getConfig('resources');
       const currentLevel = this.game.getConfig(upgradeName);
+
       cost = -1;
       if(cost < currentMoney){ //purchase successful
-        this.game.storeConfig('resources',currentMoney - cost);
-        this.game.storeConfig(upgradeName,1 + currentLevel);
-        this[groupName].incrementUpgrade();
-        this.upgradePressed(groupName, upgradeName)();
-      }else{  //purchase unsuccessful
+        this.game.storeConfig('resources',currentMoney - cost); //subtract cost
+        this.game.storeConfig(upgradeName,1 + currentLevel); //increment the config
+
+        //perform extra processing for upgrades with special cases
+        if(upgradeName == 'health' || upgradeName == 'defenseLevel'){
+          //max out health and set the Store healthbar
+          const health = Store.getMaxHealth(this.game);
+          this.game.storeConfig('health', Store.getMaxHealth(this.game)); //set health to maxHealth
+          this.healthbar.setPercent(100); //set healthbar properties
+          this.healthbar.setText(health + '/' + health);
+        }
+
+        if( this[groupName] ){ this[groupName].incrementUpgrade(); } //increment the upgrade display
+
+        this.upgradePressed(groupName, upgradeName)(); //reset the text box
+      }else{
+        //purchase unsuccessful. show alert TODO
       }
     };
   }
@@ -113,7 +135,7 @@ export default class Store extends Phaser.State {
   }
   getCost(groupName, upgradeName){
     const currentLevel = this.game.getConfig(upgradeName);
-    if(this.upgradeMaxedOut(groupName, currentLevel)) return null; //if the upgrade is maxed, return a null cost
+    if(this.upgradeMaxedOut(groupName, upgradeName)) return null; //if the upgrade is maxed, return a null cost
 
     const info = this.upgradeInfo[groupName];
 
@@ -131,14 +153,27 @@ export default class Store extends Phaser.State {
     const info = this.upgradeInfo[groupName];
 
     var msg = info.msg;
-    if(!msg && !this.upgradeMaxedOut(groupName, currentLevel)) msg = info.levels[currentLevel].msg;
-    if(this.upgradeMaxedOut(groupName,currentLevel)) msg = this.upgradeInfo.maxed_out;
+    if(this.upgradeMaxedOut(groupName, upgradeName)) msg = this.upgradeInfo.maxed_out;
+    if(!msg) msg = info.levels[currentLevel].msg;
 
     return msg;
   }
-  upgradeMaxedOut(upgradeName, level){
-    const info = this.upgradeInfo[upgradeName];
-    return level >= info.maxLevel || (info.levels && level >= info.levels.length);
+  static getMaxHealth(game){
+    const defLevel = game.getConfig('defenseLevel');
+    const heroBaseHealth = game.cache.getJSON('ships').protagonist.health;
+    const upgradeInfo = game.cache.getJSON('upgrades');
+
+    return (upgradeInfo.repair.valueIncreasePerLevel * defLevel) + heroBaseHealth;
+  }
+  upgradeMaxedOut(groupName, upgradeName){
+    const currentLevel = this.game.getConfig(upgradeName);
+    const info = this.upgradeInfo[groupName];
+
+    const isHealthAndIsMaxed = upgradeName == 'health' && this.game.getConfig('health') == Store.getMaxHealth(this.game);
+    const pastMaxLevel = info && currentLevel >= info.maxLevel;
+    const pastDefinedLevels = info && info.levels && currentLevel >= info.levels.length;
+
+    return isHealthAndIsMaxed || pastMaxLevel || pastDefinedLevels;
   }
 
   createUpgrades(upgradeWidth, upgradeHeight, margin, outlineWidth, outlineColor, backgroundColor, outlineColorPressed, bgColorPressed){

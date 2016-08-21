@@ -33,7 +33,7 @@ export default class Game extends Phaser.State {
     this.hero = new Protagonist(this.game);
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
-    this.game.waveHandler = new WaveHandler(this.game);
+    this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();
 
     new ProgressPie(this.game, this.game.world.centerX, this.game.world.centerY);

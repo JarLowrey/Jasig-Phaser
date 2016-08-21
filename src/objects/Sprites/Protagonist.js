@@ -6,6 +6,7 @@
 import Ship from '../Sprites/Ship';
 import ParentSprite from '../Sprites/ParentSprite';
 import ProgressBar from '../../objects/UI/ProgressBar';
+import Store from '../../states/Store';
 
 export default class Protagonist extends Ship {
 
@@ -40,6 +41,9 @@ export default class Protagonist extends Ship {
 
     this.body.collideWorldBounds = true;
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
+
+    this.health = this.game.getConfig('health');
+    this.maxHealth = Store.getMaxHealth(this.game);
 
     //setup healthbar
     const healthbarJson = this.game.dimen['game_health'];

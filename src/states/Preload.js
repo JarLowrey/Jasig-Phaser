@@ -9,6 +9,7 @@
 
 import assets from '../assets';
 import UiHelper from '../objects/UI/UiHelper';
+import JsonInfo from '../objects/JsonInfo';
 
 export default class Preload extends Phaser.State {
 
@@ -18,8 +19,6 @@ export default class Preload extends Phaser.State {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.showSplashScreen();
     this.load.pack('game', null, assets);
-
-    this.initConfig();
   }
 
   create() {
@@ -36,14 +35,14 @@ export default class Preload extends Phaser.State {
       'resources', 'waveNumber'
     ];
     var needToInitConfig = false;
+    const checkNeedForInitialization = function(element){
+      const config = this.game.getConfig(element);
+      needToInitConfig = needToInitConfig || isNaN(config) || config == null || typeof config == 'undefined';
+    }.bind(this);
 
     //loop through each config entry. Initialize if any are uninitialized
-    configsToDefaultToZero.forEach(
-      function(element){
-        const config = this.game.getConfig(element);
-        needToInitConfig = needToInitConfig || isNaN(config) || config == null || typeof config == 'undefined';
-      }.bind(this)
-    );
+    configsToDefaultToZero.forEach(checkNeedForInitialization);
+    checkNeedForInitialization('health');
 
     //already initialized: exit the function now
     if(!needToInitConfig) return;
@@ -54,6 +53,10 @@ export default class Preload extends Phaser.State {
         this.game.storeConfig(element, 0);
       }.bind(this)
     );
+
+    //custom config initialization below
+    const protagonistInfo = JsonInfo.getInfo(this.game, 'ships', 'protagonist');
+    this.game.storeConfig('health', protagonistInfo.health);
   }
 
   showSplashScreen() {
@@ -79,6 +82,7 @@ export default class Preload extends Phaser.State {
     this.game.weapons = this.game.cache.getJSON('weapons');
     this.game.bullets = this.game.cache.getJSON('bullets');
     this.game.bonuses = this.game.cache.getJSON('bonuses');
+    this.initConfig();
 
     this.moveOnToNextState();
   }

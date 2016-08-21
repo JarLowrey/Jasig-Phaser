@@ -3,8 +3,8 @@
 export default class ProgressBar extends Phaser.Group{
 
   constructor(game, width = 100, height = 12, barShrinksTowardsLeft = true, outlineLength = 4,
-      backgroundBarColor = '0x651828', outlineBarColor = '0xffffff', barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}],
-      fontStyle = game.fonts['progress_bar'], text =''){
+      fontStyle, text,
+      backgroundBarColor, outlineBarColor, barColor){
     super(game);
 
     this.strokeLength = outlineLength;
@@ -34,6 +34,34 @@ export default class ProgressBar extends Phaser.Group{
     this.setPercent(100); //this also sets bar color, not that the bars are defined
   }
 
+  makePressable(onPressedFunction, bgPressedColor, outlinePressedColor){
+    this.bgPressed = this.game.add.sprite(0, 0, this.getBarBitmapData(this.width - this.strokeLength, this.height - this.strokeLength));
+    this.bgPressed.anchor.setTo(0.5,0.5);
+    this.addChildAt(this.bgPressed, 0);
+    this.bgPressed.tint = bgPressedColor;
+
+    this.outlinePressed = this.game.add.sprite(0, 0, this.getBarBitmapData(this.width, this.height));
+    this.outlinePressed.anchor.setTo(0.5,0.5);
+    this.addChildAt(this.outlinePressed, 0);
+    this.outlinePressed.tint = outlinePressedColor;
+
+    //register click listeners
+    this.setAll('inputEnabled', true);
+    this.callAll('events.onInputDown.add', 'events.onInputDown', this.onDown, this);
+    this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
+    this.pressFunction = onPressedFunction;
+  }
+  onUp(){
+    this.swapChildren(this.bgPressed, this.bgSprite);
+    this.swapChildren(this.outlinePressed, this.outlineSprite);
+
+    this.pressFunction();
+  }
+  onDown(){
+    this.swapChildren(this.bgPressed, this.bgSprite);
+    this.swapChildren(this.outlinePressed, this.outlineSprite);
+  }
+
   setWidth(newWidth){
     this.outlineSprite.width = newWidth;
     this.bgSprite.width = newWidth - this.strokeLength;
@@ -59,11 +87,11 @@ export default class ProgressBar extends Phaser.Group{
     return pixel * window.window.devicePixelRatio;
   }
 
-  setText(text){
+  setText(text = ''){
     this.text.setText(text);
   }
 
-  setTextStyle(fontStyle){
+  setTextStyle(fontStyle = this.game.fonts['progress_bar']){
     this.fontStyle = fontStyle;
 
     this.text.setStyle(this.fontStyle);
@@ -105,7 +133,11 @@ export default class ProgressBar extends Phaser.Group{
       this.setBarColor(100, '0xffffff', [{'threshold':50, 'color': '0xff0000'}, {'threshold':100, 'color': '0x00ff00'}]);
         In this example, background bar is white, foreground is green at 50-100% and red at 0-50%. Since progress% is 100, the bar is green. You can have any number of threshold/colorCombos.
   */
-  setBarColor(progressPercentageRemaining = 0, backgroundBarColor, outlineBarColor, barColor){
+  setBarColor(progressPercentageRemaining = 0,
+    backgroundBarColor = '0x651828',
+    outlineBarColor = '0xffffff',
+    barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}]
+    ){
     //optional arguments to change colors
     if(backgroundBarColor) this.backgroundBarColor = backgroundBarColor;
     if(outlineBarColor) this.outlineBarColor = outlineBarColor;

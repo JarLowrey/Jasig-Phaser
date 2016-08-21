@@ -11,10 +11,11 @@ import ProgressBar from '../objects/UI/ProgressBar';
 
 export default class WaveHandler {
 
-  constructor(game){
+  constructor(game, hero){
     this.game = game;
+    this.hero = hero;
 
-    this.wave = 10;
+    this.wave = this.game.getConfig('waveNumber');
 
     //variables to determine how much stuff can be on screen at once
     this.minMeteors = 4;
@@ -31,7 +32,8 @@ export default class WaveHandler {
 
     const countDownJson = this.game.dimen['game_countdown'];
     this.progressBar = new ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
-      false, countDownJson.strokeLength, '0xcccccc', '0xffffff', '0x75c9e5');
+      false, countDownJson.strokeLength, this.game.fonts['progressBar'], '');
+    this.progressBar.setBarColor('0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
     this.progressBar.y = countDownJson.y;
   }
@@ -53,11 +55,13 @@ export default class WaveHandler {
 
   endWave(){
     this.spawnTimer.stop();
-    this.wave++;
-    //TODO save wave variables and stats to local storage
     this.waveIsOver = true;
-  }
 
+    //save completed level stats
+    this.game.storeConfig('health', this.hero.health);
+    this.game.storeConfig('waveNumber', this.wave + 1);
+  }
+  
   isWaveOver(){
     return this.waveIsOver;
   }
