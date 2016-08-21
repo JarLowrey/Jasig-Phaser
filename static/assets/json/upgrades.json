@@ -37,7 +37,7 @@
   "repair":{
     "title":"Repair",
     "msg":"Repair hull damage",
-    "alt_msg":"Hull fully repaired",
+    "maxed_out":"Hull fully repaired",
     "valueIncreasePerLevel":100,
     "baseCost":100,
     "maxCost":5000,

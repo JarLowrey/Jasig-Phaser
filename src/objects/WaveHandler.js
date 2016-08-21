@@ -33,7 +33,7 @@ export default class WaveHandler {
     const countDownJson = this.game.dimen['game_countdown'];
     this.progressBar = new ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
       false, countDownJson.strokeLength, this.game.fonts['progressBar'], '');
-    this.progressBar.setBarColor('0xcccccc', '0xffffff', '0x75c9e5');
+    this.progressBar.setBarColor(null, '0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
     this.progressBar.y = countDownJson.y;
   }
@@ -61,7 +61,7 @@ export default class WaveHandler {
     this.game.storeConfig('health', this.hero.health);
     this.game.storeConfig('waveNumber', this.wave + 1);
   }
-  
+
   isWaveOver(){
     return this.waveIsOver;
   }

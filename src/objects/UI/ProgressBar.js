@@ -4,7 +4,10 @@ export default class ProgressBar extends Phaser.Group{
 
   constructor(game, width = 100, height = 12, barShrinksTowardsLeft = true, outlineLength = 4,
       fontStyle, text,
-      backgroundBarColor, outlineBarColor, barColor){
+      backgroundBarColor = '0x651828',
+      outlineBarColor = '0xffffff',
+      barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}]
+    ){
     super(game);
 
     this.strokeLength = outlineLength;
@@ -133,11 +136,7 @@ export default class ProgressBar extends Phaser.Group{
       this.setBarColor(100, '0xffffff', [{'threshold':50, 'color': '0xff0000'}, {'threshold':100, 'color': '0x00ff00'}]);
         In this example, background bar is white, foreground is green at 50-100% and red at 0-50%. Since progress% is 100, the bar is green. You can have any number of threshold/colorCombos.
   */
-  setBarColor(progressPercentageRemaining = 0,
-    backgroundBarColor = '0x651828',
-    outlineBarColor = '0xffffff',
-    barColor = [{'threshold':25, 'color': '0xff0000'}, {'threshold':50, 'color': '0xffff00'}, {'threshold':100, 'color': '0x00ff00'}]
-    ){
+  setBarColor(progressPercentageRemaining = 0, backgroundBarColor, outlineBarColor, barColor ){
     //optional arguments to change colors
     if(backgroundBarColor) this.backgroundBarColor = backgroundBarColor;
     if(outlineBarColor) this.outlineBarColor = outlineBarColor;

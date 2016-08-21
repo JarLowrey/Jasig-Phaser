@@ -153,7 +153,7 @@ export default class Store extends Phaser.State {
     const info = this.upgradeInfo[groupName];
 
     var msg = info.msg;
-    if(this.upgradeMaxedOut(groupName, upgradeName)) msg = this.upgradeInfo.maxed_out;
+    if(this.upgradeMaxedOut(groupName, upgradeName)) msg = info.maxed_out || this.upgradeInfo.maxed_out; //maxed out message can be customized in the json entry. If it's not there, use the default
     if(!msg) msg = info.levels[currentLevel].msg;
 
     return msg;
