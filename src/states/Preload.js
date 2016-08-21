@@ -31,16 +31,17 @@ export default class Preload extends Phaser.State {
   // --------------------------------------------------------------------------
 
   initConfig(){
-    const configDefaultToZero = [
+    const configsToDefaultToZero = [
       'gunLevel', 'damageLevel', 'fireRateLevel', 'defenseLevel', 'scoreBoostLevel', 'allyLevel',
       'resources', 'waveNumber'
     ];
     var needToInitConfig = false;
 
     //loop through each config entry. Initialize if any are uninitialized
-    configDefaultToZero.forEach(
+    configsToDefaultToZero.forEach(
       function(element){
-        needToInitConfig = needToInitConfig || !this.game.getConfig(element);
+        const config = this.game.getConfig(element);
+        needToInitConfig = needToInitConfig || isNaN(config) || config == null || typeof config == 'undefined';
       }.bind(this)
     );
 
@@ -48,7 +49,7 @@ export default class Preload extends Phaser.State {
     if(!needToInitConfig) return;
 
     //still here! Need to initialize
-    configDefaultToZero.forEach(
+    configsToDefaultToZero.forEach(
       function(element){
         this.game.storeConfig(element, 0);
       }.bind(this)

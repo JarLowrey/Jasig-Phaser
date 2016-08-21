@@ -83,9 +83,9 @@ export default class IconText extends Phaser.Group {
 
     if(this.graphic && this.graphicPressed && this.image){
       //image and text have their right and left edges on the mid-line (respectively). Find the max of their dimensions, and double it for a centered graphic
+/*
       const width = Math.max(this.text.width, this.image.width);
       const height = Math.max(this.text.height, this.image.height);
-/*
       this.graphic.width = width * 2;
       this.graphic.height = height * 2;
 

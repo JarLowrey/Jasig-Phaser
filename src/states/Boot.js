@@ -51,12 +51,18 @@ export default class Boot extends Phaser.State {
 
     //setup functions that you'll want globally
     this.game.getConfig = function(name){
-      return localStorage[name];
+      var storageVal = localStorage[name];
+      try{
+        storageVal = Number(storageVal);
+      }catch(e){
+        //leave the value as a string
+      }
+      return storageVal;
     };
     this.game.storeConfig = function(name,value){
       return localStorage[name] = value;
     };
-    this.game.nFormatter = function(num, digits) {//source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
+    this.game.nFormatter = function(num, digits = 1) {//source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
       var si = [
         { value: 1E18, symbol: 'E' },
         { value: 1E15, symbol: 'P' },

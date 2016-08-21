@@ -76,62 +76,63 @@ export default class Store extends Phaser.State {
   }
 
   assignUpgradePressedFunctions(){
-    //use a closure to return a function with valid title, text, cost properties
-    var pressed = function(groupName, upgradeName){
-      return function(){
-        const upgradeLvl = this.game.getConfig(upgradeName);
-        const info = this.upgradeInfo[groupName];
-
-        const title = info.title;
-        const msg = this.getMsg(groupName, upgradeLvl);
-        var cost = this.getCost(groupName, upgradeLvl);
-
-        const purchase = this.purchaseAttempt(groupName,upgradeName, cost).bind(this);
-        this.buyBtn.changePressFunction(purchase);
-
-        this.setText( title, msg, cost, this.upgradeMaxedOut(groupName,upgradeLvl) );
-      }.bind(this);
-    }.bind(this);
-
-    this.guns.assignPressFunction(        pressed('guns', 'gunLevel') );
-    this.damage.assignPressFunction(      pressed('damage', 'damageLevel') );
-    this.fireRate.assignPressFunction(    pressed('fireRate', 'fireRateLevel') );
-    this.defense.assignPressFunction(     pressed('defense', 'defenseLevel') );
-    this.scoreBoost.assignPressFunction(  pressed('scoreBoost', 'scoreBoostLevel') );
-    this.ally.assignPressFunction(        pressed('ally', 'allyLevel') );
+    this.guns.assignPressFunction(        this.upgradePressed('guns', 'gunLevel').bind(this) );
+    this.damage.assignPressFunction(      this.upgradePressed('damage', 'damageLevel').bind(this) );
+    this.fireRate.assignPressFunction(    this.upgradePressed('fireRate', 'fireRateLevel').bind(this) );
+    this.defense.assignPressFunction(     this.upgradePressed('defense', 'defenseLevel').bind(this) );
+    this.scoreBoost.assignPressFunction(  this.upgradePressed('scoreBoost', 'scoreBoostLevel').bind(this) );
+    this.ally.assignPressFunction(        this.upgradePressed('ally', 'allyLevel').bind(this) );
   }
   purchaseAttempt(groupName, upgradeName, cost){
     return function(){
       const currentMoney = this.game.getConfig('resources');
-
+      const currentLevel = this.game.getConfig(upgradeName);
+      cost = -1;
       if(cost < currentMoney){ //purchase successful
         this.game.storeConfig('resources',currentMoney - cost);
-        this.game.storeConfig(upgradeName,this.game.getConfig(upgradeName) + 1);
+        this.game.storeConfig(upgradeName,1 + currentLevel);
         this[groupName].incrementUpgrade();
-        console.log('purchase successful');
+        this.upgradePressed(groupName, upgradeName)();
       }else{  //purchase unsuccessful
-        console.log('purchase not successful');
       }
     };
   }
-  getCost(upgradeName, level){
-    const info = this.upgradeInfo[upgradeName];
+  upgradePressed(groupName, upgradeName){
+    return function(){
+      const info = this.upgradeInfo[groupName];
+
+      const title = info.title;
+      const msg = this.getMsg(groupName, upgradeName);
+      var cost = this.getCost(groupName, upgradeName);
+
+      //change what happens when the buy button is clicked
+      this.buyBtn.changePressFunction( this.purchaseAttempt(groupName, upgradeName, cost).bind(this) );
+
+      this.setText( title, msg, cost );
+    }.bind(this);
+  }
+  getCost(groupName, upgradeName){
+    const currentLevel = this.game.getConfig(upgradeName);
+    if(this.upgradeMaxedOut(groupName, currentLevel)) return null; //if the upgrade is maxed, return a null cost
+
+    const info = this.upgradeInfo[groupName];
 
     //check if the json defines the cost increase schedule
-    var cost = info.baseCost * Math.pow(info.costIncreasePerLevel, level);
+    var cost = info.baseCost * Math.pow(info.costIncreasePerLevel, currentLevel);
     if(info.maxCost) cost = Math.min(cost, info.maxCost);
 
-    if(!cost) cost = info.baseCost * this.waveNumber; //cost not found: maybe cost is linearly proportional to wave number
-    if(!cost) cost = info.levels[level].cost; //cost not found: cost is manually defined for each level, ignore everything above and just set it
+    if(!cost) cost = info.baseCost * (1 + this.game.getConfig('waveNumber')); //cost not found: maybe cost is linearly proportional to wave number
+    if(!cost) cost = info.levels[currentLevel].cost; //cost not found: cost is manually defined for each level, ignore everything above and just set it
 
     return cost;
   }
-  getMsg(upgradeName, level){
-    const info = this.upgradeInfo[upgradeName];
+  getMsg(groupName, upgradeName){
+    const currentLevel = this.game.getConfig(upgradeName);
+    const info = this.upgradeInfo[groupName];
 
     var msg = info.msg;
-    if(!msg) msg = info.levels[level].msg;
-    if(this.upgradeMaxedOut(upgradeName,level)) msg = info.maxed_out;
+    if(!msg && !this.upgradeMaxedOut(groupName, currentLevel)) msg = info.levels[currentLevel].msg;
+    if(this.upgradeMaxedOut(groupName,currentLevel)) msg = this.upgradeInfo.maxed_out;
 
     return msg;
   }
@@ -144,32 +145,32 @@ export default class Store extends Phaser.State {
     this.upgrades = new Phaser.Group(this.game);
 
     this.guns       = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.guns.levels.length, 'icons', this.upgradeInfo.guns.icon,
+      this.game.getConfig('gunLevel'), this.upgradeInfo.guns.levels.length, 'icons', this.upgradeInfo.guns.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
     this.damage     = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.damage.maxLevel, 'icons', this.upgradeInfo.damage.icon,
+      this.game.getConfig('damageLevel'), this.upgradeInfo.damage.maxLevel, 'icons', this.upgradeInfo.damage.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
     this.fireRate   = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.fireRate.maxLevel, 'icons', this.upgradeInfo.fireRate.icon,
+      this.game.getConfig('fireRateLevel'), this.upgradeInfo.fireRate.maxLevel, 'icons', this.upgradeInfo.fireRate.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
     this.defense    = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.defense.maxLevel, 'icons', this.upgradeInfo.defense.icon,
+      this.game.getConfig('defenseLevel'), this.upgradeInfo.defense.maxLevel, 'icons', this.upgradeInfo.defense.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
     this.scoreBoost = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
+      this.game.getConfig('scoreBoostLevel'), this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
     this.ally       = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      2, this.upgradeInfo.ally.maxLevel, 'icons', this.upgradeInfo.ally.icon,
+      this.game.getConfig('allyLevel'), this.upgradeInfo.ally.maxLevel, 'icons', this.upgradeInfo.ally.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed,bgColorPressed);
 
@@ -242,13 +243,15 @@ export default class Store extends Phaser.State {
     this.textBox.y = y;
   }
 
-  setText(title, msg, cost,upgradeMaxedOut){
+  setText(title, msg, cost){
     const oldTop = this.textBox.top;
 
     this.title.setText(title);
     this.msg.setText(msg);
-    this.buyBtn.setText(this.game.nFormatter(cost));
-    this.buyBtn.visible = !upgradeMaxedOut; //if maxed, hide option to buy
+    if(cost){ //
+      this.buyBtn.setText(this.game.nFormatter(cost));
+    }
+    this.buyBtn.visible = cost; //if maxed, cost is undefined, so use that to hide option to buy
 
     //resize the background for the new text (not always needed)
     this.txtBackground.width = this.textBox.width;// + this.textMargin * 2;

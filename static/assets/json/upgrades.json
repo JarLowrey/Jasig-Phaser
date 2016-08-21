@@ -48,6 +48,7 @@
     "alt_msg":"Increase the freqeuncy of the beacon's signal to attract stronger allies.",
     "maxLevel":5,
     "baseCost":7500,
+    "costIncreasePerLevel":2,
     "icon":"ally"
   },
   "guns":{
