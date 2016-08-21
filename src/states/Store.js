@@ -234,7 +234,7 @@ export default class Store extends Phaser.State {
 
     //resize the background for the new text (not always needed)
     this.txtBackground.width = this.textBox.width;// + this.textMargin * 2;
-    this.txtBackground.height = this.textBox.height;//+ this.textMargin * 2;
+    this.txtBackground.height = Math.max(this.textBox.height, this.title.height + this.msg.height + this.cost.height); //prev value or sum of texts
     this.msg.wordWrapWidth = this.txtBackground.width * 0.75;
 
     //reposition the new text
