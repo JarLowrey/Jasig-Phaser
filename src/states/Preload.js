@@ -18,6 +18,8 @@ export default class Preload extends Phaser.State {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.showSplashScreen();
     this.load.pack('game', null, assets);
+
+    this.initConfig();
   }
 
   create() {
@@ -27,6 +29,31 @@ export default class Preload extends Phaser.State {
   }
 
   // --------------------------------------------------------------------------
+
+  initConfig(){
+    const configDefaultToZero = [
+      'gunLevel', 'damageLevel', 'fireRateLevel', 'defenseLevel', 'scoreBoostLevel', 'allyLevel',
+      'resources', 'waveNumber'
+    ];
+    var needToInitConfig = false;
+
+    //loop through each config entry. Initialize if any are uninitialized
+    configDefaultToZero.forEach(
+      function(element){
+        needToInitConfig = needToInitConfig || !this.game.getConfig(element);
+      }.bind(this)
+    );
+
+    //already initialized: exit the function now
+    if(!needToInitConfig) return;
+
+    //still here! Need to initialize
+    configDefaultToZero.forEach(
+      function(element){
+        this.game.storeConfig(element, 0);
+      }.bind(this)
+    );
+  }
 
   showSplashScreen() {
     //add logo and loading bar

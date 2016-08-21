@@ -14,7 +14,7 @@ export default class Unit extends ParentSprite {
     super(game);
 
     this.goldText = new IconText(this.game, 20,
-      'score', 'text', 'icons', 'coins', 'left', 0);
+      'score', 'text', 'icons', 'coins', 0);
     this.goldText.kill();
 
     this.explosionParticleLifeSpan = 400;

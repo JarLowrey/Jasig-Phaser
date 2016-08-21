@@ -9,7 +9,7 @@ import ParentSprite from '../../objects/Sprites/ParentSprite';
 export default class IconText extends Phaser.Group {
 
   constructor(game, fontHeight,
-    text, style, iconKey, iconFrame, whereIconGoesRelativeToText, marginBtwSpriteAndText){
+    text, style, iconKey, iconFrame, marginBtwSpriteAndText){
     super(game);
 
     this.marginBtwSpriteAndText = marginBtwSpriteAndText;
@@ -31,9 +31,9 @@ export default class IconText extends Phaser.Group {
     this.addChild(this.image);
   }
 
-  setPressable(outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed, pressFunction){
-    this.graphic = this.getBg(outlineWidth, 1, outlineColor, bgColor);
-    this.graphicPressed = this.getBg(outlineWidth, 1, outlineColorPressed, bgColorPressed);
+  setPressable(width, outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed, pressFunction){
+    this.graphic = this.getBg(width, outlineWidth, 10, outlineColor, bgColor);
+    this.graphicPressed = this.getBg(width, outlineWidth, 10, outlineColorPressed, bgColorPressed);
     this.outlineWidth = outlineWidth;
 
     this.addChild(this.graphicPressed);
@@ -41,6 +41,13 @@ export default class IconText extends Phaser.Group {
     this.bringToTop(this.text);
     this.bringToTop(this.image);
 
+    //make this group clickable
+    this.setAll('inputEnabled', true);
+    this.callAll('events.onInputDown.add', 'events.onInputDown', this.onDown, this);
+    this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
+    this.pressFunction = pressFunction;
+  }
+  changePressFunction(pressFunction){
     this.pressFunction = pressFunction;
   }
   onDown(){
@@ -50,11 +57,10 @@ export default class IconText extends Phaser.Group {
     this.swapChildren(this.graphicPressed, this.graphic);
     this.pressFunction();
   }
-  getBg(outlineLen, radius, outlineColor, bgColor){
+  getBg(width, outlineLen, radius, outlineColor, bgColor){
     var graphic = this.game.add.graphics(0,0);
     graphic.anchor.setTo(0.5,0.5);
-    const height = this.height * 1.1;
-    const width = this.width * 1.1;
+    const height = this.height * 1.5;
 
     //outline
     graphic.lineStyle(outlineLen,outlineColor,1);
@@ -68,8 +74,8 @@ export default class IconText extends Phaser.Group {
   }
 
   update(){
-    this.game.debug.geom(this.text.getBounds()); //better way of showing the bounding box when debugging
-    this.game.debug.geom(this.image.getBounds()); //better way of showing the bounding box when debugging
+    //this.game.debug.geom(this.text.getBounds()); //better way of showing the bounding box when debugging
+    //this.game.debug.geom(this.image.getBounds()); //better way of showing the bounding box when debugging
   }
 
   setText(txt){
@@ -79,13 +85,14 @@ export default class IconText extends Phaser.Group {
       //image and text have their right and left edges on the mid-line (respectively). Find the max of their dimensions, and double it for a centered graphic
       const width = Math.max(this.text.width, this.image.width);
       const height = Math.max(this.text.height, this.image.height);
-
+/*
       this.graphic.width = width * 2;
       this.graphic.height = height * 2;
 
       this.graphicPressed.width = width * 2;
       this.graphicPressed.height = height * 2;
       console.log(this.text.width, this.image.width,this.graphic.width,this.graphic.height)
+      */
 
     }
   }

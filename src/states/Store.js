@@ -13,7 +13,6 @@ export default class Store extends Phaser.State {
 
   create() {
     this.upgradeInfo = this.game.cache.getJSON('upgrades');
-    this.initUpgradeLevels();
 
     this.stars = new Stars(this.game);
     this.stars.showStars();
@@ -76,15 +75,6 @@ export default class Store extends Phaser.State {
     this.stateBtns.x = this.game.world.centerX;
   }
 
-  initUpgradeLevels(){
-    if( !this.game.getConfig('gunLevel') ){           this.game.storeConfig('gunLevel',0); }
-    if( !this.game.getConfig('damageLevel') ){         this.game.storeConfig('damageLevel',0); }
-    if( !this.game.getConfig('fireRateLevel') ){       this.game.storeConfig('fireRateLevel',0); }
-    if( !this.game.getConfig('defenseLevel') ){        this.game.storeConfig('defenseLevel',0); }
-    if( !this.game.getConfig('scoreBoostLevel') ){     this.game.storeConfig('scoreBoostLevel',0); }
-    if( !this.game.getConfig('allyLevel') ){           this.game.storeConfig('allyLevel',0); }
-  }
-
   assignUpgradePressedFunctions(){
     //use a closure to return a function with valid title, text, cost properties
     var pressed = function(groupName, upgradeName){
@@ -95,6 +85,9 @@ export default class Store extends Phaser.State {
         const title = info.title;
         const msg = this.getMsg(groupName, upgradeLvl);
         var cost = this.getCost(groupName, upgradeLvl);
+
+        const purchase = this.purchaseAttempt(groupName,upgradeName, cost).bind(this);
+        this.buyBtn.changePressFunction(purchase);
 
         this.setText( title, msg, cost, this.upgradeMaxedOut(groupName,upgradeLvl) );
       }.bind(this);
@@ -107,7 +100,20 @@ export default class Store extends Phaser.State {
     this.scoreBoost.assignPressFunction(  pressed('scoreBoost', 'scoreBoostLevel') );
     this.ally.assignPressFunction(        pressed('ally', 'allyLevel') );
   }
+  purchaseAttempt(groupName, upgradeName, cost){
+    return function(){
+      const currentMoney = this.game.getConfig('resources');
 
+      if(cost < currentMoney){ //purchase successful
+        this.game.storeConfig('resources',currentMoney - cost);
+        this.game.storeConfig(upgradeName,this.game.getConfig(upgradeName) + 1);
+        this[groupName].incrementUpgrade();
+        console.log('purchase successful');
+      }else{  //purchase unsuccessful
+        console.log('purchase not successful');
+      }
+    };
+  }
   getCost(upgradeName, level){
     const info = this.upgradeInfo[upgradeName];
 
@@ -125,13 +131,13 @@ export default class Store extends Phaser.State {
 
     var msg = info.msg;
     if(!msg) msg = info.levels[level].msg;
-    if(this.upgradeMaxedOut(upgradeName,level)) msg = info.maxed_out
+    if(this.upgradeMaxedOut(upgradeName,level)) msg = info.maxed_out;
 
     return msg;
   }
   upgradeMaxedOut(upgradeName, level){
     const info = this.upgradeInfo[upgradeName];
-    return level >= info.maxLevel || (info.levels && level >= info.levels.length)
+    return level >= info.maxLevel || (info.levels && level >= info.levels.length);
   }
 
   createUpgrades(upgradeWidth, upgradeHeight, margin, outlineWidth, outlineColor, backgroundColor, outlineColorPressed, bgColorPressed){
@@ -193,10 +199,6 @@ export default class Store extends Phaser.State {
     this.upgrades.addChild(this.ally);
   }
 
-  purchaseAttempt(){
-
-  }
-
   createTextBox(x,y, width, height, outlineWidth = 5, outlineColor = '0x123456', bgColor = '0xffffff', outlineColorPressed = 0x654321, bgColorPressed = 0x177612){
     this.txtBgOutlineWidth = outlineWidth;
 
@@ -221,21 +223,19 @@ export default class Store extends Phaser.State {
     //create msg
     this.msg = this.game.add.text(0,this.title.bottom,'Store',this.game.fonts['text']);
     this.msg.anchor.setTo(0.5,0);
-    this.msg.wordWrapWidth = this.txtBackground.width * 0.75;
+    this.msg.wordWrapWidth = this.txtBackground.width * 0.9;
 
-    //create cost
-    //this.cost = this.game.add.text(0,this.title.bottom,'Store',this.game.fonts['text']);
-    //this.cost.anchor.setTo(0.5,1);
-    this.cost = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 'left', 0);
-    this.cost.setPressable(outlineWidth / 2, outlineColor, bgColor, outlineColorPressed, bgColorPressed, this.purchaseAttempt.bind(this) );
-    this.cost.bottom = this.txtBackground.bottom - this.txtBgOutlineWidth;
+    //create buyBtn
+    this.buyBtn = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.buyBtn.setPressable(this.txtBackground.width/2, outlineWidth / 2, outlineColor, bgColor, outlineColorPressed, bgColorPressed);
+    this.buyBtn.bottom = this.txtBackground.bottom - this.txtBgOutlineWidth;
 
     //add text to a group
     this.textBox = new Phaser.Group(this.game);
     this.textBox.addChild(this.txtBackground);
     this.textBox.addChild(this.title);
     this.textBox.addChild(this.msg);
-    this.textBox.addChild(this.cost);
+    this.textBox.addChild(this.buyBtn);
 
     //position the group
     this.textBox.x = x;
@@ -247,18 +247,21 @@ export default class Store extends Phaser.State {
 
     this.title.setText(title);
     this.msg.setText(msg);
-    this.cost.setText(this.game.nFormatter(cost));
-    this.cost.visible = !upgradeMaxedOut; //if maxed, hide option to buy
+    this.buyBtn.setText(this.game.nFormatter(cost));
+    this.buyBtn.visible = !upgradeMaxedOut; //if maxed, hide option to buy
 
     //resize the background for the new text (not always needed)
     this.txtBackground.width = this.textBox.width;// + this.textMargin * 2;
-    this.txtBackground.height = Math.max(this.textBox.height, this.title.height + this.msg.height + this.cost.height); //prev value or sum of texts
-    this.msg.wordWrapWidth = this.txtBackground.width * 0.75;
+    this.txtBackground.height = Math.max(this.textBox.height, //prev value
+      this.title.height + this.msg.height + this.buyBtn.height + this.margin * 3); //sum of text boxes and buy button
+    this.msg.wordWrapWidth = this.txtBackground.width * 0.9;
 
     //reposition the new text
     this.title.top =  - this.txtBackground.height / 2 + this.txtBgOutlineWidth;
     this.msg.top = this.title.bottom;
-    this.cost.y = this.txtBackground.bottom - this.txtBgOutlineWidth - this.cost.height / 2 - this.margin;
+    const bottomOfBox = this.txtBackground.bottom  - this.buyBtn.height / 2 - this.margin;
+    const belowMsg = this.msg.bottom + this.buyBtn.height / 2 + this.margin;
+    this.buyBtn.y = Math.max(bottomOfBox, belowMsg);
 
     //ensure that the group stays at its old position
     this.textBox.top = oldTop;
