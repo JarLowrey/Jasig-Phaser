@@ -6,7 +6,6 @@
  */
 
 import ParentSprite from '../objects/Sprites/ParentSprite';
-//import Bullet from '../objects/Sprites/Bullet';
 import Bonus from '../objects/Sprites/Bonus';
 import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
@@ -14,10 +13,8 @@ import Protagonist from '../objects/Sprites/Protagonist';
 
 import WaveHandler from '../objects/WaveHandler';
 
-import ProgressPie from '../objects/UI/ProgressPie';
-
 import Stars from '../objects/UI/Stars';
-import UiHelper from '../objects/UI/UiHelper';
+import IconText from '../objects/UI/IconText';
 
 export default class Game extends Phaser.State {
 
@@ -27,22 +24,29 @@ export default class Game extends Phaser.State {
 
     this.game.time.advancedTiming = true;
 
-
-    this.UiHelper = new UiHelper(this.game);
-
     this.hero = new Protagonist(this.game);
     this.hero.reset(this.game.world.centerX, this.game.world.height );
 
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();
 
-    new ProgressPie(this.game, this.game.world.centerX, this.game.world.centerY);
+    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney.left = 0;
+    this.totalMoney.top = 0;
+    this.incrementGameResources(0);
   }
 
   update(){
-    //this.UiHelper.showGold(10,window.innerWidth * Math.random(),this.game.world.centerY);
-    this.game.waveHandler.updateProgress();
+    this.game.waveHandler.updateProgressBar();
+
     this.collisionDectection();
+  }
+
+  incrementGameResources(amt){
+    amt = amt || 0; //some sprites, like the hero, do not have a value but are still killed in a fashion where this function is called. So filter out those undefined/NaN values
+
+    this.game.waveHandler.earnedResources += amt;
+    this.totalMoney.setText( this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.getConfig('resources') ) );
   }
 
   collisionDectection(){

@@ -121,23 +121,16 @@ export default class Ship extends Unit {
     this.healthbar.setPercent(healthPercentLeft);
   }
 
-  //set isBeingKilled to true to signal that death has beweapon. Call the cool tweens, and actually kill() 'this' after the tween.
-  //You will need check if isBeingKilled when doing most a lot of stuff from now on. If this is omitted, and kill() is immediately called,
-  //'this' will be added back into the recycling pools. This causes problems as it can be recycled and completing the tween simultaneously
-  kill(showCoolStuff = true){
+  kill(){
     if(this.isBeingKilled) return;
 
-    this.isBeingKilled = true;
     this.stopShooting();
     this.healthbar.visible = false;
 
-    if(showCoolStuff){
-      this.visible = true;
-      this.playDeathTween(); //super.kill is called after tween finishes
-    }
+    super.kill();
   }
-
-  playDeathTween(){
+  //Overrides super method. this is called at the end of super.kill()
+  showDeathAnimations(){
     //setup tween to be played upon this.kill()
     const xTweenLen = ParentSprite.dp(15) * Math.random() + ParentSprite.dp(15);
     const tweenAngle = 30 + 30 * Math.random();
@@ -149,15 +142,7 @@ export default class Ship extends Unit {
       .to({angle:  tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
       .repeatAll(1);
     tween.start();
-    tween.onComplete.add(this.finishKill, this);
-  }
-
-  finishKill(){
-    this.isBeingKilled = false;
-
-    super.kill(false); //do not show explosion upon death, instead show it after deathTween completes
-    this.goldText.showGoldText(this.jsonInfo.resourceValue, this.x, this.y);
-    this.showExplosion();
+    tween.onComplete.add(super.showDeathAnimations, this);
   }
 
   static bulletCollision(bullet, unit){

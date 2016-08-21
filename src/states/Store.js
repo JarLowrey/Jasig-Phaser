@@ -33,13 +33,17 @@ export default class Store extends Phaser.State {
     this.upgrades.x = this.game.world.centerX;
     this.upgrades.y = 0 + this.upgrades.height/2;
 
+    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
+    this.totalMoney.top = this.margin;
+    this.totalMoney.x = this.game.world.centerX;
+
     this.healthbar = new ProgressBar(this.game, this.upgrades.width, btnLen, false, 4);
     this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
     this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game) );
-    this.healthbar.top = this.margin;
-    this.healthbar.x = this.upgrades.x;
+    this.healthbar.top = this.totalMoney.bottom + this.margin;
+    this.healthbar.x = this.game.world.centerX;
     this.upgrades.top = this.healthbar.bottom + this.margin;
-    this.healthbar.inputEnabled = true;
     this.healthbar.makePressable(this.upgradePressed('repair','health'), bgColor, 0xff0000);
 
     const len = this.upgrades.width;
@@ -49,9 +53,9 @@ export default class Store extends Phaser.State {
 
     this.createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin);
 
-    //simulate a press of the 'guns' upgrade to set some valid text into the text box
-    this.guns.onDown();
-    this.guns.onUp();
+    //simulate a press of an upgrade to set some valid text into the text box
+    this.healthbar.onDown();
+    this.healthbar.onUp();
   }
 
   update(){
@@ -97,7 +101,6 @@ export default class Store extends Phaser.State {
       const currentMoney = this.game.getConfig('resources');
       const currentLevel = this.game.getConfig(upgradeName);
 
-      cost = -1;
       if(cost < currentMoney){ //purchase successful
         this.game.storeConfig('resources',currentMoney - cost); //subtract cost
         this.game.storeConfig(upgradeName,1 + currentLevel); //increment the config
@@ -117,6 +120,8 @@ export default class Store extends Phaser.State {
       }else{
         //purchase unsuccessful. show alert TODO
       }
+
+      this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
     };
   }
   upgradePressed(groupName, upgradeName){

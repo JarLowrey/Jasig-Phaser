@@ -3,12 +3,12 @@
     "frame":"meteor",
     "health":20,
     "width": 20,
-    "resourceValue": 20
+    "gold": 20
   },
   "giant_meteor":{
     "frame":"meteor",
     "health":50,
     "width": 75,
-    "resourceValue": 100
+    "gold": 100
   }
 }

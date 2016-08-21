@@ -61,26 +61,34 @@ export default class Unit extends ParentSprite {
     this.yDestination = (destYInPercentOfScreen / 100) * this.game.world.height;
   }
 
+  //set isBeingKilled to true to signal that death has begun. Call the cool tweens, and actually kill() 'this' after the juicy stuff has finished.
+  //If the check for isBeingKilled is omitted, and kill() is immediately called,
+  //'this' will be added back into the recycling pools. This causes problems.
   kill(showCoolStuff = true){
     if(this.isBeingKilled) return;
 
-    super.kill();
+    this.isBeingKilled = true;
     ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
-    if( this.game.waveHandler.livingEnemiesTotalValue() == 0 && this.game.waveHandler.isWaveOver() ){
-      this.startNextStateAfterDeath('Store');
-    }
 
-    if(showCoolStuff){
-      this.goldText.showGoldText(this);
-      this.showExplosion();
-    }
+    if(showCoolStuff)this.showDeathAnimations();
+    else this.finishKill();
   }
+  showDeathAnimations(){
+    this.goldText.showGoldText(this.getValue(), this.x, this.y);
+    this.showExplosion();
+    this.visible = false;
 
-  //allow the user to view the last item's explosion before starting the next state
-  startNextStateAfterDeath(state){
-    this.game.time.events.add(this.explosionParticleLifeSpan, function(){
-      this.game.state.start(state);
-    }, this, 'Store');
+    this.game.time.events.add(this.explosionParticleLifeSpan,this.finishKill, this);
+  }
+  finishKill(stateToStartAfterwards = 'Store'){
+    this.isBeingKilled = false;
+    super.kill(); //actually kill this sprite!
+
+    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
+    if( this.getClassName() == 'Protagonist' || allEnemiesDead ){
+      this.game.state.start(stateToStartAfterwards);
+      this.game.waveHandler.saveWaveValues();
+    }
   }
 
   setAnchor(isFriendly){

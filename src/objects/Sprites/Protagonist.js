@@ -64,12 +64,12 @@ export default class Protagonist extends Ship {
   }
 
   finishKill(){
-    super.finishKill();
-    this.startNextStateAfterDeath('GameOver');
+    super.finishKill('GameOver');
   }
 
   kill(){
     super.kill();
+
     this.healthbar.visible = true; //leave healthbar showing while this is dying
   }
 

@@ -16,6 +16,7 @@ export default class WaveHandler {
     this.hero = hero;
 
     this.wave = this.game.getConfig('waveNumber');
+    this.earnedResources = 0;
 
     //variables to determine how much stuff can be on screen at once
     this.minMeteors = 4;
@@ -36,9 +37,11 @@ export default class WaveHandler {
     this.progressBar.setBarColor(null, '0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
     this.progressBar.y = countDownJson.y;
+
+    this.startWave();
   }
 
-  updateProgress(){
+  updateProgressBar(){
     const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.wave) ;
     this.progressBar.setPercent(percentLeft * 100);
     this.progressBar.setText(Math.round(this.waveTimer.duration / 1000) );
@@ -48,18 +51,22 @@ export default class WaveHandler {
     this.spawn();
 
     //timer to end the wave
-    this.waveTimer.add(WaveHandler.timeNeededToEndWave(this.wave), this.endWave, this);
+    this.waveTimer.add(WaveHandler.timeNeededToEndWave(this.wave), this.stopSpawning, this);
     this.waveTimer.start();
     this.waveIsOver = false;
   }
 
-  endWave(){
+  stopSpawning(){
     this.spawnTimer.stop();
     this.waveIsOver = true;
+    if(this.livingEnemiesTotalValue() == 0) this.game.state.start('Store');
+  }
 
+  saveWaveValues(){
     //save completed level stats
     this.game.storeConfig('health', this.hero.health);
     this.game.storeConfig('waveNumber', this.wave + 1);
+    this.game.storeConfig('resources', this.game.getConfig('resources') + this.earnedReources);
   }
 
   isWaveOver(){
@@ -71,10 +78,9 @@ export default class WaveHandler {
     const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
-
     if( enemyTotal < enemiesThresholdValue + meteorsThresholdValue ){
       this.spawnSprite('meteor', Unit);
-      enemyTotal += ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.resourceValue);
+      enemyTotal += ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.gold);
     }
     if( enemyTotal < enemiesThresholdValue ){
       const enemyInfo = this.chooseEnemy();
@@ -106,7 +112,8 @@ export default class WaveHandler {
   static timeNeededToEndWave(wave){
     var time = 1000 * 20;
     time += wave * 2.5;
-    return Math.min(time, 1000 * 90);
+    //return Math.min(time, 1000 * 90);
+    return 1500;
   }
 
   livingEnemiesTotalValue(){
@@ -124,7 +131,7 @@ export default class WaveHandler {
   //about how much Ship 'Power' can be on screen at once in a given wave.
   //'power' is approximated by value
   spawnValueThresholdForAdvancedEnemies(){
-    const basicShipValue = ParentSprite.scaleValueByWave(this.wave, this.game.ships.diagonal.resourceValue);
+    const basicShipValue = ParentSprite.scaleValueByWave(this.wave, this.game.ships.diagonal.gold);
     var numBasicShips = this.wave / this.wavesUntilOneMoreShipCanAppearOnScreen + this.minShips;
     numBasicShips = Math.min(numBasicShips, this.maxShips);
 
@@ -134,7 +141,7 @@ export default class WaveHandler {
   //about how much basic meteor 'Power' can be on screen at once in a given wave.
   //'power' is approximated by value
   spawnValueThresholdForMeteors(){
-    const basicUnitValue = ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.resourceValue);
+    const basicUnitValue = ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.gold);
     var numBasicUnits = this.wave / this.wavesUntilOneMoreMeteorCanAppearOnScreen + this.minMeteors;
     numBasicUnits = Math.min(numBasicUnits, this.maxMeteors);
 

@@ -34,7 +34,9 @@ export default class Preload extends Phaser.State {
       'gunLevel', 'damageLevel', 'fireRateLevel', 'defenseLevel', 'scoreBoostLevel', 'allyLevel',
       'resources', 'waveNumber'
     ];
+
     var needToInitConfig = false;
+
     const checkNeedForInitialization = function(element){
       const config = this.game.getConfig(element);
       needToInitConfig = needToInitConfig || isNaN(config) || config == null || typeof config == 'undefined';

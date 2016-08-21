@@ -14,7 +14,7 @@
     "frame":"ship_enemy_diagonal_full_screen",
     "health":100,
     "width": 50,
-    "resourceValue": 50,
+    "gold": 50,
     "destYInPercentOfScreen": {
       "min": 5,
       "max": 50

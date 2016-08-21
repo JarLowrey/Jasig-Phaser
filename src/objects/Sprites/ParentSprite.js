@@ -55,7 +55,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   getValue(){
-    return this.jsonInfo.resourceValue || 0;
+    return this.jsonInfo.gold || 0;
   }
 
 

@@ -9,7 +9,7 @@ import ParentSprite from '../../objects/Sprites/ParentSprite';
 export default class IconText extends Phaser.Group {
 
   constructor(game, fontHeight,
-    text, style, iconKey, iconFrame, marginBtwSpriteAndText){
+    text, style, iconKey, iconFrame, marginBtwSpriteAndText, bgKey, bgFrame){
     super(game);
 
     this.marginBtwSpriteAndText = marginBtwSpriteAndText;
@@ -27,11 +27,18 @@ export default class IconText extends Phaser.Group {
     this.image.anchor.setTo(1,0.5);
     this.text.x = marginBtwSpriteAndText;
 
+    if(bgKey){
+      this.graphic = this.game.add.image(-this.width/2,-this.height/2, bgKey, bgFrame);
+      this.addChild(this.graphic);
+    }
     this.addChild(this.text);
     this.addChild(this.image);
   }
 
   setPressable(width, outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed, pressFunction){
+    if(this.graphic) this.graphic.kill();
+    if(this.graphicPressed) this.graphicPressed.kill();
+
     this.graphic = this.getBg(width, outlineWidth, 10, outlineColor, bgColor);
     this.graphicPressed = this.getBg(width, outlineWidth, 10, outlineColorPressed, bgColorPressed);
     this.outlineWidth = outlineWidth;
@@ -91,7 +98,6 @@ export default class IconText extends Phaser.Group {
 
       this.graphicPressed.width = width * 2;
       this.graphicPressed.height = height * 2;
-      console.log(this.text.width, this.image.width,this.graphic.width,this.graphic.height)
       */
 
     }
@@ -99,6 +105,9 @@ export default class IconText extends Phaser.Group {
 
   kill(){
     this.exists = false;
+
+    if(this.graphic) this.graphic.kill();
+    if(this.graphicPressed) this.graphicPressed.kill();
 
     this.image.kill();
     this.text.kill();
@@ -114,6 +123,9 @@ export default class IconText extends Phaser.Group {
      alpha: 0}, 750, Phaser.Easing.Linear.In);
     this.goldTween.onComplete.add(function(){ this.kill(); }, this);
 
+    if(this.graphic) this.graphic.reset();
+    if(this.graphicPressed) this.graphicPressed.reset();
+
     this.image.reset();
     this.text.reset();
   }
@@ -122,12 +134,17 @@ export default class IconText extends Phaser.Group {
     if(!resourceValue || resourceValue <= 0) return;
 
     this.reset();
+    this.alpha = 1;
 
     this.setText(resourceValue);
 
     this.x = x;
     this.y = y;
 
+    this.goldTween.onComplete.add(function(){
+      // call incrementGameResources function from the 'Game' state
+      this.game.state.states.Game.incrementGameResources(resourceValue);
+    }, this);
     this.goldTween.start();
   }
 }
