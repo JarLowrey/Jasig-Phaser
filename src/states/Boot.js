@@ -48,6 +48,13 @@ export default class Boot extends Phaser.State {
     this.load.pack('boot', null, assets);
 
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+
+    this.game.getConfig = function(name){
+      return localStorage[name];
+    }
+    this.game.storeConfig = function(name,value){
+      return localStorage[name] = value;
+    }
   }
 
   onLoadComplete(){

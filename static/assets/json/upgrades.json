@@ -7,6 +7,7 @@
     "msg":"Increase bullet damage",
     "maxLevel":10,
     "baseCost":400,
+    "costIncreasePerLevel":1.5,
     "icon":"explosion"
   },
   "fireRate":{
@@ -14,6 +15,7 @@
     "msg":"Improve firing rate",
     "maxLevel":10,
     "baseCost":400,
+    "costIncreasePerLevel":1.5,
     "icon":"bullet"
   },
   "defense":{
@@ -21,6 +23,7 @@
     "msg":"Increase shield capacity",
     "maxLevel":10,
     "baseCost":1000,
+    "costIncreasePerLevel":1.5,
     "icon":"shield"
   },
   "scoreBoost":{
@@ -28,6 +31,7 @@
     "msg":"Improve ability to gather space debris. Increases rate of resource retrieval.",
     "maxLevel":5,
     "baseCost":10000,
+    "costIncreasePerLevel":2,
     "icon":"coins"
   },
   "repair":{
@@ -35,6 +39,7 @@
     "msg":"Repair hull damage",
     "alt_msg":"Hull fully repaired",
     "baseCost":100,
+    "maxCost":5000,
     "icon":"heal"
   },
   "ally":{
@@ -42,43 +47,44 @@
     "msg":"Other ships were also sent on this mission. Unfortunately our homing beacon was destoyed on launch. Repair beacon and try to signal a ship.",
     "alt_msg":"Increase the freqeuncy of the beacon's signal to attract stronger allies.",
     "maxLevel":5,
-    "baseCost":100,
+    "baseCost":7500,
     "icon":"ally"
   },
   "guns":{
+    "title":"Phaser",
     "icon":"gun",
-    "gunLevels":[
+    "levels":[
       {
       "msg":"The ship's main blaster was damaged on launch. It wouldn't take much to fix it up.",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"There's room for another gun here!",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"An upgrade to the phase annihilator would give us three shooty blastys!",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"The guns could be tilted outwards, but some major structural changes would need to be made.",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"Lets pump that middle gun up a notch.",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"Combining all the lasers could make one nasty alien killing machine.",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"A giant laser is nice, but a giant laser with some buddies is nicer!",
-      "baseCost":100
+      "cost":100
       },
       {
       "msg":"Let's pump this up a notch and bring back the spread.",
-      "baseCost":100
+      "cost":100
       }
     ]
   }

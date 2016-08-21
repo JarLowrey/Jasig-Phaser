@@ -6,7 +6,7 @@
 
 export default class IconText extends Phaser.Group {
 
-  constructor(game, diameter, iconKey, iconFrame, outlineLen, outlineColor, outlineColorPressed, bgColor, bgColorPressed){
+  constructor(game, diameter, iconKey, iconFrame, outlineLen, outlineColor, outlineColorPressed, bgColor, bgColorPressed, onPressedFunction){
     super(game);
 
     this.outlineColor = outlineColor;
@@ -30,6 +30,7 @@ export default class IconText extends Phaser.Group {
     this.setAll('inputEnabled', true);
     this.callAll('events.onInputDown.add', 'events.onInputDown', this.onDown, this);
     this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
+    this.pressFunction = onPressedFunction;
   }
 
   onDown(){
@@ -38,6 +39,7 @@ export default class IconText extends Phaser.Group {
 
   onUp(){
     this.swapChildren(this.graphicPressed, this.graphic);
+    this.pressFunction();
   }
 
   getCircle(outlineLen, diameter, outlineColor, bgColor){

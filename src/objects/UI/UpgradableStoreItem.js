@@ -42,12 +42,17 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
   }
 
+  assignPressFunction(onPressedFunction){
+    this.pressFunction = onPressedFunction;
+  }
+
   onDown(){
     this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
   }
 
   onUp(){
     this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
+    this.pressFunction();
   }
 
   getRadiusFromPercent(radiusPercent, width, height){
