@@ -13,7 +13,7 @@ export default class Unit extends ParentSprite {
   constructor(game){
     super(game);
 
-    this.goldText = new IconText(this.game, this.game.world.centerX, this.game.world.centerY, 20,
+    this.goldText = new IconText(this.game, 20,
       'score', 'text', 'icons', 'coins', 'left', 0);
     this.goldText.kill();
 

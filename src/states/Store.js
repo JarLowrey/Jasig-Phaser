@@ -6,6 +6,7 @@ import ProgressBar from '../objects/UI/ProgressBar';
 import UiHelper from '../objects/UI/UiHelper';
 import Stars from '../objects/UI/Stars';
 import IconBtn from '../objects/UI/IconBtn';
+import IconText from '../objects/UI/IconText';
 
 
 export default class Store extends Phaser.State {
@@ -86,19 +87,16 @@ export default class Store extends Phaser.State {
 
   assignUpgradePressedFunctions(){
     //use a closure to return a function with valid title, text, cost properties
-    var pressed = function(groupName, configName){
+    var pressed = function(groupName, upgradeName){
       return function(){
-        const upgradeLvl = this.game.getConfig(configName);
+        const upgradeLvl = this.game.getConfig(upgradeName);
         const info = this.upgradeInfo[groupName];
 
         const title = info.title;
-
-        var msg = info.msg;
-        if(!msg) msg = info.levels[upgradeLvl].msg;
-
+        const msg = this.getMsg(groupName, upgradeLvl);
         var cost = this.getCost(groupName, upgradeLvl);
 
-        this.setText(title,msg,cost);
+        this.setText( title, msg, cost, this.upgradeMaxedOut(groupName,upgradeLvl) );
       }.bind(this);
     }.bind(this);
 
@@ -121,6 +119,19 @@ export default class Store extends Phaser.State {
     if(!cost) cost = info.levels[level].cost; //cost not found: cost is manually defined for each level, ignore everything above and just set it
 
     return cost;
+  }
+  getMsg(upgradeName, level){
+    const info = this.upgradeInfo[upgradeName];
+
+    var msg = info.msg;
+    if(!msg) msg = info.levels[level].msg;
+    if(this.upgradeMaxedOut(upgradeName,level)) msg = info.maxed_out
+
+    return msg;
+  }
+  upgradeMaxedOut(upgradeName, level){
+    const info = this.upgradeInfo[upgradeName];
+    return level >= info.maxLevel || (info.levels && level >= info.levels.length)
   }
 
   createUpgrades(upgradeWidth, upgradeHeight, margin, outlineWidth, outlineColor, backgroundColor, outlineColorPressed, bgColorPressed){
@@ -182,7 +193,11 @@ export default class Store extends Phaser.State {
     this.upgrades.addChild(this.ally);
   }
 
-  createTextBox(x,y, width, height, outlineWidth = 5, outlineColor = '0x123456', backgroundColor = '0xffffff'){
+  purchaseAttempt(){
+
+  }
+
+  createTextBox(x,y, width, height, outlineWidth = 5, outlineColor = '0x123456', bgColor = '0xffffff', outlineColorPressed = 0x654321, bgColorPressed = 0x177612){
     this.txtBgOutlineWidth = outlineWidth;
 
     this.txtBackground = this.game.add.graphics(0,0);
@@ -194,7 +209,7 @@ export default class Store extends Phaser.State {
     this.txtBackground.drawRect(-width/2, -height/2, width, height);
 
     //draw fill
-    this.txtBackground.beginFill(backgroundColor);
+    this.txtBackground.beginFill(bgColor);
     this.txtBackground.drawRect(-width/2, -height/2, width, height);
     this.txtBackground.endFill();
 
@@ -209,9 +224,11 @@ export default class Store extends Phaser.State {
     this.msg.wordWrapWidth = this.txtBackground.width * 0.75;
 
     //create cost
-    this.cost = this.game.add.text(0,this.title.bottom,'Store',this.game.fonts['text']);
-    this.cost.anchor.setTo(0.5,1);
-    this.cost.bottom = this.txtBackground.height / 2 - this.txtBgOutlineWidth;
+    //this.cost = this.game.add.text(0,this.title.bottom,'Store',this.game.fonts['text']);
+    //this.cost.anchor.setTo(0.5,1);
+    this.cost = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 'left', 0);
+    this.cost.setPressable(outlineWidth / 2, outlineColor, bgColor, outlineColorPressed, bgColorPressed, this.purchaseAttempt.bind(this) );
+    this.cost.bottom = this.txtBackground.bottom - this.txtBgOutlineWidth;
 
     //add text to a group
     this.textBox = new Phaser.Group(this.game);
@@ -225,12 +242,13 @@ export default class Store extends Phaser.State {
     this.textBox.y = y;
   }
 
-  setText(title, msg, cost){
+  setText(title, msg, cost,upgradeMaxedOut){
     const oldTop = this.textBox.top;
 
     this.title.setText(title);
     this.msg.setText(msg);
-    this.cost.setText('$'+cost);
+    this.cost.setText(this.game.nFormatter(cost));
+    this.cost.visible = !upgradeMaxedOut; //if maxed, hide option to buy
 
     //resize the background for the new text (not always needed)
     this.txtBackground.width = this.textBox.width;// + this.textMargin * 2;
@@ -240,7 +258,7 @@ export default class Store extends Phaser.State {
     //reposition the new text
     this.title.top =  - this.txtBackground.height / 2 + this.txtBgOutlineWidth;
     this.msg.top = this.title.bottom;
-    this.cost.bottom = this.txtBackground.bottom;
+    this.cost.y = this.txtBackground.bottom - this.txtBgOutlineWidth - this.cost.height / 2 - this.margin;
 
     //ensure that the group stays at its old position
     this.textBox.top = oldTop;

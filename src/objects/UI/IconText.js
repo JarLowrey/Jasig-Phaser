@@ -8,12 +8,11 @@ import ParentSprite from '../../objects/Sprites/ParentSprite';
 
 export default class IconText extends Phaser.Group {
 
-  constructor(game, x, y, fontHeight,
+  constructor(game, fontHeight,
     text, style, iconKey, iconFrame, whereIconGoesRelativeToText, marginBtwSpriteAndText){
     super(game);
 
-    this.x = x;
-    this.y = y;
+    this.marginBtwSpriteAndText = marginBtwSpriteAndText;
 
     style = this.game.fonts[style] || this.game.fonts['text'];
     style.fontSize = fontHeight;
@@ -23,22 +22,72 @@ export default class IconText extends Phaser.Group {
     this.image.height = this.text.height;
     this.image.scale.x = this.image.scale.y;
 
-    if(whereIconGoesRelativeToText == 'left'){
-      this.text.anchor.setTo(0,0.5);
-      this.image.anchor.setTo(1,0.5);
-      this.text.x = marginBtwSpriteAndText;
-    }else{
-      this.text.anchor.setTo(1,0.5);
-      this.image.anchor.setTo(0,0.5);
-      this.image.x = marginBtwSpriteAndText;
-    }
+    //set text to left of image
+    this.text.anchor.setTo(0,0.5);
+    this.image.anchor.setTo(1,0.5);
+    this.text.x = marginBtwSpriteAndText;
 
-    this.add(this.text);
-    this.add(this.image);
+    this.addChild(this.text);
+    this.addChild(this.image);
+  }
+
+  setPressable(outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed, pressFunction){
+    this.graphic = this.getBg(outlineWidth, 1, outlineColor, bgColor);
+    this.graphicPressed = this.getBg(outlineWidth, 1, outlineColorPressed, bgColorPressed);
+    this.outlineWidth = outlineWidth;
+
+    this.addChild(this.graphicPressed);
+    this.addChild(this.graphic);
+    this.bringToTop(this.text);
+    this.bringToTop(this.image);
+
+    this.pressFunction = pressFunction;
+  }
+  onDown(){
+    this.swapChildren(this.graphicPressed, this.graphic);
+  }
+  onUp(){
+    this.swapChildren(this.graphicPressed, this.graphic);
+    this.pressFunction();
+  }
+  getBg(outlineLen, radius, outlineColor, bgColor){
+    var graphic = this.game.add.graphics(0,0);
+    graphic.anchor.setTo(0.5,0.5);
+    const height = this.height * 1.1;
+    const width = this.width * 1.1;
+
+    //outline
+    graphic.lineStyle(outlineLen,outlineColor,1);
+    graphic.drawRoundedRect(-width/2, -height/2, width, height,radius);
+
+    graphic.beginFill(bgColor);
+    graphic.drawRoundedRect(-width/2, -height/2, width, height,radius);
+    graphic.endFill();
+
+    return graphic;
+  }
+
+  update(){
+    this.game.debug.geom(this.text.getBounds()); //better way of showing the bounding box when debugging
+    this.game.debug.geom(this.image.getBounds()); //better way of showing the bounding box when debugging
   }
 
   setText(txt){
     this.text.setText(txt);
+
+    if(this.graphic && this.graphicPressed && this.image){
+      //image and text have their right and left edges on the mid-line (respectively). Find the max of their dimensions, and double it for a centered graphic
+      const width = Math.max(this.text.width, this.image.width);
+      const height = Math.max(this.text.height, this.image.height);
+
+      this.graphic.width = width * 2;
+      this.graphic.height = height * 2;
+
+      this.graphicPressed.width = width * 2;
+      this.graphicPressed.height = height * 2;
+      console.log(this.text.width, this.image.width,this.graphic.width,this.graphic.height)
+
+    }
   }
 
   kill(){
