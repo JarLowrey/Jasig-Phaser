@@ -89,7 +89,7 @@ export default class Unit extends ParentSprite {
   finishKill(stateToStartAfterwards = 'Store'){
     this.isBeingKilled = false;
     super.kill(); //actually kill this sprite!
-    this.startNextStateIfPossible();
+    this.startNextStateIfPossible(stateToStartAfterwards);
   }
   startNextStateIfPossible(stateToStartAfterwards = 'Store'){
     const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
