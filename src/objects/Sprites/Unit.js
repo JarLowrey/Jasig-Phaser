@@ -182,9 +182,9 @@ export default class Unit extends ParentSprite {
   }
 
   static addExplosionEmitter(frame = 'explosion1', game){
-    if(!Unit.explosionGroups){ //initialize the explosion groups if not already initialized
+    //initialize the explosion groups if not already initialized, or if state change has nuked the particles
+    if(!Unit.explosionGroups || Unit.getExplosionEmitter(frame).game == null){
       Unit.explosionGroups = {};
-      Unit.addExplosionEmitter('explosion1', game);
     }
 
     if(frame in Unit.explosionGroups) return; //frame can not yet be added to the emitter hash
