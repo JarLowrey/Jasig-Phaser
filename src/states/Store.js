@@ -38,7 +38,7 @@ export default class Store extends Phaser.State {
     this.totalMoney.top = this.margin;
     this.totalMoney.x = this.game.world.centerX;
 
-    this.healthbar = new ProgressBar(this.game, this.upgrades.width, btnLen, false, 4);
+    this.healthbar = new ProgressBar(this.game, null, this.upgrades.width, btnLen, false, 4);
     this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
     this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game) );
     this.healthbar.top = this.totalMoney.bottom + this.margin;

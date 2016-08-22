@@ -48,7 +48,7 @@ export default class Protagonist extends Ship {
     //setup healthbar
     const healthbarJson = this.game.dimen['game_health'];
     this.healthbar.destroy(); //delete the bar given to this by the parent, Ship
-    this.healthbar = new ProgressBar(this.game, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
+    this.healthbar = new ProgressBar(this.game, null, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
       false, healthbarJson.strokeLength);
     this.healthbar.setText( this.getHealthbarText() );
     this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width / 2;

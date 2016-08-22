@@ -2,7 +2,9 @@
 
 export default class ProgressBar extends Phaser.Group{
 
-  constructor(game, width = 100, height = 12, barShrinksTowardsLeft = true, outlineLength = 4,
+  constructor(game,
+      source = null,//Phaser.Sprite | Phaser.Image | Phaser.Text | Phaser.BitmapData | Phaser.RenderTexture | Image | HTMLCanvasElement | string
+      width = 100, height = 12, barShrinksTowardsLeft = true, outlineLength = 4,
       fontStyle, text,
       backgroundBarColor = '0x651828',
       outlineBarColor = '0xffffff',
@@ -13,16 +15,23 @@ export default class ProgressBar extends Phaser.Group{
     this.strokeLength = outlineLength;
     this.barShrinksTowardsLeft = barShrinksTowardsLeft;
 
+    //create bar background source. Assign a default if one is not set in constructor. The bar must have a diff source as cropping modifies the underlying texture
+    if(!source) source = this.getBarBitmapData(width, height);
+    var barSource = this.game.add.bitmapData(width - this.strokeLength, height - this.strokeLength);
+    barSource.copy(source,0,0,width,height,0,0,width - this.strokeLength, height - this.strokeLength);
+
     //Create sprites. The bars must use different texture, otherwise the cropping in setPercent will affect them all
-    this.outlineSprite = this.game.add.sprite(0, 0, this.getBarBitmapData(width, height));
+    this.outlineSprite = this.game.add.sprite(0, 0, source);
     this.outlineSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.outlineSprite);
 
-    this.bgSprite = this.game.add.sprite(0, 0, this.getBarBitmapData(width - this.strokeLength, height - this.strokeLength));
+    this.bgSprite = this.game.add.sprite(0, 0, source);
+    this.bgSprite.width = width - this.strokeLength;
+    this.bgSprite.height = height - this.strokeLength;
     this.bgSprite.anchor.setTo(0.5,0.5);
     this.addChild(this.bgSprite);
 
-    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, this.getBarBitmapData(width - this.strokeLength, height - this.strokeLength));
+    this.barSprite = this.game.add.sprite(this.getBarXPosition(), 0, barSource);
     this.barSprite.anchor.setTo(this.getBarXAnchor(),0.5);
     this.addChild(this.barSprite);
 

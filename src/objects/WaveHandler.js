@@ -32,7 +32,7 @@ export default class WaveHandler {
     this.waveTimer = game.time.create(false);
 
     const countDownJson = this.game.dimen['game_countdown'];
-    this.progressBar = new ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
+    this.progressBar = new ProgressBar(this.game, null, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
       false, countDownJson.strokeLength, this.game.fonts['progressBar'], '');
     this.progressBar.setBarColor(null, '0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
