@@ -10,6 +10,8 @@ export default class GameOver extends Phaser.State {
     this.stars.showStars();
 
     this.text = this.game.add.text(this.game.world.centerX,this.game.world.centerY,'Game Over',{'fill':'#ffffff'});
+
+    this.game.resetConfig();
   }
 
   update() {

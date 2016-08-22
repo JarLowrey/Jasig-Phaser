@@ -114,7 +114,7 @@ export default class ParentSprite extends Phaser.Sprite {
 
     const pool = (useFriendlinessPools) ? childClass.friendlyPool : childClass.pool;
 
-    if( !pool ){ //pool does not exist. Initialize them!
+    if( !pool || pool.game == null){ //pool does not exist, or does exist but has been fucked up by a State change. (Re)Initialize them!
       if(useFriendlinessPools){
         childClass.friendlyPool = new Phaser.Group(game);
         childClass.enemyPool = new Phaser.Group(game);

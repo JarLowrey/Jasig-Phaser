@@ -13,8 +13,7 @@ export default class Unit extends ParentSprite {
   constructor(game){
     super(game);
 
-    this.goldText = new IconText(this.game, 20,
-      'score', 'text', 'icons', 'coins', 0);
+    this.goldText = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.goldText.kill();
 
     this.explosionParticleLifeSpan = 400;
@@ -66,12 +65,18 @@ export default class Unit extends ParentSprite {
   //'this' will be added back into the recycling pools. This causes problems.
   kill(showCoolStuff = true){
     if(this.isBeingKilled) return;
-
     this.isBeingKilled = true;
-    ParentSprite.getNewSprite(Bonus).reset('heal', this); //check to see if a bonus should be made
+
+    //check to see if a bonus should be made
+    if( this.getClassName() != 'Protagonist' ){
+      ParentSprite.getNewSprite(Bonus, null, this.game).reset('heal', this);
+    }
 
     if(showCoolStuff)this.showDeathAnimations();
-    else this.finishKill();
+    else{
+      this.finishKill();
+      this.game.state.states.Game.incrementGameResources(this.jsonInfo.gold);
+    }
   }
   showDeathAnimations(){
     this.goldText.showGoldText(this.getValue(), this.x, this.y);

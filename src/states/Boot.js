@@ -8,6 +8,7 @@
  */
 
 import assets from '../assets';
+import JsonInfo from '../objects/JsonInfo';
 
 export default class Boot extends Phaser.State {
 
@@ -58,10 +59,10 @@ export default class Boot extends Phaser.State {
         //leave the value as a string
       }
       return storageVal;
-    };
+    }.bind(this);
     this.game.storeConfig = function(name,value){
       return localStorage[name] = value;
-    };
+    }.bind(this);
     this.game.nFormatter = function(num, digits = 1) {//source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
       var si = [
         { value: 1E18, symbol: 'E' },
@@ -77,7 +78,20 @@ export default class Boot extends Phaser.State {
         }
       }
       return num.toFixed(digits).replace(rx, '$1');
-    };
+    }.bind(this);
+    this.game.resetConfig = function(){
+      this.game.storeConfig('gunLevel', 0);
+      this.game.storeConfig('damageLevel', 0);
+      this.game.storeConfig('fireRateLevel', 0);
+      this.game.storeConfig('defenseLevel', 0);
+      this.game.storeConfig('scoreBoostLevel', 0);
+      this.game.storeConfig('allyLevel', 0);
+      this.game.storeConfig('resources', 0);
+      this.game.storeConfig('waveNumber', 0);
+
+      const protagonistInfo = JsonInfo.getInfo(this.game, 'ships', 'protagonist');
+      this.game.storeConfig('health', protagonistInfo.health);
+    }.bind(this);
   }
 
   onLoadComplete(){

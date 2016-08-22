@@ -43,8 +43,6 @@ export default class Game extends Phaser.State {
   }
 
   incrementGameResources(amt){
-    amt = amt || 0; //some sprites, like the hero, do not have a value but are still killed in a fashion where this function is called. So filter out those undefined/NaN values
-
     this.game.waveHandler.earnedResources += amt;
     this.totalMoney.setText( this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.getConfig('resources') ) );
   }

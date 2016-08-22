@@ -9,7 +9,6 @@
 
 import assets from '../assets';
 import UiHelper from '../objects/UI/UiHelper';
-import JsonInfo from '../objects/JsonInfo';
 
 export default class Preload extends Phaser.State {
 
@@ -49,16 +48,7 @@ export default class Preload extends Phaser.State {
     //already initialized: exit the function now
     if(!needToInitConfig) return;
 
-    //still here! Need to initialize
-    configsToDefaultToZero.forEach(
-      function(element){
-        this.game.storeConfig(element, 0);
-      }.bind(this)
-    );
-
-    //custom config initialization below
-    const protagonistInfo = JsonInfo.getInfo(this.game, 'ships', 'protagonist');
-    this.game.storeConfig('health', protagonistInfo.health);
+    this.game.resetConfig();
   }
 
   showSplashScreen() {

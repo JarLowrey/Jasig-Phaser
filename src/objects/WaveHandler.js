@@ -66,7 +66,7 @@ export default class WaveHandler {
     //save completed level stats
     this.game.storeConfig('health', this.hero.health);
     this.game.storeConfig('waveNumber', this.wave + 1);
-    this.game.storeConfig('resources', this.game.getConfig('resources') + this.earnedReources);
+    this.game.storeConfig('resources', this.game.getConfig('resources') + this.earnedResources);
   }
 
   isWaveOver(){
