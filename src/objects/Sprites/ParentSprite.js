@@ -53,7 +53,6 @@ export default class ParentSprite extends Phaser.Sprite {
   silentKill(){
     this.kill(false);
   }
-
   getValue(){
     return this.jsonInfo.gold || 0;
   }

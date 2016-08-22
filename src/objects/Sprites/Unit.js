@@ -83,14 +83,18 @@ export default class Unit extends ParentSprite {
     this.showExplosion();
     this.visible = false;
 
-    this.game.time.events.add(this.explosionParticleLifeSpan,this.finishKill, this);
+    //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
+    this.game.time.events.add(1000,this.finishKill, this);
   }
   finishKill(stateToStartAfterwards = 'Store'){
     this.isBeingKilled = false;
     super.kill(); //actually kill this sprite!
-
+    this.startNextStateIfPossible();
+  }
+  startNextStateIfPossible(stateToStartAfterwards = 'Store'){
     const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
-    if( this.getClassName() == 'Protagonist' || allEnemiesDead ){
+    const noActiveBonuses = ParentSprite.getPool(Bonus, null, this.game).getFirstAlive() == null;
+    if( this.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
       this.game.state.start(stateToStartAfterwards);
       this.game.waveHandler.saveWaveValues();
     }
