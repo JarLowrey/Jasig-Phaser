@@ -15,8 +15,6 @@ export default class Unit extends ParentSprite {
 
     this.goldText = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.goldText.kill();
-
-    this.explosionParticleLifeSpan = 400;
   }
 
   update(){
@@ -80,7 +78,7 @@ export default class Unit extends ParentSprite {
   }
   showDeathAnimations(){
     this.goldText.showGoldText(this.getValue(), this.x, this.y);
-    this.showExplosion();
+    this.explosionRecycler.showExplosion();
     this.visible = false;
 
     //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
@@ -122,84 +120,6 @@ export default class Unit extends ParentSprite {
 
   isAlive(){
     return !this.isBeingKilled && this.alive;
-  }
-
-
-
-
-
-  /*
-    EXPLOSION EMITTER RELATED METHODS
-  */
-
-  showExplosion(frame = 'explosion1', explosionSpeed = 400, numParticlesEmittedPerDirection = 3){
-    Unit.addExplosionEmitter(frame, this.game); //checks to see if the emitter has been added yet. If not, it does so.
-
-    var emitter = Unit.getExplosionEmitter(frame);
-    const fastSpeed = ParentSprite.dp(explosionSpeed);
-    const slowSpeed = explosionSpeed * 0.75;
-
-    //put the emitter on top of the thing that is exploding
-    emitter.width = this.width ;
-    emitter.height = this.height ;
-    emitter.x = this.x;
-    emitter.y = this.y;
-    emitter.minParticleScale = this.getParticleScale(frame);
-    emitter.maxParticleScale = this.getParticleScale(frame);
-
-    //explode stationary
-    //emitter.minParticleSpeed.set(-slowSpeed, -slowSpeed);
-    //emitter.maxParticleSpeed.set(slowSpeed, slowSpeed);
-    //emitter.start(true, 500, null, 2);
-
-    //explode down
-    emitter.minParticleSpeed.set(-slowSpeed, slowSpeed);
-    emitter.maxParticleSpeed.set(slowSpeed, fastSpeed);
-    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
-    //explode up
-    emitter.minParticleSpeed.set(-slowSpeed, -fastSpeed);
-    emitter.maxParticleSpeed.set(slowSpeed, -slowSpeed);
-    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
-
-    //explode left
-    emitter.minParticleSpeed.set(-fastSpeed, -slowSpeed);
-    emitter.maxParticleSpeed.set(-slowSpeed, slowSpeed);
-    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
-    //explode right
-    emitter.minParticleSpeed.set(slowSpeed, -slowSpeed);
-    emitter.maxParticleSpeed.set(fastSpeed, slowSpeed);
-    emitter.start(true, this.explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
-  }
-
-  getParticleScale(particleFrame){
-    const particleWidth = this.game.cache.getFrameByName('sprites',particleFrame).width;
-    const desiredWidth = 20;
-    return  desiredWidth / particleWidth;
-  }
-
-  static getExplosionEmitter(frame = 'explosion1'){
-    return Unit.explosionGroups[frame];
-  }
-
-  static addExplosionEmitter(frame = 'explosion1', game){
-    //initialize the explosion groups if not already initialized, or if state change has nuked the particles
-    if(!Unit.explosionGroups || Unit.getExplosionEmitter(frame).game == null){
-      Unit.explosionGroups = {};
-    }
-
-    if(frame in Unit.explosionGroups) return; //frame can not yet be added to the emitter hash
-
-    //Emit an explosion upon death
-    var emitter = game.add.emitter(0,0, 25);
-
-    emitter.makeParticles('sprites',frame); //cannot change texture on the fly. Prob would be better to define an emitter per explosion texture desired (with lots of particles), and emit only a few of the particles upon death
-
-    emitter.gravity = 0;
-
-    emitter.setRotation(0, 0);
-    emitter.setAlpha(0.75, 1);
-
-    Unit.explosionGroups[frame] = emitter;
   }
 
 }

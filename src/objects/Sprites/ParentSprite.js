@@ -5,12 +5,14 @@
  */
 
 import JsonInfo from '../../objects/JsonInfo';
+import ExplosionRecycler from '../../objects/UI/ExplosionRecycler';
 
 
 export default class ParentSprite extends Phaser.Sprite {
 
   constructor(game){
     super(game);
+    this.explosionRecycler = new ExplosionRecycler(this.game, this);
   }
 
   reset(jsonType, jsonName, x, y){
@@ -25,6 +27,8 @@ export default class ParentSprite extends Phaser.Sprite {
 
     this.alpha = 1;
     this.angle = 0;
+
+    this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
   }
 
   update(){
