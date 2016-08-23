@@ -6,9 +6,12 @@
 
 import ParentSprite from '../Sprites/ParentSprite';
 import Bonus from '../Sprites/Bonus';
+import SpritePooling from '../Sprites/SpritePooling';
+
 import IconText from '../../objects/UI/IconText';
 
 export default class Unit extends ParentSprite {
+  static getClassName(){ return 'Unit'; }
 
   constructor(game){
     super(game);
@@ -66,8 +69,9 @@ export default class Unit extends ParentSprite {
     this.isBeingKilled = true;
 
     //check to see if a bonus should be made
-    if( this.getClassName() != 'Protagonist' ){
-      ParentSprite.getNewSprite(Bonus, null, this.game).reset('heal', this);
+    if( this.constructor.getClassName() != 'Protagonist' ){
+      const bonusesPoolName = SpritePooling.getPoolName(Bonus);
+      this.createSprite(bonusesPoolName).reset('heal', this);
     }
 
     if(showCoolStuff)this.showDeathAnimations();
@@ -88,15 +92,6 @@ export default class Unit extends ParentSprite {
     this.isBeingKilled = false;
     super.kill(); //actually kill this sprite!
     this.startNextStateIfPossible(stateToStartAfterwards);
-  }
-  startNextStateIfPossible(stateToStartAfterwards = 'Store'){
-    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
-    const noActiveBonuses = ParentSprite.getPool(Bonus, null, this.game).getFirstAlive() == null;
-    if( this.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
-      this.game.stateTransition.to(stateToStartAfterwards);
-      //this.game.state.start(stateToStartAfterwards);
-      this.game.waveHandler.saveWaveValues();
-    }
   }
 
   setAnchor(isFriendly){

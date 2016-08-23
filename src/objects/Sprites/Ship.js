@@ -9,6 +9,7 @@ import ProgressBar from '../../objects/UI/ProgressBar';
 import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Ship extends Unit {
+  static getClassName(){ return 'Ship'; }
 
   constructor(game){
     super(game);
@@ -21,7 +22,7 @@ export default class Ship extends Unit {
     if(!this.alive) return;
 
     super.update();
-    if(this.getClassName() != 'Protagonist'){
+    if(this.constructor.getClassName() != 'Protagonist'){
       this.healthbar.x = this.x;
       this.healthbar.y = this.top - this.healthbar.height / 2;
     }

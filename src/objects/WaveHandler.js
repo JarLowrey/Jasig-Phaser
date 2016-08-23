@@ -6,6 +6,7 @@
 import ParentSprite from '../objects/Sprites/ParentSprite';
 import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
+import SpritePooling from '../objects/Sprites/SpritePooling';
 
 import ProgressBar from '../objects/UI/ProgressBar';
 
@@ -96,7 +97,8 @@ export default class WaveHandler {
       y = - ParentSprite.dp(5), //spawn a bit offscreen
       isFriendly = false){
 
-    var newEnemy = ParentSprite.getNewSprite(newEnemyClass, isFriendly, this.game);
+    const poolName = SpritePooling.getPoolName(newEnemyClass, isFriendly);
+    var newEnemy = this.game.state.states.Game.spritePools.getNewSprite(poolName);
     newEnemy.reset(newEnemyJsonName, x, y, isFriendly);
 
     return newEnemy;
@@ -122,8 +124,10 @@ export default class WaveHandler {
       if(!child.isFriendly) total += child.getValue();
     };
 
-    ParentSprite.getPool(Unit, false, this.game).forEachAlive(addToTotal);       //enemy units
-    ParentSprite.getPool(Ship, false, this.game).forEachAlive(addToTotal);       //enemy ships
+    const enemyUnitPoolName = SpritePooling.getPoolName(Unit, false);
+    const enemyShipPoolName = SpritePooling.getPoolName(Ship, false);
+    this.game.state.states.Game.spritePools.getPool(enemyUnitPoolName).forEachAlive(addToTotal);       //enemy units
+    this.game.state.states.Game.spritePools.getPool(enemyShipPoolName).forEachAlive(addToTotal);       //enemy ships
 
     return total;
   }

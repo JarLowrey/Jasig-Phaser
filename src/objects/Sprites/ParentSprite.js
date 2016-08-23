@@ -9,6 +9,7 @@ import ExplosionRecycler from '../../objects/UI/ExplosionRecycler';
 
 
 export default class ParentSprite extends Phaser.Sprite {
+  static getClassName(){ return 'ParentSprite'; }
 
   constructor(game){
     super(game);
@@ -17,6 +18,7 @@ export default class ParentSprite extends Phaser.Sprite {
 
   reset(jsonType, jsonName, x, y){
     this.jsonInfo = JsonInfo.getInfo(this.game, jsonType, jsonName);
+    this.jsonName = jsonName;
 
     super.reset(x, y, this.jsonInfo.health);
     this.maxHealth = this.jsonInfo.health;
@@ -35,10 +37,6 @@ export default class ParentSprite extends Phaser.Sprite {
     //this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
     //this.game.debug.body(this,'rgba(255,0,0,0.8)');
     //this.game.debug.bodyInfo(this, this.x, this.y);
-  }
-
-  getClassName(){
-    return this.constructor.name;
   }
 
   //give the sprite a new size while maintaining aspec
@@ -61,7 +59,24 @@ export default class ParentSprite extends Phaser.Sprite {
     return this.jsonInfo.gold || 0;
   }
 
+  //convenience functions to call 'Game' state's getPool function for sprites
+  getSpritePool(poolName){
+    return this.game.state.states.Game.spritePools.getPool(poolName);
+  }
+  createSprite(poolName){
+    return this.game.state.states.Game.spritePools.getNewSprite(poolName);
+  }
 
+  startNextStateIfPossible(stateToStartAfterwards = 'Store'){
+    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
+    const noActiveBonuses = this.getSpritePool('Bonus').getFirstAlive() == null;
+
+    if( this.constructor.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
+      this.game.stateTransition.to(stateToStartAfterwards);
+      //this.game.state.start(stateToStartAfterwards);
+      this.game.waveHandler.saveWaveValues();
+    }
+  }
 
 
 
@@ -86,58 +101,6 @@ export default class ParentSprite extends Phaser.Sprite {
     return height * (parseFloat(percent) / 100.0);
   }
 
-
-
-
-
-  /*
-    STATIC METHODS FOR HANDLIING RESOURCE POOLING
-  */
-
-  static useFriendlinessPools(isFriendly){
-    return !(isFriendly == null || typeof isFriendly == 'undefined');
-  }
-
-  static getPool(childClass, isFriendly, game, preallocationNum){
-    ParentSprite.initPools(childClass, isFriendly, game, preallocationNum);
-
-    const useFriendlinessPools = ParentSprite.useFriendlinessPools(isFriendly);
-
-    if(useFriendlinessPools && isFriendly){
-      return childClass.friendlyPool;
-    }else if(useFriendlinessPools){
-      return childClass.enemyPool;
-    }else{
-      return childClass.pool;
-    }
-  }
-
-  static initPools(childClass, isFriendly, game, preallocationNum = 10){
-    const useFriendlinessPools = ParentSprite.useFriendlinessPools(isFriendly);
-
-    const pool = (useFriendlinessPools) ? childClass.friendlyPool : childClass.pool;
-
-    if( !pool || pool.game == null){ //pool does not exist, or does exist but has been fucked up by a State change. (Re)Initialize them!
-      if(useFriendlinessPools){
-        childClass.friendlyPool = new Phaser.Group(game);
-        childClass.enemyPool = new Phaser.Group(game);
-
-        childClass.friendlyPool.classType = childClass;
-        childClass.enemyPool.classType = childClass;
-
-        childClass.friendlyPool.createMultiple(preallocationNum);
-        childClass.enemyPool.createMultiple(preallocationNum);
-      }else{
-        childClass.pool = new Phaser.Group(game);
-        childClass.pool.classType = childClass;
-        childClass.pool.createMultiple(preallocationNum);
-      }
-    }
-  }
-
-  static getNewSprite(childClass, newSpriteIsFriendly, game, preallocationNum){
-    return ParentSprite.getPool(childClass, newSpriteIsFriendly, game, preallocationNum).getFirstDead(true);
-  }
 
   /*
     STATIC METHODS FOR SCALING SPRITE ATTRIBUTES BASED UPON WAVE NUMBER

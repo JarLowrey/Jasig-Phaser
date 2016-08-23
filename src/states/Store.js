@@ -65,7 +65,7 @@ export default class Store extends Phaser.State {
 
   setScrollArea(){
     //Changing the world height
-    console.log(this.game.width, this.stateBtns, this.stateBtns.bottom,this.upgrades.y)
+    console.log(this.game.width, this.stateBtns, this.stateBtns.bottom,this.upgrades.y);
     //this.game.world.setBounds(0, 0, this.game.width, 2000);
     //this.stars.setEmitAreaToGameArea();
   }

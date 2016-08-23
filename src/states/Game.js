@@ -5,11 +5,11 @@
  * A sample Game state, displaying the Phaser logo.
  */
 
-import ParentSprite from '../objects/Sprites/ParentSprite';
 import Bonus from '../objects/Sprites/Bonus';
 import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
 import Protagonist from '../objects/Sprites/Protagonist';
+import SpritePooling from '../objects/Sprites/SpritePooling';
 
 import WaveHandler from '../objects/WaveHandler';
 
@@ -21,6 +21,12 @@ export default class Game extends Phaser.State {
   create() {
     this.stars = new Stars(this.game);
     this.stars.showStars();
+
+    this.spritePools = new SpritePooling(this.game);
+    this.spritePools.initPool('friendlyShip',Ship);
+    this.spritePools.initPool('enemyShip',Ship);
+    this.spritePools.initPool('enemyUnit',Unit);
+    this.spritePools.initPool('Bonus',Bonus);
 
     this.game.time.advancedTiming = true;
 
@@ -48,13 +54,10 @@ export default class Game extends Phaser.State {
   }
 
   collisionDectection(){
-    const friendlyShips = ParentSprite.getPool(Ship, true, this.game);
-    const enemyShips = ParentSprite.getPool(Ship, false, this.game);
-
-    //const friendlyUnits = ParentSprite.getPool(Unit, true, this.game);
-    const enemyUnits = ParentSprite.getPool(Unit, false, this.game);
-
-    const bonuses = ParentSprite.getPool(Bonus, null, this.game);
+    const friendlyShips = this.spritePools.getPool('friendlyShip');
+    const enemyShips = this.spritePools.getPool('enemyShip');
+    const enemyUnits = this.spritePools.getPool('enemyUnit');
+    const bonuses = this.spritePools.getPool('Bonus');
 
     this.game.physics.arcade.overlap(
       friendlyShips,

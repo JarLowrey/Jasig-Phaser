@@ -5,10 +5,12 @@
  */
 import Ship from '../Sprites/Ship';
 import ParentSprite from '../Sprites/ParentSprite';
+import SpritePooling from '../Sprites/SpritePooling';
 import ProgressBar from '../../objects/UI/ProgressBar';
 import Store from '../../states/Store';
 
 export default class Protagonist extends Ship {
+  static getClassName(){ return 'Protagonist'; }
 
   constructor(game){
     super(game);
@@ -17,7 +19,8 @@ export default class Protagonist extends Ship {
 
     this.speed = 5;
 
-    ParentSprite.getPool(Ship, true, this.game).add(this);
+    const friendlyShipsPoolName = SpritePooling.getPoolName(Ship, true);
+    this.getSpritePool(friendlyShipsPoolName).add(this);
   }
 
   update(){

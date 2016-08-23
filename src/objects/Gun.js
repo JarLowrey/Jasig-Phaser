@@ -5,7 +5,6 @@
  */
 
 import Bullet from '../objects/Sprites/Bullet';
-import ParentSprite from '../objects/Sprites/ParentSprite';
 import JsonInfo from '../objects/JsonInfo';
 
 export default class Gun {
@@ -58,7 +57,7 @@ export default class Gun {
     for(var shotName in this.jsonInfo.shots){
       const shot = this.jsonInfo.shots[shotName];
 
-      var bullet = ParentSprite.getNewSprite(Bullet, this.shooter.isFriendly);
+      var bullet = this.createSprite(Bullet, this.shooter.isFriendly);
 
       bullet.reset(this.bulletName, this.shooter, this.target, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, shot['angle']);
     }
