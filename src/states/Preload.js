@@ -10,6 +10,9 @@
 import assets from '../assets';
 import UiHelper from '../objects/UI/UiHelper';
 
+import 'phaser-state-transition'; //only needs an import to setup ^.^
+import 'phaser-kinetic-scrolling-plugin';
+
 export default class Preload extends Phaser.State {
 
   preload() {
@@ -22,8 +25,15 @@ export default class Preload extends Phaser.State {
 
   create() {
     // Here is a good place to initialize plugins that depend on any game
-    // asset. Don't forget to `import` them first. Example:
-    //this.add.plugin(MyPlugin/*, ... initialization parameters ... */);
+    // asset. Don't forget to `import` them first.
+    this.game.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
+
+    this.game.kineticScrolling.configure({
+      horizontalScroll: false,
+      verticalScroll: true,
+      horizontalWheel: false,
+      verticalWheel: true
+    });
   }
 
   // --------------------------------------------------------------------------

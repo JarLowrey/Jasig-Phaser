@@ -72,8 +72,7 @@ export default class ParentSprite extends Phaser.Sprite {
     const noActiveBonuses = this.getSpritePool('Bonus').getFirstAlive() == null;
 
     if( this.constructor.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
-      this.game.stateTransition.to(stateToStartAfterwards);
-      //this.game.state.start(stateToStartAfterwards);
+      this.game.state.start(stateToStartAfterwards, Phaser.Plugin.StateTransition.Out.SlideTop, Phaser.Plugin.StateTransition.In.SlideTop);
       this.game.waveHandler.saveWaveValues();
     }
   }

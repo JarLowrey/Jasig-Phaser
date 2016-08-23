@@ -3,7 +3,7 @@
   "dependencies": {
     "phaser": "^2.6.1",
     "phaser-kinetic-scrolling-plugin": "^1.0.2",
-    "phaser-state-transition-plugin": "^0.1.6"
+    "phaser-state-transition": "^2.3.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.0",

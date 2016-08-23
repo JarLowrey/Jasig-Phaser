@@ -23,7 +23,7 @@ export default class Store extends Phaser.State {
     this.margin = margin;
     const outlineColor = 0x99E1D9;
     const bgColor = 0x332292F;
-    const upgradeHeight = Math.min(UiHelper.dp(150), this.game.height / 5);
+    const upgradeHeight = UiHelper.dp(150);
     const width = Math.min(UiHelper.dp(75), this.game.width / 6);
     const btnLen = Math.min(UiHelper.dp(40), this.game.width / 6);
     const outlineColorPressed = 0xa1e199;
@@ -31,22 +31,21 @@ export default class Store extends Phaser.State {
 
     this.createUpgrades(width, upgradeHeight, margin, outlineWidth,outlineColor,bgColor,outlineColorPressed,bgColorPressed);
     this.upgrades.x = this.game.world.centerX;
-    this.upgrades.y = 0 + this.upgrades.height/2;
-
-    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
-    this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
-    this.totalMoney.top = this.margin;
-    this.totalMoney.right = this.upgrades.right;
-
-    this.currentWave = this.game.add.text(this.upgrades.left, this.totalMoney.top, 'Wave '+this.game.getConfig('waveNumber'), this.game.fonts['text']);
+    this.upgrades.bottom = this.game.world.centerY;
 
     this.healthbar = new ProgressBar(this.game, null, this.upgrades.width, btnLen, false, 4);
     this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
     this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game) );
-    this.healthbar.top = this.totalMoney.bottom + this.margin;
+    this.healthbar.bottom = this.upgrades.top - this.margin;
     this.healthbar.x = this.game.world.centerX;
-    this.upgrades.top = this.healthbar.bottom + this.margin;
     this.healthbar.makePressable(this.upgradePressed('repair','health'), bgColor, 0xff0000);
+
+    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
+    this.totalMoney.bottom = this.healthbar.top - this.margin;
+    this.totalMoney.right = this.healthbar.right;
+
+    this.currentWave = this.game.add.text(this.upgrades.left, this.totalMoney.top, 'Wave '+this.game.getConfig('waveNumber'), this.game.fonts['text']);
 
     const len = this.upgrades.width;
     this.createTextBox(this.game.world.centerX, this.upgrades.bottom + len/2 + margin, len, this.upgrades.width, outlineWidth,outlineColor,bgColor);
@@ -59,21 +58,26 @@ export default class Store extends Phaser.State {
     this.healthbar.onDown();
     this.healthbar.onUp();
 
-    //this.game.camera.reset();
-    //this.game.kineticScrolling.start();
+    console.log("STORE", this.game.width, this.game.camera, this.upgrades.y);
+
+    this.game.camera.reset();
+    this.game.kineticScrolling.start();
   }
 
   setScrollArea(){
     //Changing the world height
-    console.log(this.game.width, this.stateBtns, this.stateBtns.bottom,this.upgrades.y);
-    //this.game.world.setBounds(0, 0, this.game.width, 2000);
-    //this.stars.setEmitAreaToGameArea();
+    const top = this.currentWave.top;
+    const height = this.stateBtns.bottom - top;
+    console.log(top, height, this.stateBtns)
+
+    this.game.world.setBounds(0, top, this.game.width, height);
+    this.stars.setEmitAreaToGameArea();
   }
 
   shutdown(){
     //return game bounds to game size and stop scrolling
-    //this.game.kineticScrolling.stop();
-    //this.game.world.setBounds(0, 0, this.game.width, this.game.height);
+    this.game.kineticScrolling.stop();
+    this.game.world.setBounds(0, 0, this.game.width, this.game.height);
   }
 
   update(){
@@ -82,7 +86,9 @@ export default class Store extends Phaser.State {
   }
 
   createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin){
-    var startState = function(stateName){ return function(){ this.game.stateTransition.to(stateName); }.bind(this); }.bind(this);
+    var startState = function(stateName){ return function(){
+      this.game.state.start(stateName, Phaser.Plugin.StateTransition.Out.SlideTop, Phaser.Plugin.StateTransition.In.SlideTop);
+    }.bind(this); }.bind(this);
 
     this.stateBtns = new Phaser.Group(this.game);
 
