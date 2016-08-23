@@ -81,7 +81,7 @@ export default class Unit extends ParentSprite {
     this.explosionRecycler.showExplosion();
     this.visible = false;
 
-    //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
+    //leave eno ugh time for goldtext, explosion, and whatever else may happen in children, to finish
     this.game.time.events.add(1000,this.finishKill, this);
   }
   finishKill(stateToStartAfterwards = 'Store'){
@@ -94,6 +94,7 @@ export default class Unit extends ParentSprite {
     const noActiveBonuses = ParentSprite.getPool(Bonus, null, this.game).getFirstAlive() == null;
     if( this.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
       this.game.stateTransition.to(stateToStartAfterwards);
+      //this.game.state.start(stateToStartAfterwards);
       this.game.waveHandler.saveWaveValues();
     }
   }

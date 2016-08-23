@@ -17,17 +17,6 @@ export default class Store extends Phaser.State {
     this.stars = new Stars(this.game);
     this.stars.showStars();
 
-    //Configure the plugin
-    this.game.kineticScrolling.configure({
-      horizontalScroll: false,
-      verticalScroll: true,
-      horizontalWheel: false,
-      verticalWheel: true
-    });
-
-    this.game.kineticScrolling.start();
-
-
     //setup placement vars
     const outlineWidth = UiHelper.dp(4);
     const margin = UiHelper.dp(15);
@@ -70,13 +59,21 @@ export default class Store extends Phaser.State {
     this.healthbar.onDown();
     this.healthbar.onUp();
 
-    this.setScrollArea();
+    //this.game.camera.reset();
+    //this.game.kineticScrolling.start();
   }
 
   setScrollArea(){
     //Changing the world height
-    this.game.world.setBounds(0, 0, this.game.width, this.stateBtns.bottom + this.margin);
-    this.stars.setEmitAreaToGameArea();
+    console.log(this.game.width, this.stateBtns, this.stateBtns.bottom,this.upgrades.y)
+    //this.game.world.setBounds(0, 0, this.game.width, 2000);
+    //this.stars.setEmitAreaToGameArea();
+  }
+
+  shutdown(){
+    //return game bounds to game size and stop scrolling
+    //this.game.kineticScrolling.stop();
+    //this.game.world.setBounds(0, 0, this.game.width, this.game.height);
   }
 
   update(){

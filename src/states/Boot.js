@@ -17,8 +17,16 @@ export default class Boot extends Phaser.State {
   init(){
     //Initialize plugins here. Remember to include the plugin in your package.json's dependencies,
     //run npm install, and add "import 'plugin-name'" at the top of this file
-    this.game.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
+    //this.game.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
     this.game.stateTransition = this.game.plugins.add(Phaser.Plugin.StateTransition);
+
+    //Configure the plugins
+    //this.game.kineticScrolling.configure({
+    //  horizontalScroll: false,
+    //  verticalScroll: true,
+    //  horizontalWheel: false,
+    //  verticalWheel: true
+    //});
     this.game.stateTransition.configure({
       duration: Phaser.Timer.SECOND * 0.8,
       ease: Phaser.Easing.Exponential.InOut,
