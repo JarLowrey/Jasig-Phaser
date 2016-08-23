@@ -17,6 +17,17 @@ export default class Store extends Phaser.State {
     this.stars = new Stars(this.game);
     this.stars.showStars();
 
+    //Configure the plugin
+    this.game.kineticScrolling.configure({
+      horizontalScroll: false,
+      verticalScroll: true,
+      horizontalWheel: false,
+      verticalWheel: true
+    });
+
+    this.game.kineticScrolling.start();
+
+
     //setup placement vars
     const outlineWidth = UiHelper.dp(4);
     const margin = UiHelper.dp(15);
@@ -36,7 +47,9 @@ export default class Store extends Phaser.State {
     this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
     this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
     this.totalMoney.top = this.margin;
-    this.totalMoney.x = this.game.world.centerX;
+    this.totalMoney.right = this.upgrades.right;
+
+    this.currentWave = this.game.add.text(this.upgrades.left, this.totalMoney.top, 'Wave '+this.game.getConfig('waveNumber'), this.game.fonts['text']);
 
     this.healthbar = new ProgressBar(this.game, null, this.upgrades.width, btnLen, false, 4);
     this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
@@ -56,6 +69,14 @@ export default class Store extends Phaser.State {
     //simulate a press of an upgrade to set some valid text into the text box
     this.healthbar.onDown();
     this.healthbar.onUp();
+
+    this.setScrollArea();
+  }
+
+  setScrollArea(){
+    //Changing the world height
+    this.game.world.setBounds(0, 0, this.game.width, this.stateBtns.bottom + this.margin);
+    this.stars.setEmitAreaToGameArea();
   }
 
   update(){
@@ -64,7 +85,7 @@ export default class Store extends Phaser.State {
   }
 
   createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin){
-    var startState = function(stateName){ return function(){ this.state.start(stateName); }.bind(this); }.bind(this);
+    var startState = function(stateName){ return function(){ this.game.stateTransition.to(stateName); }.bind(this); }.bind(this);
 
     this.stateBtns = new Phaser.Group(this.game);
 
@@ -311,5 +332,7 @@ export default class Store extends Phaser.State {
 
     //ensure the buttons remain below
     this.stateBtns.top = this.textBox.bottom + this.margin;
+
+    this.setScrollArea();
   }
 }

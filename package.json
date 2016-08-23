@@ -1,7 +1,9 @@
 {
   "private": true,
   "dependencies": {
-    "phaser": "^2.4.8"
+    "phaser": "^2.6.1",
+    "phaser-kinetic-scrolling-plugin": "^1.0.2",
+    "phaser-state-transition-plugin": "^0.1.6"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.0",

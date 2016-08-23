@@ -9,8 +9,28 @@
 
 import assets from '../assets';
 import JsonInfo from '../objects/JsonInfo';
+import 'phaser-state-transition-plugin';
+import 'phaser-kinetic-scrolling-plugin';
 
 export default class Boot extends Phaser.State {
+
+  init(){
+    //Initialize plugins here. Remember to include the plugin in your package.json's dependencies,
+    //run npm install, and add "import 'plugin-name'" at the top of this file
+    this.game.kineticScrolling = this.game.plugins.add(Phaser.Plugin.KineticScrolling);
+    this.game.stateTransition = this.game.plugins.add(Phaser.Plugin.StateTransition);
+    this.game.stateTransition.configure({
+      duration: Phaser.Timer.SECOND * 0.8,
+      ease: Phaser.Easing.Exponential.InOut,
+      properties: {
+        alpha: 0,
+        scale: {
+          x: 1.4,
+          y: 1.4
+        }
+      }
+    });
+  }
 
   preload() {
     // Point the Phaser Asset Loader to where your game assets live.

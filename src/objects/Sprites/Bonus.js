@@ -31,7 +31,7 @@ export default class Bonus extends ParentSprite {
     const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
     const noActiveBonuses = ParentSprite.getPool(Bonus, null, this.game).getFirstAlive() == null;
     if( this.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
-      this.game.state.start(stateToStartAfterwards);
+      this.game.stateTransition.to(stateToStartAfterwards);
       this.game.waveHandler.saveWaveValues();
     }
   }

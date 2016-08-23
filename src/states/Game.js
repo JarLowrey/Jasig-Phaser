@@ -31,8 +31,8 @@ export default class Game extends Phaser.State {
     this.game.waveHandler.startWave();
 
     this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
-    this.totalMoney.left = 0;
-    this.totalMoney.top = 0;
+    this.totalMoney.right = this.game.waveHandler.progressBar.right;
+    this.totalMoney.top = this.game.waveHandler.progressBar.bottom;
     this.incrementGameResources(0);
   }
 

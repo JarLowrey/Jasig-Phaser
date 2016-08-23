@@ -20,31 +20,35 @@ export default class Stars {
   //private function to create and setup particle properties
   setupStars(){
     //	Emitters have a center point and a width/height, which extends from their center point to the left/right and up/down
-    var emitter = this.game.add.emitter(this.game.world.centerX, this.game.world.centerY, this.maxNumParticles);
+    this.emitter = this.game.add.emitter(this.game.world.centerX, this.game.world.centerY, this.maxNumParticles);
 
-    // A particle can emit from anywhere in the range (emitter.x - emitter.width, emitter.x + emitter.width), same for y&height
-    emitter.width = this.game.world.width ;
-    emitter.height = this.game.world.height ;
+    this.setEmitAreaToGameArea();
 
-    emitter.makeParticles('sprites','circle');
+    this.emitter.makeParticles('sprites','circle');
 
-    emitter.minParticleSpeed.set(0, 5);
-    emitter.maxParticleSpeed.set(0, 15);
-    emitter.gravity = 0;
+    this.emitter.minParticleSpeed.set(0, 5);
+    this.emitter.maxParticleSpeed.set(0, 15);
+    this.emitter.gravity = 0;
 
-    emitter.setRotation(0, 0);
-    emitter.setAlpha(0.75, 1);
+    this.emitter.setRotation(0, 0);
+    this.emitter.setAlpha(0.75, 1);
 
-    emitter.minParticleScale = 0.05;
-    emitter.maxParticleScale = 0.1;
+    this.emitter.minParticleScale = 0.05;
+    this.emitter.maxParticleScale = 0.1;
 
     /*
-    emitter.forEach(function(particle) {  // tint every particle white
+    this.emitter.forEach(function(particle) {  // tint every particle white
       particle.tint = 0xff0000;
     });
     */
+  }
 
-    this.emitter = emitter;
+  setEmitAreaToGameArea(){
+    this.emitter.x = this.game.world.centerX ;
+    this.emitter.y = this.game.world.centerY ;
+
+    this.emitter.width = this.game.world.width ;
+    this.emitter.height = this.game.world.height ;
   }
 
 
