@@ -41,7 +41,16 @@ export default class Preload extends Phaser.State {
     };
     this.game.getRandomStateTransitionIn = function(){
       //return false; //ClearCache param to normal state.start function
-      return Phaser.Plugin.StateTransition.In.SlideTop;
+      return {
+        ease: Phaser.Easing.Exponential.InOut,
+        duration: 3e3, // 3s
+        intro: true,
+        props: {
+          y: function(game) {
+            return game.height;
+          }
+        }
+      };
     };
   }
 
