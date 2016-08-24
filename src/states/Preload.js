@@ -34,6 +34,15 @@ export default class Preload extends Phaser.State {
       horizontalWheel: false,
       verticalWheel: true
     });
+
+    this.game.getRandomStateTransitionOut = function(){
+      //return true; //ClearWorld param to normal state.start function
+      return Phaser.Plugin.StateTransition.Out.SlideTop;
+    };
+    this.game.getRandomStateTransitionIn = function(){
+      //return false; //ClearCache param to normal state.start function
+      return Phaser.Plugin.StateTransition.In.SlideTop;
+    };
   }
 
   // --------------------------------------------------------------------------

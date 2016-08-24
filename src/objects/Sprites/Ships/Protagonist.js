@@ -3,11 +3,11 @@
  * ====
  *
  */
-import Ship from '../Sprites/Ship';
-import ParentSprite from '../Sprites/ParentSprite';
-import SpritePooling from '../Sprites/SpritePooling';
-import ProgressBar from '../../objects/UI/ProgressBar';
-import Store from '../../states/Store';
+import Ship from '../../Sprites/Ship';
+import ParentSprite from '../../Sprites/ParentSprite';
+import SpritePooling from '../../Sprites/SpritePooling';
+import ProgressBar from '../../../objects/UI/ProgressBar';
+import Store from '../../../states/Store';
 
 export default class Protagonist extends Ship {
   static getClassName(){ return 'Protagonist'; }

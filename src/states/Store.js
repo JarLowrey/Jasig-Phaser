@@ -17,6 +17,8 @@ export default class Store extends Phaser.State {
     this.stars = new Stars(this.game);
     this.stars.showStars();
 
+    this.game.world.setBounds(0, 0, this.game.width, this.game.height);
+
     //setup placement vars
     const outlineWidth = UiHelper.dp(4);
     const margin = UiHelper.dp(15);
@@ -29,48 +31,79 @@ export default class Store extends Phaser.State {
     const outlineColorPressed = 0xa1e199;
     const bgColorPressed = 0xe1d999;
 
+    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
+
+    this.currentWave = this.game.add.text(0, 0, 'Wave '+this.game.getConfig('waveNumber'), this.game.fonts['text']);
+    this.currentWave.anchor.setTo(0.5,0.5);
+
     this.createUpgrades(width, upgradeHeight, margin, outlineWidth,outlineColor,bgColor,outlineColorPressed,bgColorPressed);
-    this.upgrades.x = this.game.world.centerX;
-    this.upgrades.bottom = this.game.world.centerY;
 
     this.healthbar = new ProgressBar(this.game, null, this.upgrades.width, btnLen, false, 4);
     this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
     this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game) );
-    this.healthbar.bottom = this.upgrades.top - this.margin;
-    this.healthbar.x = this.game.world.centerX;
     this.healthbar.makePressable(this.upgradePressed('repair','health'), bgColor, 0xff0000);
 
-    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
-    this.totalMoney.setText( this.game.nFormatter(this.game.getConfig('resources') ));
-    this.totalMoney.bottom = this.healthbar.top - this.margin;
-    this.totalMoney.right = this.healthbar.right;
-
-    this.currentWave = this.game.add.text(this.upgrades.left, this.totalMoney.top, 'Wave '+this.game.getConfig('waveNumber'), this.game.fonts['text']);
-
     const len = this.upgrades.width;
-    this.createTextBox(this.game.world.centerX, this.upgrades.bottom + len/2 + margin, len, this.upgrades.width, outlineWidth,outlineColor,bgColor);
+    this.createTextBox(len, this.upgrades.width, outlineWidth,outlineColor,bgColor);
+
+    this.createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin);
+
+    this.positionStoreItems();
 
     this.assignUpgradePressedFunctions(); //assign functions after creation of upgrade displays and text box
 
-    this.createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin);
+    this.game.kineticScrolling.start();
 
     //simulate a press of an upgrade to set some valid text into the text box
     this.healthbar.onDown();
     this.healthbar.onUp();
+    //this.setScrollArea();
+  }
 
-    console.log("STORE", this.game.width, this.game.camera, this.upgrades.y);
+  positionStoreItems(){
+    //place the store items on the screen
+    this.upgrades.x = this.game.world.centerX;  //group
+    this.healthbar.x = this.game.world.centerX; //group
+    this.stateBtns.x = this.game.world.centerX; //group
+    this.textBox.x = this.game.world.centerX;   //group
+    this.totalMoney.right = this.upgrades.right;//group
+    this.currentWave.left = this.upgrades.left; //text
 
-    this.game.camera.reset();
-    this.game.kineticScrolling.start();
+    const groupTopAndBottomPropertiesAreMessedUp = true;
+    if(groupTopAndBottomPropertiesAreMessedUp){
+      this.currentWave.top = this.margin;
+      this.totalMoney.y = this.currentWave.y;
+      this.healthbar.y = this.totalMoney.y + this.totalMoney.height/2 + this.healthbar.height/2 + this.margin;
+      this.upgrades.y = this.healthbar.y + this.healthbar.height/2 + this.upgrades.height/2 + this.margin;
+      this.textBox.y = this.upgrades.y + this.upgrades.height/2 + this.textBox.height/2 + this.margin;
+      this.stateBtns.y = this.textBox.y + this.textBox.height/2 + this.stateBtns.height/2 + this.margin;
+    }else{
+      this.totalMoney.top = this.margin;
+      this.currentWave.top = this.totalMoney.top;
+      this.healthbar.top = this.currentWave.bottom + this.margin;
+      this.upgrades.top = this.healthbar.bottom + this.margin;
+      this.textBox.top = this.upgrades.bottom + this.margin;
+      this.stateBtns.top = this.textBox.bottom + this.margin;
+    }
+
+    /*
+    console.log(this.game.world, this.game.camera);
+    console.log("Top: ",this.margin, this.currentWave.top, this.totalMoney.top, this.healthbar.top, this.upgrades.top, this.textBox.top);
+    console.log("Y position:",this.margin, this.currentWave.y, this.totalMoney.y, this.healthbar.y, this.upgrades.y, this.textBox.y);
+    console.log("X position:",this.margin, this.currentWave.x, this.totalMoney.x, this.healthbar.x, this.upgrades.x, this.textBox.x);
+    console.log("height:",this.margin, this.currentWave.height, this.totalMoney.height, this.healthbar.height, this.upgrades.height, this.textBox.height);
+    console.log("");
+    */
   }
 
   setScrollArea(){
     //Changing the world height
     const top = this.currentWave.top;
-    const height = this.stateBtns.bottom - top;
-    console.log(top, height, this.stateBtns)
+    //stateBtns position is relative to the world, which moves with kineticScrolling camera. Account for this offset when setting new scroll bounds
+    const height = this.stateBtns.y + this.stateBtns.height/2 - this.game.world.y + top;
 
-    this.game.world.setBounds(0, top, this.game.width, height);
+    this.game.world.setBounds(0, 0, this.game.width, height);
     this.stars.setEmitAreaToGameArea();
   }
 
@@ -87,7 +120,7 @@ export default class Store extends Phaser.State {
 
   createStateBtns(btnLen, outlineWidth, outlineColor, outlineColorPressed, bgColor, bgColorPressed, margin){
     var startState = function(stateName){ return function(){
-      this.game.state.start(stateName, Phaser.Plugin.StateTransition.Out.SlideTop, Phaser.Plugin.StateTransition.In.SlideTop);
+      this.game.state.start(stateName, this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn() );
     }.bind(this); }.bind(this);
 
     this.stateBtns = new Phaser.Group(this.game);
@@ -96,20 +129,17 @@ export default class Store extends Phaser.State {
     this.settingsBtn = new IconBtn(this.game, btnLen, 'icons', 'settings', outlineWidth/2, outlineColor, outlineColorPressed, bgColor, bgColorPressed,startState('Settings'));
     this.scoresBtn = new IconBtn(this.game, btnLen, 'icons', 'chart', outlineWidth/2, outlineColor, outlineColorPressed, bgColor, bgColorPressed,startState('Stats'));
 
+    //set buttons positioning relative to one another
     this.playBtn.x = 0;
-    this.playBtn.top = this.textBox.bottom + margin;
-
+    this.playBtn.y = 0;
     this.settingsBtn.right = this.playBtn.left - margin * 2;
     this.settingsBtn.y = this.playBtn.y;
-
     this.scoresBtn.left = this.playBtn.right + margin * 2;
     this.scoresBtn.y = this.playBtn.y;
 
     this.stateBtns.addChild(this.playBtn);
     this.stateBtns.addChild(this.settingsBtn);
     this.stateBtns.addChild(this.scoresBtn);
-
-    this.stateBtns.x = this.game.world.centerX;
   }
 
   assignUpgradePressedFunctions(){
@@ -239,7 +269,6 @@ export default class Store extends Phaser.State {
       outlineColorPressed,bgColorPressed);
 
     const x = 0;
-    const y = 0;
     this.scoreBoost.x = x;
     this.guns.right = this.scoreBoost.left - margin;
     this.ally.left = this.scoreBoost.right + margin;
@@ -248,14 +277,26 @@ export default class Store extends Phaser.State {
     this.damage.right = this.fireRate.left - margin;
     this.defense.left = this.fireRate.right + margin;
 
+
+    this.ally.y = -(this.ally.height/2 + margin/2);
+    this.scoreBoost.y = -(this.scoreBoost.height/2 + margin/2);
+    this.guns.y = -(this.guns.height/2 + margin/2);
+
+    this.defense.y = this.defense.height/2 + margin/2;
+    this.damage.y = this.damage.height/2  + margin/2;
+    this.fireRate.y = this.fireRate.height/2  + margin/2;
+    /*
+    //BOTTOM POSITIONING
+    const y = 0;
+
     this.ally.bottom = y;
     this.scoreBoost.bottom = y;
     this.guns.bottom = y;
 
-    this.defense.top = this.ally.bottom + margin;
-    this.damage.top = this.scoreBoost.bottom + margin;
-    this.fireRate.top = this.guns.bottom + margin;
-
+    this.defense.y = this.ally.y + this.ally.height/2 + this.defense.height/2 + margin;
+    this.damage.y = this.scoreBoost.y + this.scoreBoost.height/2 + this.damage.height/2  + margin;
+    this.fireRate.y = this.guns.y + this.guns.height/2 + this.fireRate.height/2  + margin;
+    */
     this.upgrades.addChild(this.guns);
     this.upgrades.addChild(this.damage);
     this.upgrades.addChild(this.fireRate);
@@ -264,7 +305,7 @@ export default class Store extends Phaser.State {
     this.upgrades.addChild(this.ally);
   }
 
-  createTextBox(x,y, width, height, outlineWidth = 5, outlineColor = '0x123456', bgColor = '0xffffff', outlineColorPressed = 0x654321, bgColorPressed = 0x177612){
+  createTextBox(width, height, outlineWidth = 5, outlineColor = '0x123456', bgColor = '0xffffff', outlineColorPressed = 0x654321, bgColorPressed = 0x177612){
     this.txtBgOutlineWidth = outlineWidth;
 
     this.txtBackground = this.game.add.graphics(0,0);
@@ -301,15 +342,9 @@ export default class Store extends Phaser.State {
     this.textBox.addChild(this.title);
     this.textBox.addChild(this.msg);
     this.textBox.addChild(this.buyBtn);
-
-    //position the group
-    this.textBox.x = x;
-    this.textBox.y = y;
   }
 
   setText(title, msg, cost){
-    const oldTop = this.textBox.top;
-
     this.title.setText(title);
     this.msg.setText(msg);
     if(cost){ //
@@ -330,11 +365,8 @@ export default class Store extends Phaser.State {
     const belowMsg = this.msg.bottom + this.buyBtn.height / 2 + this.margin;
     this.buyBtn.y = Math.max(bottomOfBox, belowMsg);
 
-    //ensure that the group stays at its old position
-    this.textBox.top = oldTop;
-
-    //ensure the buttons remain below
-    this.stateBtns.top = this.textBox.bottom + this.margin;
+    //after changing the text box's size, it will need to be repositioned (as it grows with the midpoint staying at the same point, instead of the top as desired here)
+    this.positionStoreItems();
 
     this.setScrollArea();
   }

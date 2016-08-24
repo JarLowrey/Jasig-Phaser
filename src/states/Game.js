@@ -8,7 +8,7 @@
 import Bonus from '../objects/Sprites/Bonus';
 import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
-import Protagonist from '../objects/Sprites/Protagonist';
+import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import SpritePooling from '../objects/Sprites/SpritePooling';
 
 import WaveHandler from '../objects/WaveHandler';
