@@ -8,6 +8,11 @@ import Unit from '../objects/Sprites/Unit';
 import Ship from '../objects/Sprites/Ship';
 import SpritePooling from '../objects/Sprites/SpritePooling';
 
+//specific unit and ship classes
+import Meteor from '../objects/Sprites/Units/Meteor';
+import DiagonalMover from '../objects/Sprites/Ships/DiagonalMover';
+import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
+
 import ProgressBar from '../objects/UI/ProgressBar';
 
 export default class WaveHandler {
@@ -80,34 +85,33 @@ export default class WaveHandler {
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
     if( enemyTotal < enemiesThresholdValue + meteorsThresholdValue ){
-      this.spawnSprite('meteor', Unit);
+      this.spawnSprite(Meteor);
       enemyTotal += ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.gold);
     }
     if( enemyTotal < enemiesThresholdValue ){
       const enemyInfo = this.chooseEnemy();
-      this.spawnSprite( enemyInfo.newEnemyJsonName, enemyInfo.newEnemyClass );
+      this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
     }
 
     this.spawnTimer.add(this.timeToCheckForNewSpawn, this.spawn, this);
     this.spawnTimer.start();
   }
 
-  spawnSprite( newEnemyJsonName, newEnemyClass,
-      x = (this.game.world.width * 0.9 + 0.1) * Math.random() , //spawn in middle 90% of screen
-      y = - ParentSprite.dp(5), //spawn a bit offscreen
-      isFriendly = false){
-
+  spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false){
     const poolName = SpritePooling.getPoolName(newEnemyClass, isFriendly);
     var newEnemy = this.game.state.states.Game.spritePools.getNewSprite(poolName);
-    newEnemy.reset(newEnemyJsonName, x, y, isFriendly);
+
+    newEnemy.reset(newEnemyJsonName, isFriendly);
 
     return newEnemy;
   }
 
   chooseEnemy(){
-    var newEnemyJsonName = 'diagonal';
-    var newEnemyClass = Ship;
-    return {'newEnemyJsonName': newEnemyJsonName, 'newEnemyClass': newEnemyClass};
+    //var newEnemyJsonName = 'diagonal';
+    var newEnemyClass = DiagonalMover;
+
+    //if json is null, the class default will be used
+    return {'newEnemyJsonName': null, 'newEnemyClass': newEnemyClass};
   }
 
   //min time = 20s, max time = 90s, wave increments time by 2.5s
@@ -124,12 +128,18 @@ export default class WaveHandler {
       if(!child.isFriendly) total += child.getValue();
     };
 
-    const enemyUnitPoolName = SpritePooling.getPoolName(Unit, false);
-    const enemyShipPoolName = SpritePooling.getPoolName(Ship, false);
-    this.game.state.states.Game.spritePools.getPool(enemyUnitPoolName).forEachAlive(addToTotal);       //enemy units
-    this.game.state.states.Game.spritePools.getPool(enemyShipPoolName).forEachAlive(addToTotal);       //enemy ships
+    this.getPool(Unit).forEachAlive(addToTotal);
+    this.getPool(Meteor).forEachAlive(addToTotal);
+
+    //this.getPool(Ship).forEachAlive(addToTotal);
+    this.getPool(Kamikaze).forEachAlive(addToTotal);
+    this.getPool(DiagonalMover).forEachAlive(addToTotal);
 
     return total;
+  }
+
+  getPool(classType, isFriendly = false){
+    return this.game.state.states.Game.spritePools.getPool(classType, isFriendly);
   }
 
   //about how much Ship 'Power' can be on screen at once in a given wave.

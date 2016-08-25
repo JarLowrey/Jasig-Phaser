@@ -16,11 +16,11 @@ export default class ParentSprite extends Phaser.Sprite {
     this.explosionRecycler = new ExplosionRecycler(this.game, this);
   }
 
-  reset(jsonType, jsonName, x, y){
+  reset(jsonType, jsonName){
     this.jsonInfo = JsonInfo.getInfo(this.game, jsonType, jsonName);
     this.jsonName = jsonName;
 
-    super.reset(x, y, this.jsonInfo.health);
+    super.reset(0,0, this.jsonInfo.health);
     this.maxHealth = this.jsonInfo.health;
     this.anchor.setTo(0.5,0.5);
 
@@ -29,6 +29,10 @@ export default class ParentSprite extends Phaser.Sprite {
 
     this.alpha = 1;
     this.angle = 0;
+
+    //set default position
+    this.top = 0;
+    this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
 
     this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
   }
@@ -60,11 +64,11 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   //convenience functions to call 'Game' state's getPool function for sprites
-  getSpritePool(poolName){
-    return this.game.state.states.Game.spritePools.getPool(poolName);
+  getSpritePool(classOrPoolName,isFriendly){
+    return this.game.state.states.Game.spritePools.getPool(classOrPoolName,isFriendly);
   }
-  createSprite(poolName){
-    return this.game.state.states.Game.spritePools.getNewSprite(poolName);
+  createSprite(classOrPoolName,isFriendly){
+    return this.game.state.states.Game.spritePools.getNewSprite(classOrPoolName,isFriendly);
   }
 
   startNextStateIfPossible(stateToStartAfterwards = 'Store'){

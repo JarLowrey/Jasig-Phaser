@@ -87,13 +87,13 @@ export default class Store extends Phaser.State {
       this.stateBtns.top = this.textBox.bottom + this.margin;
     }
 
-    console.log("Store item's placement variables")
+    console.log('Store items placement variables');
     console.log(this.game.world, this.game.camera);
-    console.log("Top: ",this.margin, this.currentWave.top, this.totalMoney.top, this.healthbar.top, this.upgrades.top, this.textBox.top);
-    console.log("Y position:",this.margin, this.currentWave.y, this.totalMoney.y, this.healthbar.y, this.upgrades.y, this.textBox.y);
-    console.log("X position:",this.margin, this.currentWave.x, this.totalMoney.x, this.healthbar.x, this.upgrades.x, this.textBox.x);
-    console.log("height:",this.margin, this.currentWave.height, this.totalMoney.height, this.healthbar.height, this.upgrades.height, this.textBox.height);
-    console.log("");
+    console.log('Top: ',this.margin, this.currentWave.top, this.totalMoney.top, this.healthbar.top, this.upgrades.top, this.textBox.top);
+    console.log('Y position:',this.margin, this.currentWave.y, this.totalMoney.y, this.healthbar.y, this.upgrades.y, this.textBox.y);
+    console.log('X position:',this.margin, this.currentWave.x, this.totalMoney.x, this.healthbar.x, this.upgrades.x, this.textBox.x);
+    console.log('height:',this.margin, this.currentWave.height, this.totalMoney.height, this.healthbar.height, this.upgrades.height, this.textBox.height);
+    console.log('');
 
   }
 

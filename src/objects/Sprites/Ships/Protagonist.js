@@ -5,7 +5,6 @@
  */
 import Ship from '../../Sprites/Ship';
 import ParentSprite from '../../Sprites/ParentSprite';
-import SpritePooling from '../../Sprites/SpritePooling';
 import ProgressBar from '../../../objects/UI/ProgressBar';
 import Store from '../../../states/Store';
 
@@ -18,9 +17,6 @@ export default class Protagonist extends Ship {
     this.game.world.add(this); //need to set the parent to the world group, as it is not done automatically
 
     this.speed = 5;
-
-    const friendlyShipsPoolName = SpritePooling.getPoolName(Ship, true);
-    this.getSpritePool(friendlyShipsPoolName).add(this);
   }
 
   update(){
@@ -39,8 +35,11 @@ export default class Protagonist extends Ship {
     return speed;
   }
 
-  reset(x, y){
-    super.reset('protagonist', x, y, true);
+  reset(){
+    super.reset('protagonist', true);
+
+    this.x = this.game.world.centerX;
+    this.y = this.game.world.height;
 
     this.body.collideWorldBounds = true;
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
@@ -67,8 +66,12 @@ export default class Protagonist extends Ship {
   }
 
   damage(amt){
+    const percentDamaged = amt / this.health;
+    const maxShake = 0.05;
+    const shakeVal = maxShake * percentDamaged;
+    this.game.camera.shake( Phaser.Math.clamp(shakeVal, 0, maxShake) );
+
     super.damage(amt);
-    this.game.camera.shake(0.01);
   }
 
   finishKill(){

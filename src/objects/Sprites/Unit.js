@@ -6,7 +6,6 @@
 
 import ParentSprite from '../Sprites/ParentSprite';
 import Bonus from '../Sprites/Bonus';
-import SpritePooling from '../Sprites/SpritePooling';
 
 import IconText from '../../objects/UI/IconText';
 
@@ -28,8 +27,8 @@ export default class Unit extends ParentSprite {
     }
   }
 
-  reset(jsonInfo, x, y, isFriendly, jsonType = 'units'){
-    super.reset(jsonType, jsonInfo, x, y); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
+  reset(jsonInfo, isFriendly, jsonType = 'units'){
+    super.reset(jsonType, jsonInfo); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
     this.isFriendly = isFriendly;
     this.setAnchor(isFriendly);
@@ -70,8 +69,7 @@ export default class Unit extends ParentSprite {
 
     //check to see if a bonus should be made
     if( this.constructor.getClassName() != 'Protagonist' ){
-      const bonusesPoolName = SpritePooling.getPoolName(Bonus);
-      this.createSprite(bonusesPoolName).reset('heal', this);
+      this.createSprite(Bonus).reset('heal', this);
     }
 
     if(showCoolStuff)this.showDeathAnimations();

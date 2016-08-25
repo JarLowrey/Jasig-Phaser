@@ -16,27 +16,30 @@ export default class Ship extends Unit {
 
     this.healthbar = new ProgressBar(this.game);
     this.healthbar.visible = false; //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
+
+    this.weapons = [];
   }
 
   update(){
     if(!this.alive) return;
 
     super.update();
+
     if(this.constructor.getClassName() != 'Protagonist'){
-      this.healthbar.x = this.x;
-      this.healthbar.y = this.top - this.healthbar.height / 2;
+      this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height/2);
     }
+
     if(this.canShoot) this.fireWeapons();
   }
 
-  reset(shipName, x, y, isFriendly){
+  reset(shipName, isFriendly){
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
-    super.reset(shipName, x, y, isFriendly, 'ships');
+    super.reset(shipName, isFriendly, 'ships');
 
-    //this.healthbar.width = this.width;
     this.healthbar.setPercent(100);
     this.healthbar.setText( this.getHealthbarText() );
     this.healthbar.setWidth(this.width);
+
     this.healthbar.visible = true;
 
     this.canShoot = false;
@@ -146,7 +149,15 @@ export default class Ship extends Unit {
     tween.onComplete.add(super.showDeathAnimations, this);
   }
 
-  static bulletCollision(bullet, unit){
+  static bulletCollision(unit, bullet){
+    //if the parameters come out of order, ensure that unit is a Unit and bullet is a Phaser.Bullet
+    //check if the bullet is actually a Unit by seeing if it has a property (function) that is defined for Unit
+    if(bullet.isAlive){
+      const temp = unit;
+      unit = bullet;
+      bullet = temp;
+    }
+
     if( unit.isAlive() ) bullet.kill();
     if( unit.isAlive() ) unit.damage(bullet.parent.dmg);
   }

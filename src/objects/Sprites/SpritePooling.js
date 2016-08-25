@@ -7,26 +7,30 @@ export default class SpritePooling {
     this.pools = {};
   }
 
-  getPool(poolName){
-    return this.pools[poolName];
-  }
+  initPool(childClass, isFriendly, preallocationNum = 5){
+    const poolName = SpritePooling.getPoolName(childClass, isFriendly);
 
-  initPool(poolName, childClass, preallocationNum = 10){
     this.pools[poolName] = new Phaser.Group(this.game);
     this.pools[poolName].classType = childClass;
     this.pools[poolName].createMultiple(preallocationNum);
   }
 
-  getNewSprite(poolName){
-    return this.getPool(poolName).getFirstDead(true);
+  getPool(nameOrChildClass, isFriendly){
+    return this.pools[SpritePooling.getPoolName(nameOrChildClass, isFriendly)];
   }
 
-  static getPoolName(childClass, isFriendly){
+  getNewSprite(nameOrChildClass, isFriendly){
+    return this.getPool( SpritePooling.getPoolName(nameOrChildClass, isFriendly) ).getFirstDead(true);
+  }
+
+  static getPoolName(nameOrChildClass, isFriendly){
+    if(typeof nameOrChildClass == 'string') return nameOrChildClass;
+
     var friendliness = '';
     if(isFriendly) friendliness = 'friendly';
     else if(isFriendly === false) friendliness = 'enemy';
 
-    return friendliness + childClass.getClassName();
+    return friendliness + nameOrChildClass.getClassName();
   }
 
 }

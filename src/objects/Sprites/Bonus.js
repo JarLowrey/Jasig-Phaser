@@ -13,7 +13,10 @@ export default class Bonus extends ParentSprite {
   }
 
   reset(bonusType, enemy){
-    super.reset('bonuses', bonusType, enemy.x, enemy.y);
+    super.reset('bonuses', bonusType);
+
+    this.x = enemy.x;
+    this.y = enemy.y;
 
     this.body.velocity.y = ParentSprite.dp(100);
   }
