@@ -12,8 +12,6 @@ import IconText from '../objects/UI/IconText';
 export default class Store extends Phaser.State {
 
   create() {
-    console.log(this.game.world.height, this.game.world.centerY);
-
     this.upgradeInfo = this.game.cache.getJSON('upgrades');
 
     this.stars = new Stars(this.game);

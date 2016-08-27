@@ -3,20 +3,12 @@
  * ====
  *
  */
-import ParentSprite from '../Sprites/ParentSprite';
 
-export default class Bullet extends ParentSprite{
+export default class Bullet extends Phaser.Bullet{
 
-  constructor(game, x, y){
-    super(game,x,y);
-
-    //kill sprite if it moves out of bounds of game screen
-    this.checkWorldBounds = true;
-    this.outOfBoundsKill = true;
-
-    Bullet.shotAngle = 10;
+  constructor(game,x,y,key,frame){
+    super(game,x,y,key,frame);
   }
-
   update(){
     if(this.target && this.target.alive){
       this.game.physics.arcade.moveToObject(this, this.target, this.body.velocity); //track towards object
@@ -26,42 +18,40 @@ export default class Bullet extends ParentSprite{
     }
   }
 
+  reset(x,y,health){
+    super.reset(x,y,health);
+
+    //this.applyJsonInfo();
+  }
+
+  applyJsonInfo(jsonInfo = this.jsonInfo){
+    this.jsonInfo = jsonInfo;
+
+    const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
+    if(this.jsonInfo.isTinted) this.tint = bulletTint;
+
+    //update sprite dimensions & its body dimensions
+    this.width = this.jsonInfo.width;
+    this.scale.y = this.scale.x;
+    this.body.setSize(this.jsonInfo.width,this.jsonInfo.height);
+  }
+
+  /*
   reset(bulletName, shooter, target, xPercentageOnShooter, yPercentageOnShooter, shootingAngle = 90){
     super.reset('bullets', bulletName, Bullet.getXPos(xPercentageOnShooter, shooter), Bullet.getYPos(yPercentageOnShooter, shooter));
 
     this.shooter = shooter;
     this.target = target;
 
-    if(this.jsonInfo.isTinted){
+    if(jsonInfo.isTinted){
       this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
     }
 
     shootingAngle = (this.shooter.isFriendly) ? 360 - shootingAngle : shootingAngle; //correct angle in bulletInfo for friendliness
-    this.game.physics.arcade.velocityFromAngle(shootingAngle, this.jsonInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
+    this.game.physics.arcade.velocityFromAngle(shootingAngle, jsonInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
 
     this.dmg = 25;
   }
-
-  //assume that shooter and bullet will have an anchor of 0.5x
-  static getXPos(xPercentageOnShooter = 50, shooter){
-    xPercentageOnShooter -= 50;
-    xPercentageOnShooter /= 100;
-
-    return shooter.x + xPercentageOnShooter * shooter.width;
-  }
-
-  //assume that shooter and bullet will have an anchor of 0.5y
-  static getYPos(yPercentageOnShooter = 50, shooter){
-    yPercentageOnShooter -= 50;
-    yPercentageOnShooter /= 100;
-    //console.log(yPercentageOnShooter)
-
-    return shooter.y + yPercentageOnShooter * shooter.height;
-  }
-
-  static bulletCollision(bullet, unit){
-    if( unit.isAlive() ) bullet.kill();
-    if( unit.isAlive() ) unit.damage(bullet.dmg);
-  }
+*/
 
 }

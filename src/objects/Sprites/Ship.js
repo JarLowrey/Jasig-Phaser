@@ -7,6 +7,7 @@
 import Unit from '../Sprites/Unit';
 import ProgressBar from '../../objects/UI/ProgressBar';
 import ParentSprite from '../Sprites/ParentSprite';
+import Bullet from '../Sprites/Bullet';
 
 export default class Ship extends Unit {
   static getClassName(){ return 'Ship'; }
@@ -28,14 +29,6 @@ export default class Ship extends Unit {
     if(this.constructor.getClassName() != 'Protagonist'){
       this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height/2);
     }
-
-
-            this.game.debug.body(this); //better way of showing the bounding box when debugging
-            this.weapons[0].bullets.forEach(
-              function(bullet){
-                this.game.debug.body(bullet); //better way of showing the bounding box when debugging
-              }.bind(this)
-            );
   }
 
   reset(shipName, isFriendly){
@@ -50,38 +43,30 @@ export default class Ship extends Unit {
 
     //add all the weapons from the json file
     this.weapons = [];
-    const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-    const setBulletProperties = function(weapon, bulletInfo, tint){
-      weapon.bullets.forEach(
-        function(bullet){
-          //bullet.anchor.setTo(0.5,0.5);
-          if(bulletInfo.isTinted) bullet.tint = bulletTint;
-
-          //update sprite dimensions & its body dimensions
-          bullet.width = bulletInfo.width;
-          bullet.scale.y = bullet.scale.x;
-          bullet.body.setSize(bullet.width,bullet.height);
-        }.bind(this)
-      );
-    }.bind(this);
-
     for(var weaponName in this.jsonInfo.weapons){
       const weaponInfo = this.jsonInfo.weapons[weaponName];
       const bulletType = weaponInfo.bulletType || 'default';
       const bulletInfo = this.game.bullets[bulletType];
+      const ammo = (weaponInfo.ammo !== undefined) ? weaponInfo.ammo : -1; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.add.weapon(30, bulletInfo.key, bulletInfo.frame);
       weapon.weaponName = weaponName;
       weapon.bulletType = bulletType;
-      weapon.autoExpandBulletsGroup = (weaponInfo.autoExpandBulletsGroup === false) ? false : true; //has unlimited ammo unless set otherwise in JSON
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-      weapon.bulletSpeed = ParentSprite.dp(300);
+      weapon.bulletSpeed = ParentSprite.dp(500);
       weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
 
-      weapon.fireRate = 1000;//this.getFreRate();
+      weapon.bulletClass = Bullet;
+      weapon.createBullets(ammo);
+
+      weapon.bullets.forEach(function(bullet){
+        console.log(bullet);
+        //bullet.applyJsonInfo(bulletInfo);
+      });
+
+      weapon.fireRate = 50;//this.getFireRate();
       //weapon.dmg = this.getDamage();
 
-      setBulletProperties(weapon, bulletInfo);
       weapon.dmg = 25; //this does nothing right now
       weapon.bullets.myWeapon = weapon;
 
@@ -89,10 +74,7 @@ export default class Ship extends Unit {
       const bulletMidpoint = bulletInfo.width / 2;
       const xPixelOffset = this.width * percentOffset;
       const yPixelOffset = -this.anchor.y * this.height + this.height/2 ; //regardless of anchor, bullets start in middle Y of sprite
-      //console.log(this.width * offset - bulletMidpoint, offset, weaponInfo.xPercentOffset, bulletMidpoint, this.width);
       weapon.trackSprite(this, xPixelOffset, yPixelOffset);
-
-      //console.log(weapon, weaponInfo)
 
       this.weapons.push(weapon);
     }
@@ -114,7 +96,7 @@ export default class Ship extends Unit {
     this.weapons.forEach(function(weapon){
       weapon.autofire = true;
     });
-   }
+  }
   stopShooting(){
     this.weapons.forEach(function(weapon){
       weapon.autofire = false;
