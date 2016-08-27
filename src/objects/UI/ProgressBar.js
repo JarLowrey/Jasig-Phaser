@@ -44,6 +44,7 @@ export default class ProgressBar extends Phaser.Group{
     this.setTextStyle(fontStyle);
     this.setText(text);
     this.setPercent(100); //this also sets bar color, not that the bars are defined
+    this.setTextSizeToBarSize();
   }
 
   makePressable(onPressedFunction, bgPressedColor, outlinePressedColor){
@@ -85,6 +86,7 @@ export default class ProgressBar extends Phaser.Group{
     this.outlineSprite.height = newHeight;
     this.bgSprite.height = newHeight;
     this.barSprite.height = newHeight;
+    this.setTextSizeToBarSize();
   }
 
   getBarXAnchor(){
@@ -112,6 +114,8 @@ export default class ProgressBar extends Phaser.Group{
 
   setTextSizeToBarSize(){
     this.text.fontSize = this.height  * 0.45;
+//    this.text.height = this.outlineSprite.height  * 0.9;
+//    this.text.scale.x = this.text.scale.y;
   }
 
   /*

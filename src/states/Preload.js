@@ -11,6 +11,7 @@ import assets from '../assets';
 import UiHelper from '../objects/UI/UiHelper';
 
 import 'phaser-state-transition'; //only needs an import to setup ^.^
+//import '../plugins/phaser-dynamic-state-transition';
 import 'phaser-kinetic-scrolling-plugin';
 
 export default class Preload extends Phaser.State {
@@ -40,18 +41,7 @@ export default class Preload extends Phaser.State {
       return Phaser.Plugin.StateTransition.Out.SlideTop;
     };
     this.game.getRandomStateTransitionIn = function(){
-      //return false; //ClearCache param to normal state.start function
-      return null;
-      return {
-        ease: Phaser.Easing.Exponential.InOut,
-        duration: 3e3, // 3s
-        intro: true,
-        props: {
-          y: function(game) {
-            return game.height;
-          }
-        }
-      };
+      return false;//ClearCache param to normal state.start function
     };
   }
 

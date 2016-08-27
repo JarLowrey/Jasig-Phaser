@@ -14,6 +14,8 @@ export default class ParentSprite extends Phaser.Sprite {
   constructor(game){
     super(game);
     this.explosionRecycler = new ExplosionRecycler(this.game, this);
+    this.game.physics.arcade.enableBody(this);
+
   }
 
   reset(jsonType, jsonName){
@@ -25,7 +27,13 @@ export default class ParentSprite extends Phaser.Sprite {
     this.anchor.setTo(0.5,0.5);
 
     this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);
-    this.setAreaMaintainAspectRatio(this.jsonInfo.width);
+    //this.setAreaMaintainAspectRatio(this.jsonInfo.width);
+
+    this.width = this.jsonInfo.width;
+    this.scale.y = Math.abs(this.scale.x);
+    this.body.setSize(this.width / this.scale.x,this.height / this.scale.y);
+    this.checkWorldBounds = true;
+    this.events.onOutOfBounds.add(this.silentKill, this);
 
     this.alpha = 1;
     this.angle = 0;

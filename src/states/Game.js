@@ -91,18 +91,17 @@ export default class Game extends Phaser.State {
     const enemies = this.spritePools.getPool(enemyType, false);
 
     //loop through each shooter, check if any of their bullets have hit a receiver
-    const overlapAllWeaponsBullets = function(shooter, receivers){
-      shooter.weapons.forEach(
-        function(weapon){
-          this.game.physics.arcade.overlap(weapon.bullets, receivers, Ship.bulletCollision, null, this);
-        }.bind(this));
+    const overlapAllWeapons = function(receivers){
+      return function(shooter){
+        shooter.weapons.forEach(
+          function(weapon){
+            this.game.physics.arcade.overlap(weapon.bullets, receivers, Ship.bulletCollision, null, this);
+          }.bind(this));
+      }.bind(this);
     }.bind(this);
 
-    const overlapAllShipsBullets = function(shooters, receivers){
-      for(var i=0;i<shooters.length;i++){
-        const ship = shooters.getChildAt(i);
-        overlapAllWeaponsBullets(ship,receivers);
-      }
+    const overlapAllSprites = function(shooters, receivers){
+      shooters.forEach(overlapAllWeapons(receivers), this, true);
     }.bind(this);
 
     //const friendlyShips = this.spritePools.getPool(Ship, true);
@@ -110,8 +109,10 @@ export default class Game extends Phaser.State {
     //overlapShipsBullets(friendlyShips, enemies);
 
     //if enemy has weapons, check to see if those weapon's bullets have hit the hero
-    if(enemies.getChildAt(0) instanceof Ship) overlapAllShipsBullets(enemies, this.hero);
-    overlapAllWeaponsBullets(this.hero, enemies);
+    if(enemies.getChildAt(0).weapons) overlapAllSprites(enemies, this.hero);
+    this.game.physics.arcade.overlap(this.hero.weapons[0].bullets, enemies, Ship.bulletCollision, null, this);
+
+    //overlapAllWeapons(enemies)(this.hero);
   }
 
   render(){

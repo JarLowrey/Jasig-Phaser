@@ -29,7 +29,13 @@ export default class Ship extends Unit {
       this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height/2);
     }
 
-    if(this.canShoot) this.fireWeapons();
+
+            this.game.debug.body(this); //better way of showing the bounding box when debugging
+            this.weapons[0].bullets.forEach(
+              function(bullet){
+                this.game.debug.body(bullet); //better way of showing the bounding box when debugging
+              }.bind(this)
+            );
   }
 
   reset(shipName, isFriendly){
@@ -42,10 +48,23 @@ export default class Ship extends Unit {
 
     this.healthbar.visible = true;
 
-    this.canShoot = false;
-
     //add all the weapons from the json file
     this.weapons = [];
+    const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
+    const setBulletProperties = function(weapon, bulletInfo, tint){
+      weapon.bullets.forEach(
+        function(bullet){
+          //bullet.anchor.setTo(0.5,0.5);
+          if(bulletInfo.isTinted) bullet.tint = bulletTint;
+
+          //update sprite dimensions & its body dimensions
+          bullet.width = bulletInfo.width;
+          bullet.scale.y = bullet.scale.x;
+          bullet.body.setSize(bullet.width,bullet.height);
+        }.bind(this)
+      );
+    }.bind(this);
+
     for(var weaponName in this.jsonInfo.weapons){
       const weaponInfo = this.jsonInfo.weapons[weaponName];
       const bulletType = weaponInfo.bulletType || 'default';
@@ -54,17 +73,26 @@ export default class Ship extends Unit {
       var weapon = this.game.add.weapon(30, bulletInfo.key, bulletInfo.frame);
       weapon.weaponName = weaponName;
       weapon.bulletType = bulletType;
-
+      weapon.autoExpandBulletsGroup = (weaponInfo.autoExpandBulletsGroup === false) ? false : true; //has unlimited ammo unless set otherwise in JSON
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
       weapon.bulletSpeed = ParentSprite.dp(300);
       weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
-      weapon.fireRate = weaponInfo.fireRate;
-      weapon.autoFire = true;
 
-      weapon.bullets.dmg = 25; //this is
+      weapon.fireRate = 1000;//this.getFreRate();
+      //weapon.dmg = this.getDamage();
 
-      const offset = (weaponInfo.xPercentOffset || 50) / 100;
-      weapon.trackSprite(this, this.width * offset, 0);
+      setBulletProperties(weapon, bulletInfo);
+      weapon.dmg = 25; //this does nothing right now
+      weapon.bullets.myWeapon = weapon;
+
+      const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;
+      const bulletMidpoint = bulletInfo.width / 2;
+      const xPixelOffset = this.width * percentOffset;
+      const yPixelOffset = -this.anchor.y * this.height + this.height/2 ; //regardless of anchor, bullets start in middle Y of sprite
+      //console.log(this.width * offset - bulletMidpoint, offset, weaponInfo.xPercentOffset, bulletMidpoint, this.width);
+      weapon.trackSprite(this, xPixelOffset, yPixelOffset);
+
+      //console.log(weapon, weaponInfo)
 
       this.weapons.push(weapon);
     }
@@ -80,19 +108,18 @@ export default class Ship extends Unit {
     this.startShooting();
   }
 
-  fireWeapons(){
+  startShooting(){
+    if(!this.isAlive()) return;
+
     this.weapons.forEach(function(weapon){
-      const bulletWasFired = weapon.fire();
-
-      if(bulletWasFired && this.game.bullets[weapon.bulletType].isTinted){
-        const bullet = weapon.bullets.getChildAt(0); //TODO get the proper bullet, this is not right!!!!!!!!!!!!1111
-        bullet.tint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-      }
-    }.bind(this));
+      weapon.autofire = true;
+    });
+   }
+  stopShooting(){
+    this.weapons.forEach(function(weapon){
+      weapon.autofire = false;
+    });
   }
-
-  startShooting(){  this.canShoot = true; }
-  stopShooting(){   this.canShoot = false; }
 
   damage(amount){
     super.damage(amount);
@@ -158,8 +185,9 @@ export default class Ship extends Unit {
       bullet = temp;
     }
 
+    const shootingWeapon = bullet.parent.myWeapon;
     if( unit.isAlive() ) bullet.kill();
-    if( unit.isAlive() ) unit.damage(bullet.parent.dmg);
+    if( unit.isAlive() ) unit.damage(shootingWeapon.dmg);
   }
 
 }
