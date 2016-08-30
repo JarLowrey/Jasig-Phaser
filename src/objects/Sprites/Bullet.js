@@ -1,39 +1,41 @@
+/* jshint esversion: 6 */
+
 /*
  * Bullet
  * ====
  *
  */
 
-export default class Bullet extends Phaser.Bullet{
+export default class Bullet extends Phaser.Bullet {
 
-  constructor(game,x,y,key,frame){
-    super(game,x,y,key,frame);
+  constructor(game, x, y, key, frame) {
+    super(game, x, y, key, frame);
   }
-  update(){
-    if(this.target && this.target.alive){
+  update() {
+    if (this.target && this.target.alive) {
       this.game.physics.arcade.moveToObject(this, this.target, this.body.velocity); //track towards object
-      this.body.angle = this.game.physics.arcade.angleBetween(this, this.target);//set bullet rotation angle to point towards target
-    }else{ //target could be revived after awhile, and then bullet would track wrong thing.
+      this.body.angle = this.game.physics.arcade.angleBetween(this, this.target); //set bullet rotation angle to point towards target
+    } else { //target could be revived after awhile, and then bullet would track wrong thing.
       this.target = null;
     }
   }
 
-  reset(x,y,health){
-    super.reset(x,y,health);
+  reset(x, y, health) {
+    super.reset(x, y, health);
 
     //this.applyJsonInfo();
   }
 
-  applyJsonInfo(jsonInfo = this.jsonInfo){
+  applyJsonInfo(jsonInfo = this.jsonInfo) {
     this.jsonInfo = jsonInfo;
 
     const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-    if(this.jsonInfo.isTinted) this.tint = bulletTint;
+    if (this.jsonInfo.isTinted) this.tint = bulletTint;
 
     //update sprite dimensions & its body dimensions
     this.width = this.jsonInfo.width;
     this.scale.y = this.scale.x;
-    this.body.setSize(this.jsonInfo.width,this.jsonInfo.height);
+    this.body.setSize(this.jsonInfo.width, this.jsonInfo.height);
   }
 
   /*

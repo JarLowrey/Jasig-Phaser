@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * ParentSprite
  * ====
@@ -9,29 +11,31 @@ import ExplosionRecycler from '../../objects/UI/ExplosionRecycler';
 
 
 export default class ParentSprite extends Phaser.Sprite {
-  static getClassName(){ return 'ParentSprite'; }
+  static getClassName() {
+    return 'ParentSprite';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
     this.explosionRecycler = new ExplosionRecycler(this.game, this);
     this.game.physics.arcade.enableBody(this);
 
   }
 
-  reset(jsonType, jsonName){
+  reset(jsonType, jsonName) {
     this.jsonInfo = JsonInfo.getInfo(this.game, jsonType, jsonName);
     this.jsonName = jsonName;
 
-    super.reset(0,0, this.jsonInfo.health);
+    super.reset(0, 0, this.jsonInfo.health);
     this.maxHealth = this.jsonInfo.health;
-    this.anchor.setTo(0.5,0.5);
+    this.anchor.setTo(0.5, 0.5);
 
     this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);
     //this.setAreaMaintainAspectRatio(this.jsonInfo.width);
 
     this.width = this.jsonInfo.width;
     this.scale.y = Math.abs(this.scale.x);
-    this.body.setSize(this.width / this.scale.x,this.height / this.scale.y);
+    this.body.setSize(this.width / this.scale.x, this.height / this.scale.y);
     this.checkWorldBounds = true;
     this.events.onOutOfBounds.add(this.silentKill, this);
 
@@ -45,14 +49,14 @@ export default class ParentSprite extends Phaser.Sprite {
     this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
   }
 
-  update(){
+  update() {
     //this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
     //this.game.debug.body(this,'rgba(255,0,0,0.8)');
     //this.game.debug.bodyInfo(this, this.x, this.y);
   }
 
   //give the sprite a new size while maintaining aspec
-  setAreaMaintainAspectRatio(width){
+  setAreaMaintainAspectRatio(width) {
     this.width = ParentSprite.dp(width);
     this.scale.y = Math.abs(this.scale.x);
 
@@ -64,27 +68,27 @@ export default class ParentSprite extends Phaser.Sprite {
     this.events.onOutOfBounds.add(this.silentKill, this);
   }
 
-  silentKill(){
+  silentKill() {
     this.kill(false);
   }
-  getValue(){
+  getValue() {
     return this.jsonInfo.gold || 0;
   }
 
   //convenience functions to call 'Game' state's getPool function for sprites
-  getSpritePool(classOrPoolName,isFriendly){
-    return this.game.state.states.Game.spritePools.getPool(classOrPoolName,isFriendly);
+  getSpritePool(classOrPoolName, isFriendly) {
+    return this.game.state.states.Game.spritePools.getPool(classOrPoolName, isFriendly);
   }
-  createSprite(classOrPoolName,isFriendly){
-    return this.game.state.states.Game.spritePools.getNewSprite(classOrPoolName,isFriendly);
+  createSprite(classOrPoolName, isFriendly) {
+    return this.game.state.states.Game.spritePools.getNewSprite(classOrPoolName, isFriendly);
   }
 
-  startNextStateIfPossible(stateToStartAfterwards = 'Store'){
-    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() == 0;
-    const noActiveBonuses = this.getSpritePool('Bonus').getFirstAlive() == null;
+  startNextStateIfPossible(stateToStartAfterwards = 'Store') {
+    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() === 0;
+    const noActiveBonuses = this.getSpritePool('Bonus').getFirstAlive() === null;
 
-    if( this.constructor.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses) ){
-      this.game.state.start(stateToStartAfterwards, this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn() );
+    if (this.constructor.getClassName() == 'Protagonist' || (allEnemiesDead && noActiveBonuses)) {
+      this.game.state.start(stateToStartAfterwards, this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
       this.game.waveHandler.saveWaveValues();
     }
   }
@@ -96,17 +100,17 @@ export default class ParentSprite extends Phaser.Sprite {
   */
 
   //density independent pixels
-  static dp(pixels){
+  static dp(pixels) {
     return pixels * window.devicePixelRatio;
   }
 
-  static percentWidthToPixels(percent, parent){
+  static percentWidthToPixels(percent, parent) {
     const width = (parent) ? parent.width : window.innerWidth;
 
     return width * (parseFloat(percent) / 100.0);
   }
 
-  static percentHeightToPixels(percent, parent){
+  static percentHeightToPixels(percent, parent) {
     const height = (parent) ? parent.height : window.innerHeight;
 
     return height * (parseFloat(percent) / 100.0);
@@ -117,12 +121,12 @@ export default class ParentSprite extends Phaser.Sprite {
     STATIC METHODS FOR SCALING SPRITE ATTRIBUTES BASED UPON WAVE NUMBER
   */
 
-  static scaleHealthByWave(wave, health){
-    return wave+health;
+  static scaleHealthByWave(wave, health) {
+    return wave + health;
   }
 
-  static scaleValueByWave(wave, value){
-    return wave+value;
+  static scaleValueByWave(wave, value) {
+    return wave + value;
   }
 
 }

@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Gun
  * ====
@@ -9,7 +11,7 @@ import JsonInfo from '../objects/JsonInfo';
 
 export default class Gun {
 
-  constructor(game, shooter, gunName, bulletName){
+  constructor(game, shooter, gunName, bulletName) {
     this.game = game;
     this.jsonInfo = JsonInfo.getInfo(this.game, 'guns', gunName);
 
@@ -20,13 +22,13 @@ export default class Gun {
     this.fireRate = game.time.create(false);
   }
 
-  changeGun(gunName, bulletName){
+  changeGun(gunName, bulletName) {
     this.jsonInfo = JsonInfo.getInfo(this.game, 'guns', gunName);
     this.bulletName = bulletName || this.bulletName;
   }
 
-  startShooting(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null){
-    if(!this.canShoot) return;
+  startShooting(xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null) {
+    if (!this.canShoot) return;
     this.canShoot = false;
 
     this.target = trackingTarget;
@@ -37,7 +39,7 @@ export default class Gun {
 
   }
 
-  stopShooting(){
+  stopShooting() {
     //const remainingTime = this.fireRate.duration;
 
     this.fireRate.stop();
@@ -45,21 +47,21 @@ export default class Gun {
     this.fireRate.start();
   }
 
-  canShootAgain(fireShot = false, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget){
+  canShootAgain(fireShot = false, xPercentageOnShooter = 50, yPercentageOnShooter = 0, trackingTarget = null) {
     this.canShoot = true;
 
-    if(fireShot){
+    if (fireShot) {
       this.startShooting(xPercentageOnShooter, yPercentageOnShooter, trackingTarget);
     }
   }
 
-  shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0){
-    for(var shotName in this.jsonInfo.shots){
+  shoot(xPercentageOnShooter = 50, yPercentageOnShooter = 0) {
+    for (var shotName in this.jsonInfo.shots) {
       const shot = this.jsonInfo.shots[shotName];
 
       var bullet = this.createSprite(Bullet, this.shooter.isFriendly);
 
-      bullet.reset(this.bulletName, this.shooter, this.target, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, shot['angle']);
+      bullet.reset(this.bulletName, this.shooter, this.target, xPercentageOnShooter + shot['x%Diff'], yPercentageOnShooter, shot.angle);
     }
   }
 

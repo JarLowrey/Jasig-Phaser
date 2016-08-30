@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * ExplosionRecycler
  * ====
@@ -9,25 +11,25 @@
 
 export default class ExplosionRecycler {
 
-  constructor(game, explodingSprite){
+  constructor(game, explodingSprite) {
     this.game = game;
     this.explodingSprite = explodingSprite;
 
-    if(!ExplosionRecycler.explosionGroups){
+    if (!ExplosionRecycler.explosionGroups) {
       ExplosionRecycler.explosionGroups = {};
     }
   }
 
-  showExplosion(key = 'sprites', frame = 'explosion1', explosionParticleLifeSpan = 400, explosionSpeed = 400, numParticlesEmittedPerDirection = 2){
+  showExplosion(key = 'sprites', frame = 'explosion1', explosionParticleLifeSpan = 400, explosionSpeed = 400, numParticlesEmittedPerDirection = 2) {
     this.addExplosionEmitter(key, frame); //checks to see if the emitter has been added yet. If not, it does so.
 
-    var emitter = this.getExplosionEmitter(key,frame);
+    var emitter = this.getExplosionEmitter(key, frame);
     const fastSpeed = explosionSpeed;
     const slowSpeed = explosionSpeed * 0.75;
 
     //put the emitter on top of the thing that is exploding
-    emitter.width = this.explodingSprite.width ;
-    emitter.height = this.explodingSprite.height ;
+    emitter.width = this.explodingSprite.width;
+    emitter.height = this.explodingSprite.height;
     emitter.x = this.explodingSprite.x;
     emitter.y = this.explodingSprite.y;
     emitter.minParticleScale = this.getParticleScale(frame);
@@ -57,36 +59,36 @@ export default class ExplosionRecycler {
     emitter.start(true, explosionParticleLifeSpan, null, numParticlesEmittedPerDirection);
   }
 
-  getParticleScale(particleFrame){
-    const particleWidth = this.game.cache.getFrameByName('sprites',particleFrame).width;
+  getParticleScale(particleFrame) {
+    const particleWidth = this.game.cache.getFrameByName('sprites', particleFrame).width;
     const desiredWidth = 20;
-    return  desiredWidth / particleWidth;
+    return desiredWidth / particleWidth;
   }
 
-  static _getHashKey(explosionImageKey,explosionImageFrame){
-    return explosionImageKey+'_'+explosionImageFrame;
+  static _getHashKey(explosionImageKey, explosionImageFrame) {
+    return explosionImageKey + '_' + explosionImageFrame;
   }
 
-  getExplosionEmitter(key = 'sprites', frame = 'explosion1'){
-    return ExplosionRecycler.explosionGroups[ ExplosionRecycler._getHashKey(key, frame) ];
+  getExplosionEmitter(key = 'sprites', frame = 'explosion1') {
+    return ExplosionRecycler.explosionGroups[ExplosionRecycler._getHashKey(key, frame)];
   }
 
-  addExplosionEmitter(key = 'sprites', frame = 'explosion1'){
-    const emitterAlreadyCreated = this.getExplosionEmitter(key, frame) != null;
-    const stateChangeNukedParticles = emitterAlreadyCreated && this.getExplosionEmitter(key, frame).game != null;
-    if(emitterAlreadyCreated && !stateChangeNukedParticles) return;
+  addExplosionEmitter(key = 'sprites', frame = 'explosion1') {
+    const emitterAlreadyCreated = this.getExplosionEmitter(key, frame) !== null;
+    const stateChangeNukedParticles = emitterAlreadyCreated && this.getExplosionEmitter(key, frame).game !== null;
+    if (emitterAlreadyCreated && !stateChangeNukedParticles) return;
 
     //Emit an explosion upon death
-    var emitter = this.game.add.emitter(0,0, 25);
+    var emitter = this.game.add.emitter(0, 0, 25);
 
-    emitter.makeParticles(key,frame);
+    emitter.makeParticles(key, frame);
 
     emitter.gravity = 0;
 
     emitter.setRotation(0, 0);
     emitter.setAlpha(0.75, 1);
 
-    ExplosionRecycler.explosionGroups[ ExplosionRecycler._getHashKey(key, frame) ] = emitter;
+    ExplosionRecycler.explosionGroups[ExplosionRecycler._getHashKey(key, frame)] = emitter;
   }
 
 }

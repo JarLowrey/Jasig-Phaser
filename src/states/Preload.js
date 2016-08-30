@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Preload state
  * =============
@@ -36,18 +38,18 @@ export default class Preload extends Phaser.State {
       verticalWheel: true
     });
 
-    this.game.getRandomStateTransitionOut = function(){
+    this.game.getRandomStateTransitionOut = function() {
       //return true; //ClearWorld param to normal state.start function
       return Phaser.Plugin.StateTransition.Out.SlideTop;
     };
-    this.game.getRandomStateTransitionIn = function(){
-      return false;//ClearCache param to normal state.start function
+    this.game.getRandomStateTransitionIn = function() {
+      return false; //ClearCache param to normal state.start function
     };
   }
 
   // --------------------------------------------------------------------------
 
-  initConfig(){
+  initConfig() {
     const configsToDefaultToZero = [
       'gunLevel', 'damageLevel', 'fireRateLevel', 'defenseLevel', 'scoreBoostLevel', 'allyLevel',
       'resources', 'waveNumber'
@@ -55,9 +57,9 @@ export default class Preload extends Phaser.State {
 
     var needToInitConfig = false;
 
-    const checkNeedForInitialization = function(element){
+    const checkNeedForInitialization = function(element) {
       const config = this.game.getConfig(element);
-      needToInitConfig = needToInitConfig || isNaN(config) || config == null || typeof config == 'undefined';
+      needToInitConfig = needToInitConfig || isNaN(config) || config === null || typeof config == 'undefined';
     }.bind(this);
 
     //loop through each config entry. Initialize if any are uninitialized
@@ -65,7 +67,7 @@ export default class Preload extends Phaser.State {
     checkNeedForInitialization('health');
 
     //already initialized: exit the function now
-    if(!needToInitConfig) return;
+    if (!needToInitConfig) return;
 
     this.game.resetConfig();
   }
@@ -73,7 +75,7 @@ export default class Preload extends Phaser.State {
   showSplashScreen() {
     //add logo and loading bar
     UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 0.5, 'preload_sprites', 'j_tron_labs_logo');
-    const loadingBar =  UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
+    const loadingBar = UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
     this.load.setPreloadSprite(loadingBar);
 
     //show splash screen for a few seconds. then call onLoadComplete
@@ -81,13 +83,13 @@ export default class Preload extends Phaser.State {
     this.game.time.events.add(Phaser.Timer.SECOND * this.minSplashScreenShowTime, this.finishedSplashScreen, this);
   }
 
-  finishedSplashScreen(){
+  finishedSplashScreen() {
     this.splashScreenOver = true;
 
     this.moveOnToNextState();
   }
 
-  onLoadComplete(){
+  onLoadComplete() {
     this.game.units = this.game.cache.getJSON('units');
     this.game.ships = this.game.cache.getJSON('ships');
     this.game.weapons = this.game.cache.getJSON('weapons');
@@ -98,8 +100,8 @@ export default class Preload extends Phaser.State {
     this.moveOnToNextState();
   }
 
-  moveOnToNextState(){
-    if(this.splashScreenOver && this.load.hasLoaded){ //splash screen has been shown for a minimum amount of time, and loading assets is finished
+  moveOnToNextState() {
+    if (this.splashScreenOver && this.load.hasLoaded) { //splash screen has been shown for a minimum amount of time, and loading assets is finished
       this.state.start('Store');
     }
   }

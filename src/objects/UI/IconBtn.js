@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * IconText
  * ====
@@ -6,7 +8,7 @@
 
 export default class IconText extends Phaser.Group {
 
-  constructor(game, diameter, iconKey, iconFrame, outlineLen, outlineColor, outlineColorPressed, bgColor, bgColorPressed, onPressedFunction){
+  constructor(game, diameter, iconKey, iconFrame, outlineLen, outlineColor, outlineColorPressed, bgColor, bgColorPressed, onPressedFunction) {
     super(game);
 
     this.outlineColor = outlineColor;
@@ -17,8 +19,8 @@ export default class IconText extends Phaser.Group {
 
     this.graphic = this.getCircle(outlineLen, diameter, outlineColor, bgColor);
     this.graphicPressed = this.getCircle(outlineLen, diameter, outlineColorPressed, bgColorPressed);
-    this.icon = game.add.image(0,0,iconKey, iconFrame);
-    this.icon.anchor.setTo(0.5,0.5);
+    this.icon = game.add.image(0, 0, iconKey, iconFrame);
+    this.icon.anchor.setTo(0.5, 0.5);
     this.icon.width = diameter * 0.75;
     this.icon.height = diameter * 0.75;
 
@@ -33,25 +35,25 @@ export default class IconText extends Phaser.Group {
     this.pressFunction = onPressedFunction;
   }
 
-  onDown(){
+  onDown() {
     this.swapChildren(this.graphicPressed, this.graphic);
   }
 
-  onUp(){
+  onUp() {
     this.swapChildren(this.graphicPressed, this.graphic);
     this.pressFunction();
   }
 
-  getCircle(outlineLen, diameter, outlineColor, bgColor){
-    var graphic = this.game.add.graphics(0,0);
-    graphic.anchor.setTo(0.5,0.5);
+  getCircle(outlineLen, diameter, outlineColor, bgColor) {
+    var graphic = this.game.add.graphics(0, 0);
+    graphic.anchor.setTo(0.5, 0.5);
 
     //outline
-    graphic.lineStyle(outlineLen,outlineColor,1);
-    graphic.drawCircle(0,0,diameter);
+    graphic.lineStyle(outlineLen, outlineColor, 1);
+    graphic.drawCircle(0, 0, diameter);
 
     graphic.beginFill(bgColor);
-    graphic.drawCircle(0,0,diameter);
+    graphic.drawCircle(0, 0, diameter);
     graphic.endFill();
 
     return graphic;

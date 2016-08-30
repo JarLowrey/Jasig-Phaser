@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Ship
  * ====
@@ -10,9 +12,11 @@ import ParentSprite from '../Sprites/ParentSprite';
 import Bullet from '../Sprites/Bullet';
 
 export default class Ship extends Unit {
-  static getClassName(){ return 'Ship'; }
+  static getClassName() {
+    return 'Ship';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
 
     this.healthbar = new ProgressBar(this.game);
@@ -21,29 +25,37 @@ export default class Ship extends Unit {
     this.weapons = [];
   }
 
-  update(){
-    if(!this.alive) return;
+  update() {
+    if (!this.alive) return;
 
     super.update();
 
-    if(this.constructor.getClassName() != 'Protagonist'){
-      this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height/2);
+    if (this.constructor.getClassName() != 'Protagonist') {
+      this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height / 2);
     }
   }
 
-  reset(shipName, isFriendly){
+  reset(shipName, isFriendly) {
     //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, isFriendly, 'ships');
 
     this.healthbar.setPercent(100);
-    this.healthbar.setText( this.getHealthbarText() );
+    this.healthbar.setText(this.getHealthbarText());
     this.healthbar.setWidth(this.width);
 
     this.healthbar.visible = true;
 
     //add all the weapons from the json file
     this.weapons = [];
-    for(var weaponName in this.jsonInfo.weapons){
+
+    const applyBulletJson = function(json) {
+      return function(bullet) {
+        console.log(bullet);
+        //bullet.applyJsonInfo(json);
+      };
+    };
+
+    for (var weaponName in this.jsonInfo.weapons) {
       const weaponInfo = this.jsonInfo.weapons[weaponName];
       const bulletType = weaponInfo.bulletType || 'default';
       const bulletInfo = this.game.bullets[bulletType];
@@ -59,12 +71,9 @@ export default class Ship extends Unit {
       weapon.bulletClass = Bullet;
       weapon.createBullets(ammo);
 
-      weapon.bullets.forEach(function(bullet){
-        console.log(bullet);
-        //bullet.applyJsonInfo(bulletInfo);
-      });
+      weapon.bullets.forEach(applyBulletJson(bulletInfo));
 
-      weapon.fireRate = 50;//this.getFireRate();
+      weapon.fireRate = 50; //this.getFireRate();
       //weapon.dmg = this.getDamage();
 
       weapon.dmg = 25; //this does nothing right now
@@ -73,103 +82,117 @@ export default class Ship extends Unit {
       const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;
       const bulletMidpoint = bulletInfo.width / 2;
       const xPixelOffset = this.width * percentOffset;
-      const yPixelOffset = -this.anchor.y * this.height + this.height/2 ; //regardless of anchor, bullets start in middle Y of sprite
+      const yPixelOffset = -this.anchor.y * this.height + this.height / 2; //regardless of anchor, bullets start in middle Y of sprite
       weapon.trackSprite(this, xPixelOffset, yPixelOffset);
 
       this.weapons.push(weapon);
     }
   }
 
-  getHealthbarText(){
-    return Math.max(this.health,0);
+  getHealthbarText() {
+    return Math.max(this.health, 0);
   }
 
-  arrivedAtYDestionation(){
+  arrivedAtYDestionation() {
     super.arrivedAtYDestionation();
 
     this.startShooting();
   }
 
-  startShooting(){
-    if(!this.isAlive()) return;
+  startShooting() {
+    if (!this.isAlive()) return;
 
-    this.weapons.forEach(function(weapon){
+    this.weapons.forEach(function(weapon) {
       weapon.autofire = true;
     });
   }
-  stopShooting(){
-    this.weapons.forEach(function(weapon){
+  stopShooting() {
+    this.weapons.forEach(function(weapon) {
       weapon.autofire = false;
     });
   }
 
-  damage(amount){
+  damage(amount) {
     super.damage(amount);
 
     //little tween to show damage occurred
     //const tempAngle = this.angle;
-    const resetAngle = function(){ this.angle = 0; }.bind(this);
+    const resetAngle = function() {
+      this.angle = 0;
+    }.bind(this);
     const tweenAngle = 10 + 10 * Math.random();
     const tweenTime = 4;
     var tween = this.game.add.tween(this)
-      .to({angle: -tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
-      .to({angle:  tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
+      .to({
+        angle: -tweenAngle
+      }, tweenTime, Phaser.Easing.Linear.In)
+      .to({
+        angle: tweenAngle
+      }, tweenTime, Phaser.Easing.Linear.In)
       .repeatAll(1);
     tween.onComplete.add(resetAngle, this);
     tween.start();
 
     this.setHealthBarPercentage();
-    this.healthbar.setText( this.getHealthbarText() );
+    this.healthbar.setText(this.getHealthbarText());
   }
 
-  heal(amount){
+  heal(amount) {
     super.heal(amount);
 
     this.setHealthBarPercentage();
-    this.healthbar.setText( this.getHealthbarText() );
+    this.healthbar.setText(this.getHealthbarText());
   }
 
-  setHealthBarPercentage(){
+  setHealthBarPercentage() {
     const healthPercentLeft = 100 * (this.health / this.maxHealth);
     this.healthbar.setPercent(healthPercentLeft);
   }
 
-  kill(){
-    if(this.isBeingKilled) return;
+  kill() {
+      if (this.isBeingKilled) return;
 
-    this.stopShooting();
-    this.healthbar.visible = false;
+      this.stopShooting();
+      this.healthbar.visible = false;
 
-    super.kill();
-  }
-  //Overrides super method. this is called at the end of super.kill()
-  showDeathAnimations(){
+      super.kill();
+    }
+    //Overrides super method. this is called at the end of super.kill()
+  showDeathAnimations() {
     //setup tween to be played upon this.kill()
     const xTweenLen = ParentSprite.dp(15) * Math.random() + ParentSprite.dp(15);
     const tweenAngle = 30 + 30 * Math.random();
     const tweenTime = 35;
     var tween = this.game.add.tween(this)
-      .to({x:'-'+xTweenLen}, tweenTime, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
-      .to({x:'+'+xTweenLen}, tweenTime, Phaser.Easing.Linear.In)
-      .to({angle: -tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
-      .to({angle:  tweenAngle}, tweenTime, Phaser.Easing.Linear.In)
+      .to({
+        x: '-' + xTweenLen
+      }, tweenTime, Phaser.Easing.Linear.In) //tween it relative to the current position. Needs to be a string
+      .to({
+        x: '+' + xTweenLen
+      }, tweenTime, Phaser.Easing.Linear.In)
+      .to({
+        angle: -tweenAngle
+      }, tweenTime, Phaser.Easing.Linear.In)
+      .to({
+        angle: tweenAngle
+      }, tweenTime, Phaser.Easing.Linear.In)
       .repeatAll(1);
     tween.start();
     tween.onComplete.add(super.showDeathAnimations, this);
   }
 
-  static bulletCollision(unit, bullet){
+  static bulletCollision(unit, bullet) {
     //if the parameters come out of order, ensure that unit is a Unit and bullet is a Phaser.Bullet
     //check if the bullet is actually a Unit by seeing if it has a property (function) that is defined for Unit
-    if(bullet.isAlive){
+    if (bullet.isAlive) {
       const temp = unit;
       unit = bullet;
       bullet = temp;
     }
 
     const shootingWeapon = bullet.parent.myWeapon;
-    if( unit.isAlive() ) bullet.kill();
-    if( unit.isAlive() ) unit.damage(shootingWeapon.dmg);
+    if (unit.isAlive()) bullet.kill();
+    if (unit.isAlive()) unit.damage(shootingWeapon.dmg);
   }
 
 }

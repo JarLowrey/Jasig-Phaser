@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Boot state
  * ==========
@@ -50,27 +52,40 @@ export default class Boot extends Phaser.State {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
     //setup functions that you'll want globally
-    this.game.getConfig = function(name){
+    this.game.getConfig = function(name) {
       var storageVal = localStorage[name];
-      try{
+      try {
         storageVal = Number(storageVal);
-      }catch(e){
+      } catch (e) {
         //leave the value as a string
       }
       return storageVal;
     }.bind(this);
-    this.game.storeConfig = function(name,value){
-      return localStorage[name] = value;
+    this.game.storeConfig = function(name, value) {
+      localStorage[name] = value;
     }.bind(this);
-    this.game.nFormatter = function(num, digits = 1) {//source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
-      var si = [
-        { value: 1E18, symbol: 'E' },
-        { value: 1E15, symbol: 'P' },
-        { value: 1E12, symbol: 'T' },
-        { value: 1E9,  symbol: 'G' },
-        { value: 1E6,  symbol: 'M' },
-        { value: 1E3,  symbol: 'k' }
-        ], rx = /\.0+$|(\.[0-9]*[1-9])0+$/, i;
+    this.game.nFormatter = function(num, digits = 1) { //source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
+      var si = [{
+          value: 1E18,
+          symbol: 'E'
+        }, {
+          value: 1E15,
+          symbol: 'P'
+        }, {
+          value: 1E12,
+          symbol: 'T'
+        }, {
+          value: 1E9,
+          symbol: 'G'
+        }, {
+          value: 1E6,
+          symbol: 'M'
+        }, {
+          value: 1E3,
+          symbol: 'k'
+        }],
+        rx = /\.0+$|(\.[0-9]*[1-9])0+$/,
+        i;
       for (i = 0; i < si.length; i++) {
         if (num >= si[i].value) {
           return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
@@ -78,7 +93,7 @@ export default class Boot extends Phaser.State {
       }
       return num.toFixed(digits).replace(rx, '$1');
     }.bind(this);
-    this.game.resetConfig = function(){
+    this.game.resetConfig = function() {
       this.game.storeConfig('gunLevel', 0);
       this.game.storeConfig('damageLevel', 0);
       this.game.storeConfig('fireRateLevel', 0);
@@ -93,7 +108,7 @@ export default class Boot extends Phaser.State {
     }.bind(this);
   }
 
-  onLoadComplete(){
+  onLoadComplete() {
     //create variables that are required in the preload state
     this.game.dimen = this.game.cache.getJSON('dimen');
     this.game.fonts = this.game.cache.getJSON('font_styles');

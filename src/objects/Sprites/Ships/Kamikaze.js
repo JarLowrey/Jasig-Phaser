@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Kamikaze
  * ====
@@ -6,22 +8,24 @@
 import Ship from '../Ship';
 
 export default class Kamikaze extends Ship {
-  static getClassName(){ return 'Kamikaze'; }
+  static getClassName() {
+    return 'Kamikaze';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
   }
 
-  update(){
-    if(!this.alive) return;
+  update() {
+    if (!this.alive) return;
     super.update();
 
-    if(this.y < this.trackingObject.y){
+    if (this.y < this.trackingObject.y) {
       this.game.physics.arcade.moveToObject(this, this.trackingObject, this.speed);
     }
   }
 
-  reset(jsonName, isFriendly, objectToTrack){
+  reset(jsonName, isFriendly, objectToTrack) {
     super.reset(jsonName || 'kamikaze', isFriendly);
 
     this.trackingObject = objectToTrack;

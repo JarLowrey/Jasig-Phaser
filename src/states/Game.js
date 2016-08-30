@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Game state
  * ==========
@@ -30,10 +32,10 @@ export default class Game extends Phaser.State {
     this.spritePools = new SpritePooling(this.game);
     //this.spritePools.initPool(Ship,true);
     //this.spritePools.initPool(Ship,false);
-    this.spritePools.initPool(Kamikaze,false);
-    this.spritePools.initPool(DiagonalMover,false);
-    this.spritePools.initPool(Meteor,false);
-    this.spritePools.initPool(Unit,false);
+    this.spritePools.initPool(Kamikaze, false);
+    this.spritePools.initPool(DiagonalMover, false);
+    this.spritePools.initPool(Meteor, false);
+    this.spritePools.initPool(Unit, false);
     this.spritePools.initPool(Bonus);
 
     this.game.time.advancedTiming = true;
@@ -44,24 +46,24 @@ export default class Game extends Phaser.State {
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();
 
-    this.totalMoney = new IconText(this.game,20,'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.totalMoney.right = this.game.waveHandler.progressBar.right;
     this.totalMoney.top = this.game.waveHandler.progressBar.bottom;
     this.incrementGameResources(0);
   }
 
-  update(){
+  update() {
     this.game.waveHandler.updateProgressBar();
 
     this.collisionDectection();
   }
 
-  incrementGameResources(amt){
+  incrementGameResources(amt) {
     this.game.waveHandler.earnedResources += amt;
-    this.totalMoney.setText( this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.getConfig('resources') ) );
+    this.totalMoney.setText(this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.getConfig('resources')));
   }
 
-  collisionDectection(){
+  collisionDectection() {
     //this.enemyFriendlyOverlap(Ship);
     this.enemyFriendlyOverlap(Kamikaze);
     this.enemyFriendlyOverlap(DiagonalMover);
@@ -78,29 +80,29 @@ export default class Game extends Phaser.State {
       Bonus.bonusCollision, null, this);
   }
 
-  enemyFriendlyOverlap(classType){
+  enemyFriendlyOverlap(classType) {
     const enemyPool = this.spritePools.getPool(classType, false);
     //const friendlyShips = this.spritePools.getPool(Ship, true);
 
     //this.game.physics.arcade.overlap( friendlyShips, pool, Unit.unitCollision, null, this);
-    this.game.physics.arcade.overlap( this.hero, enemyPool, Unit.unitCollision, null, this);
+    this.game.physics.arcade.overlap(this.hero, enemyPool, Unit.unitCollision, null, this);
   }
 
   //each ship has a list of weapons, and each weapon has its own pool of bullets
-  overlapBullets(enemyType){
+  overlapBullets(enemyType) {
     const enemies = this.spritePools.getPool(enemyType, false);
 
     //loop through each shooter, check if any of their bullets have hit a receiver
-    const overlapAllWeapons = function(receivers){
-      return function(shooter){
+    const overlapAllWeapons = function(receivers) {
+      return function(shooter) {
         shooter.weapons.forEach(
-          function(weapon){
+          function(weapon) {
             this.game.physics.arcade.overlap(weapon.bullets, receivers, Ship.bulletCollision, null, this);
           }.bind(this));
       }.bind(this);
     }.bind(this);
 
-    const overlapAllSprites = function(shooters, receivers){
+    const overlapAllSprites = function(shooters, receivers) {
       shooters.forEach(overlapAllWeapons(receivers), this, true);
     }.bind(this);
 
@@ -109,14 +111,14 @@ export default class Game extends Phaser.State {
     //overlapShipsBullets(friendlyShips, enemies);
 
     //if enemy has weapons, check to see if those weapon's bullets have hit the hero
-    if(enemies.getChildAt(0).weapons) overlapAllSprites(enemies, this.hero);
+    if (enemies.getChildAt(0).weapons) overlapAllSprites(enemies, this.hero);
     this.game.physics.arcade.overlap(this.hero.weapons[0].bullets, enemies, Ship.bulletCollision, null, this);
 
     //overlapAllWeapons(enemies)(this.hero);
   }
 
-  render(){
-    this.game.debug.text('fps='+this.game.time.fps || '--', this.game.world.centerX,100, '#ffff00');
+  render() {
+    this.game.debug.text('fps=' + this.game.time.fps || '--', this.game.world.centerX, 100, '#ffff00');
   }
 
 }

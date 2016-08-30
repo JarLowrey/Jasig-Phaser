@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * Meteor
  * ====
@@ -6,13 +8,15 @@
 import Unit from '../Unit';
 
 export default class Meteor extends Unit {
-  static getClassName(){ return 'Meteor'; }
+  static getClassName() {
+    return 'Meteor';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
   }
 
-  reset(jsonName, isFriendly){
+  reset(jsonName, isFriendly) {
     super.reset(jsonName || 'meteor', isFriendly);
 
     this.body.velocity.y = 200;

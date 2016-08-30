@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * WaveHandler
  * ====
@@ -17,7 +19,7 @@ import ProgressBar from '../objects/UI/ProgressBar';
 
 export default class WaveHandler {
 
-  constructor(game, hero){
+  constructor(game, hero) {
     this.game = game;
     this.hero = hero;
 
@@ -37,9 +39,9 @@ export default class WaveHandler {
     this.spawnTimer = game.time.create(false);
     this.waveTimer = game.time.create(false);
 
-    const countDownJson = this.game.dimen['game_countdown'];
+    const countDownJson = this.game.dimen.game_countdown;
     this.progressBar = new ProgressBar(this.game, null, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
-      false, countDownJson.strokeLength, this.game.fonts['progressBar'], '');
+      false, countDownJson.strokeLength, this.game.fonts.progressBar, '');
     this.progressBar.setBarColor(null, '0xcccccc', '0xffffff', '0x75c9e5');
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
     this.progressBar.y = countDownJson.y;
@@ -47,13 +49,13 @@ export default class WaveHandler {
     this.startWave();
   }
 
-  updateProgressBar(){
-    const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.wave) ;
+  updateProgressBar() {
+    const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.wave);
     this.progressBar.setPercent(percentLeft * 100);
-    this.progressBar.setText(Math.round(this.waveTimer.duration / 1000) );
+    this.progressBar.setText(Math.round(this.waveTimer.duration / 1000));
   }
 
-  startWave(){
+  startWave() {
     this.spawn();
 
     //timer to end the wave
@@ -62,33 +64,33 @@ export default class WaveHandler {
     this.waveIsOver = false;
   }
 
-  stopSpawning(){
+  stopSpawning() {
     this.spawnTimer.stop();
     this.waveIsOver = true;
-    if(this.livingEnemiesTotalValue() == 0) this.game.state.start('Store');
+    if (this.livingEnemiesTotalValue() === 0) this.game.state.start('Store');
   }
 
-  saveWaveValues(){
+  saveWaveValues() {
     //save completed level stats
     this.game.storeConfig('health', this.hero.health);
     this.game.storeConfig('waveNumber', this.wave + 1);
     this.game.storeConfig('resources', this.game.getConfig('resources') + this.earnedResources);
   }
 
-  isWaveOver(){
+  isWaveOver() {
     return this.waveIsOver;
   }
 
-  spawn(){
+  spawn() {
     var enemyTotal = this.livingEnemiesTotalValue();
     const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
-    if( enemyTotal < enemiesThresholdValue + meteorsThresholdValue ){
+    if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
       this.spawnSprite(Meteor);
       enemyTotal += ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.gold);
     }
-    if( enemyTotal < enemiesThresholdValue ){
+    if (enemyTotal < enemiesThresholdValue) {
       const enemyInfo = this.chooseEnemy();
       this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
     }
@@ -97,7 +99,7 @@ export default class WaveHandler {
     this.spawnTimer.start();
   }
 
-  spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false){
+  spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false) {
     const poolName = SpritePooling.getPoolName(newEnemyClass, isFriendly);
     var newEnemy = this.game.state.states.Game.spritePools.getNewSprite(poolName);
 
@@ -106,26 +108,29 @@ export default class WaveHandler {
     return newEnemy;
   }
 
-  chooseEnemy(){
+  chooseEnemy() {
     //var newEnemyJsonName = 'diagonal';
     var newEnemyClass = DiagonalMover;
 
     //if json is null, the class default will be used
-    return {'newEnemyJsonName': null, 'newEnemyClass': newEnemyClass};
+    return {
+      'newEnemyJsonName': null,
+      'newEnemyClass': newEnemyClass
+    };
   }
 
   //min time = 20s, max time = 90s, wave increments time by 2.5s
-  static timeNeededToEndWave(wave){
+  static timeNeededToEndWave(wave) {
     var time = 1000 * 20;
     time += wave * 2.5;
     //return Math.min(time, 1000 * 90);
     return 1500;
   }
 
-  livingEnemiesTotalValue(){
+  livingEnemiesTotalValue() {
     var total = 0;
-    const addToTotal = function(child){
-      if(!child.isFriendly) total += child.getValue();
+    const addToTotal = function(child) {
+      if (!child.isFriendly) total += child.getValue();
     };
 
     this.getPool(Unit).forEachAlive(addToTotal);
@@ -138,13 +143,13 @@ export default class WaveHandler {
     return total;
   }
 
-  getPool(classType, isFriendly = false){
+  getPool(classType, isFriendly = false) {
     return this.game.state.states.Game.spritePools.getPool(classType, isFriendly);
   }
 
   //about how much Ship 'Power' can be on screen at once in a given wave.
   //'power' is approximated by value
-  spawnValueThresholdForAdvancedEnemies(){
+  spawnValueThresholdForAdvancedEnemies() {
     const basicShipValue = ParentSprite.scaleValueByWave(this.wave, this.game.ships.diagonal.gold);
     var numBasicShips = this.wave / this.wavesUntilOneMoreShipCanAppearOnScreen + this.minShips;
     numBasicShips = Math.min(numBasicShips, this.maxShips);
@@ -154,7 +159,7 @@ export default class WaveHandler {
 
   //about how much basic meteor 'Power' can be on screen at once in a given wave.
   //'power' is approximated by value
-  spawnValueThresholdForMeteors(){
+  spawnValueThresholdForMeteors() {
     const basicUnitValue = ParentSprite.scaleValueByWave(this.wave, this.game.units.meteor.gold);
     var numBasicUnits = this.wave / this.wavesUntilOneMoreMeteorCanAppearOnScreen + this.minMeteors;
     numBasicUnits = Math.min(numBasicUnits, this.maxMeteors);

@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * ParentSprite
  * ====
@@ -6,13 +8,15 @@
 import ParentSprite from '../Sprites/ParentSprite';
 
 export default class Bonus extends ParentSprite {
-  static getClassName(){ return 'Bonus'; }
+  static getClassName() {
+    return 'Bonus';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
   }
 
-  reset(bonusType, enemy){
+  reset(bonusType, enemy) {
     super.reset('bonuses', bonusType);
 
     this.x = enemy.x;
@@ -21,29 +25,29 @@ export default class Bonus extends ParentSprite {
     this.body.velocity.y = ParentSprite.dp(100);
   }
 
-  static bonusCollision(hero, bonus){
+  static bonusCollision(hero, bonus) {
     bonus.bonusFunction(hero);
 
     bonus.kill();
   }
 
-  kill(){
-    super.kill();
-    this.startNextStateIfPossible();
-  }
-  /*
-    METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
-  */
+  kill() {
+      super.kill();
+      this.startNextStateIfPossible();
+    }
+    /*
+      METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
+    */
 
-  bonusFunction(hero){
+  bonusFunction(hero) {
     return Bonus[this.jsonInfo.bonusFunctionName](hero); //choose the bonus function and call it
   }
 
-  static applyHeal(hero){
+  static applyHeal(hero) {
     hero.heal(hero.maxHealth / 2);
   }
 
-  static addResources(){
+  static addResources() {
     //add money
   }
 

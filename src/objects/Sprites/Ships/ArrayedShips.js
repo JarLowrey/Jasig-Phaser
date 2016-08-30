@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
  * ArrayedShips
  * ====
@@ -6,13 +8,15 @@
 import Ship from '../Ship';
 
 export default class ArrayedShips extends Ship {
-  static getClassName(){ return 'ArrayedShips'; }
+  static getClassName() {
+    return 'ArrayedShips';
+  }
 
-  constructor(game){
+  constructor(game) {
     super(game);
   }
 
-  reset(jsonName, isFriendly){
+  reset(jsonName, isFriendly) {
     super.reset(jsonName || 'arrayedShip', isFriendly);
   }
 

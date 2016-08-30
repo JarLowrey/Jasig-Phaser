@@ -1,10 +1,12 @@
+/* jshint esversion: 6 */
+
 /*
  * UpgradableStoreItem
  */
 
 export default class UpgradableStoreItem extends Phaser.Group {
 
-  constructor(game, width = 20, height = 100, currentUpgradeNum, maxUpgradesNum, upgradePicKey, upgradePicFrame,
+  constructor(game, width, height, currentUpgradeNum, maxUpgradesNum, upgradePicKey, upgradePicFrame,
     outlineWidth, outlineColor, bgColor,
     outlineColorPressed, bgColorPressed) {
     super(game);
@@ -28,7 +30,7 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.addChild(this.bgGraphic);
 
     //add the upgrade image
-    this.icon = game.add.image(0,0, upgradePicKey, upgradePicFrame);
+    this.icon = game.add.image(0, 0, upgradePicKey, upgradePicFrame);
     this.setIconProperties();
     this.addChild(this.icon);
 
@@ -42,35 +44,35 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.callAll('events.onInputUp.add', 'events.onInputUp', this.onUp, this);
   }
 
-  assignPressFunction(onPressedFunction){
+  assignPressFunction(onPressedFunction) {
     this.pressFunction = onPressedFunction;
   }
 
-  onDown(){
+  onDown() {
     this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
   }
 
-  onUp(){
+  onUp() {
     this.swapChildren(this.bgGraphic, this.bgGraphicPressed);
     this.pressFunction();
   }
 
-  getRadiusFromPercent(radiusPercent, width, height){
+  getRadiusFromPercent(radiusPercent, width, height) {
     //these extra vars are only for use in the constructor, where this.width and this.height will be set after the radius
-    if(this.width > 0) width = this.width;
-    if(this.height > 0) height = this.width;
+    if (this.width > 0) width = this.width;
+    if (this.height > 0) height = this.width;
 
     const min_dimen = Math.min(width, height); //cannot be >= Max_Dimension / 2
     radiusPercent = Math.min(radiusPercent, 50); //max radius is 50%
 
     const radius = min_dimen * (radiusPercent / 100) - 1;
-    return Math.max(0.1,radius); //radius must be >0 to be a rectangle
+    return Math.max(0.1, radius); //radius must be >0 to be a rectangle
   }
 
-  getBackgroundGraphic(width, height, lineWidth = 3, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radiusPercent = 25){
-    var graphic = this.game.add.graphics(- width / 2, - height / 2);
+  getBackgroundGraphic(width, height, lineWidth = 3, outlineColor = '0x99E1D9', backgroundColor = '0x332292F', radiusPercent = 25) {
+    var graphic = this.game.add.graphics(-width / 2, -height / 2);
 
-    graphic.anchor.setTo(0.5,0.5);
+    graphic.anchor.setTo(0.5, 0.5);
     const radius = this.getRadiusFromPercent(radiusPercent, width, height);
 
     //draw outline
@@ -86,18 +88,18 @@ export default class UpgradableStoreItem extends Phaser.Group {
     return graphic;
   }
 
-  setIconProperties(){
-    this.icon.anchor.setTo(0.5,0.5);
+  setIconProperties() {
+    this.icon.anchor.setTo(0.5, 0.5);
     this.icon.width = this.width * 0.5;
     this.icon.height = this.icon.width;
     this.icon.y = this.height / 2 - this.icon.height / 2 - this.marginFromSides;
   }
 
-  changeIconTexture(key,frame){
-    this.icon.loadTexture(key,frame);
+  changeIconTexture(key, frame) {
+    this.icon.loadTexture(key, frame);
   }
 
-  getUpgradeBulletBitmapData(width, height){
+  getUpgradeBulletBitmapData(width, height) {
     var bmd = this.game.add.bitmapData(width, height);
     bmd.ctx.fillStyle = '#ffffff'; //bar must have pure white bitmap data in order to be tinted effectively
     bmd.ctx.beginPath();
@@ -107,23 +109,23 @@ export default class UpgradableStoreItem extends Phaser.Group {
     return bmd;
   }
 
-  incrementUpgrade(){
+  incrementUpgrade() {
     this.bulletHasChanged(this.currentUpgradeNum, this.upgradedColor);
     this.currentUpgradeNum++;
   }
-  decrementUpgrade(){
+  decrementUpgrade() {
     this.currentUpgradeNum--;
     this.bulletHasChanged(this.currentUpgradeNum, this.notYetUpgradedColor);
   }
-  bulletHasChanged(bulletNo, newColor){
+  bulletHasChanged(bulletNo, newColor) {
     var bullet = this.upgradeBullets[bulletNo];
     bullet.tint = newColor;
     //TODO add tween
   }
 
-  setNumberUpgradeBullets(currentUpgradeNum = this.currentUpgradeNum, maxUpgradesNum = this.maxUpgradesNum){
+  setNumberUpgradeBullets(currentUpgradeNum = this.currentUpgradeNum, maxUpgradesNum = this.maxUpgradesNum) {
     //remove any current bullets.
-    for(var i=this.upgradeBullets.length-1;i>=0;i--){
+    for (var i = this.upgradeBullets.length - 1; i >= 0; i--) {
       var oldBullet = this.upgradeBullets.pop();
       oldBullet.kill();
     }
@@ -133,20 +135,20 @@ export default class UpgradableStoreItem extends Phaser.Group {
     this.maxUpgradesNum = maxUpgradesNum;
 
     //create the new bullets
-    const totalHeightForBullets = this.height - this.icon.height - this.marginFromSides * 3;//margin needed above and below the icon, and below the top of this group
+    const totalHeightForBullets = this.height - this.icon.height - this.marginFromSides * 3; //margin needed above and below the icon, and below the top of this group
     const bulletHeightPlusMargin = totalHeightForBullets / this.maxUpgradesNum;
     const bulletHeight = bulletHeightPlusMargin * 0.75;
     const bulletMargin = bulletHeightPlusMargin - bulletHeight;
 
     const bmpData = this.getUpgradeBulletBitmapData(this.width / 2, bulletHeightPlusMargin / 2);
-    for(i=0; i<this.maxUpgradesNum; i++){
+    for (i = 0; i < this.maxUpgradesNum; i++) {
       this.addUpgradeBullet(bmpData, bulletHeight, bulletMargin, i);
     }
   }
 
-  addUpgradeBullet(bmpData, bulletHeight, bulletMargin, bulletNo){
-    var bullet = this.game.add.image(0,0, bmpData);
-    bullet.anchor.setTo(0.5,0.5);
+  addUpgradeBullet(bmpData, bulletHeight, bulletMargin, bulletNo) {
+    var bullet = this.game.add.image(0, 0, bmpData);
+    bullet.anchor.setTo(0.5, 0.5);
     this.upgradeBullets.push(bullet);
     this.addChild(bullet);
 
