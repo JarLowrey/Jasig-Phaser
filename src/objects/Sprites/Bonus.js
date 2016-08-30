@@ -32,12 +32,13 @@ export default class Bonus extends ParentSprite {
   }
 
   kill() {
-      super.kill();
-      this.startNextStateIfPossible();
-    }
-    /*
-      METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
-    */
+    super.kill();
+    this.startNextStateIfPossible();
+  }
+
+  /*
+    METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
+  */
 
   bonusFunction(hero) {
     return Bonus[this.jsonInfo.bonusFunctionName](hero); //choose the bonus function and call it

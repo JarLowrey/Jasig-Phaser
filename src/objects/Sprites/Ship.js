@@ -50,7 +50,7 @@ export default class Ship extends Unit {
 
     const applyBulletJson = function(json) {
       return function(bullet) {
-        console.log(bullet);
+        console.log(bullet, json);
         //bullet.applyJsonInfo(json);
       };
     };
@@ -150,14 +150,15 @@ export default class Ship extends Unit {
   }
 
   kill() {
-      if (this.isBeingKilled) return;
+    if (this.isBeingKilled) return;
 
-      this.stopShooting();
-      this.healthbar.visible = false;
+    this.stopShooting();
+    this.healthbar.visible = false;
 
-      super.kill();
-    }
-    //Overrides super method. this is called at the end of super.kill()
+    super.kill();
+  }
+
+  //Overrides super method. this is called at the end of super.kill()
   showDeathAnimations() {
     //setup tween to be played upon this.kill()
     const xTweenLen = ParentSprite.dp(15) * Math.random() + ParentSprite.dp(15);

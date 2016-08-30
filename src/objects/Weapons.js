@@ -14,11 +14,9 @@ export default class Weapons {
   }
 
   static getWeapon() {
-    Weapons.pool.forEach(function() {
-
-    });
+    Weapons.pool.forEach(
+      function() {}
+    );
   }
-
-}
 
 }
