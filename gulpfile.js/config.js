@@ -18,7 +18,7 @@ var BUILD = 'build';
 var STATIC = 'static';
 
 // Which Phaser build was selected to develop the game.
-var PHASER = 'node_modules/phaser/build/custom/phaser-arcade-physics.js';
+var PHASER = 'node_modules/phaser-ce/build/custom/phaser-arcade-physics.js';
 
 // Build output directories.
 exports.dirs = {
