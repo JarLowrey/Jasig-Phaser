@@ -30,7 +30,7 @@ export default class Stars {
 
     this.emitter.minParticleSpeed.set(0, 5);
     this.emitter.maxParticleSpeed.set(0, 15);
-    this.emitter.gravity = 0;
+    this.emitter.gravity.set(0,0);
 
     this.emitter.setRotation(0, 0);
     this.emitter.setAlpha(0.75, 1);
