@@ -107,7 +107,7 @@ export default class Store extends Phaser.State {
     const height = this.stateBtns.y + this.stateBtns.height / 2 - this.game.world.y + top;
 
     this.game.world.setBounds(0, 0, this.game.width, height);
-    this.stars.setEmitAreaToGameArea();
+    //this.stars.setEmitAreaToGameArea();
   }
 
   shutdown() {
