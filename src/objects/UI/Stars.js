@@ -5,8 +5,10 @@
  * ====
  * Parallax scrolling star field
  * https://gamedevelopment.tutsplus.com/tutorials/parallax-scrolling-a-simple-effective-way-to-add-depth-to-a-2d-game--cms-21510
- * TODO: star particles have infinite life, choose a random position when falling offscreen, iron out kinks in the vals used for parallax
+ * TODO: star particles have infinite life, choose a random position when falling offscreen, iron out kinks in the vals used for para
  */
+
+import Star from '../UI/Star';
 
 export default class Stars {
 
@@ -14,7 +16,7 @@ export default class Stars {
     this.game = game;
 
     this.maxNumParticles = 75;
-    this.lifespan = 10000;
+    //this.lifespan = 10000;
     this.emitFreq = 150;
     this.numEmitPer = 2;
 
@@ -40,7 +42,8 @@ export default class Stars {
   relativeDistToPlayer = smaller when stars need to be closer to player (bigger, faster)
   */
   __setupEmitter(emitter, relativeDistToPlayer) {
-    emitter.makeParticles('sprites', 'circle');
+    emitter.particleClass = Star;
+    emitter.makeParticles();
 
     emitter.x = this.game.world.centerX;
     emitter.y = this.game.world.centerY;
@@ -49,15 +52,15 @@ export default class Stars {
     emitter.height = this.game.world.height;
 
     emitter.gravity.set(0,0);
-    //emitter.setRotation(0, 0);
+    emitter.setRotation(0, 0);
 
     emitter.minParticleSpeed.set(0, this.baseMinStarSpeed - this.baseMinStarSpeed / relativeDistToPlayer);
-    emitter.maxParticleSpeed.set(0, this.baseMaxStarSpeed - this.baseMaxStarSpeed / relativeDistToPlayer);
+    emitter.maxParticleSpeed.set(0, 5*this.baseMaxStarSpeed - this.baseMaxStarSpeed / relativeDistToPlayer);
 
     emitter.setAlpha(0.75 - relativeDistToPlayer/10, 1 - relativeDistToPlayer/10);
 
-    emitter.minParticleScale = 0.07 - relativeDistToPlayer/100;
-    emitter.maxParticleScale = 0.1 - relativeDistToPlayer/100;
+    emitter.minParticleScale = .1 - relativeDistToPlayer/100;
+    emitter.maxParticleScale = .5 - relativeDistToPlayer/100;
 
     emitter.setAlpha(0.75, 1);
   }
@@ -65,6 +68,7 @@ export default class Stars {
 
   //expose showStars on a global level so other states can take advantage of it
   showStars() {
+    /*
     const explodeLife = this.lifespan / 2, explodeNumStars = this.maxNumParticles / 2;
     //set some stars onto the screen all at once to populate it a bit before flow can get established
     this.layerOneStars.start(true, explodeLife, null, explodeNumStars);
@@ -75,5 +79,10 @@ export default class Stars {
 
     this.layerThreeStars.start(true, explodeLife, null, explodeNumStars);
     this.layerThreeStars.flow(this.lifespan, this.emitFreq, this.numEmitPer, -1, true);
+    */
+
+    this.layerOneStars.explode(0,this.maxNumParticles);
+    this.layerTwoStars.explode(0,this.maxNumParticles);
+    this.layerThreeStars.explode(0,this.maxNumParticles);
   }
 }
