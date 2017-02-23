@@ -1,0 +1,15 @@
+{
+  "minSplashScreenShowTime":1000,
+
+  "defaults":{
+    "settings":{
+      "vibration": true,
+      "screenShake": true,
+      "muted": false
+    }
+  },
+
+  "devName":"JTronLabs",
+  "appName":"Jasig",
+  "bgColor":"#7ec6f2"
+}

@@ -10,6 +10,8 @@ import ParentSprite from '../../Sprites/ParentSprite';
 import ProgressBar from '../../../objects/UI/ProgressBar';
 import Store from '../../../states/Store';
 
+import GameData from '../../GameData';
+
 export default class Protagonist extends Ship {
   static getClassName() {
     return 'Protagonist';

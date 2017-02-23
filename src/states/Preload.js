@@ -10,20 +10,24 @@
  */
 
 import assets from '../assets';
-import UiHelper from '../objects/UI/UiHelper';
+
+import GameData from '../objects/GameData';
+import * as PhaserUI from 'phaser-ui';
 
 import 'phaser-state-transition'; //only needs an import to setup ^.^
-//import '../plugins/phaser-dynamic-state-transition';
 import 'phaser-kinetic-scrolling-plugin';
 
 export default class Preload extends Phaser.State {
 
   preload() {
-    this.minSplashScreenShowTime = 0; //seconds
-
-    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
+    this.minSplashScreenShowTime = this.game.cache.getJSON('preload').minSplashScreenShowTime; //seconds
     this.showSplashScreen();
+
+    this.game.load.onFileComplete.add(this.fileComplete, this);
+    this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
     this.load.pack('game', null, assets);
+
+    this.copyDataToCache();
   }
 
   create() {
@@ -49,34 +53,30 @@ export default class Preload extends Phaser.State {
 
   // --------------------------------------------------------------------------
 
-  initConfig() {
-    const configsToDefaultToZero = [
-      'gunLevel', 'damageLevel', 'fireRateLevel', 'defenseLevel', 'scoreBoostLevel', 'allyLevel',
-      'resources', 'waveNumber'
-    ];
+  async copyDataToCache() {
+    this.savedGameLoaded = false;
 
-    var needToInitConfig = false;
+    this.game.data = new GameData(this.game);
+    await this.game.data.load();
 
-    const checkNeedForInitialization = function(element) {
-      const config = this.game.getConfig(element);
-      needToInitConfig = needToInitConfig || isNaN(config) || config === null || typeof config == 'undefined';
-    }.bind(this);
+    this.savedGameLoaded = true;
+    this.checkPreloadFinishedAndTryStartNextState();
+  }
 
-    //loop through each config entry. Initialize if any are uninitialized
-    configsToDefaultToZero.forEach(checkNeedForInitialization);
-    checkNeedForInitialization('health');
-
-    //already initialized: exit the function now
-    if (!needToInitConfig) return;
-
-    this.game.resetConfig();
+  fileComplete(progress) {
+    this.loadingBar.progress = progress / 100;
   }
 
   showSplashScreen() {
     //add logo and loading bar
-    UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 0.5, 'preload_sprites', 'j_tron_labs_logo');
-    const loadingBar = UiHelper.addImage(this.game, this.game.world.centerX, this.game.world.centerY * 1.5, 'progress-bar'); //new Image(this.game, this.game.world.centerX ,this.game.world.centerY,'progress');
-    this.load.setPreloadSprite(loadingBar);
+    this.logo = this.add.sprite(0, 0, 'preload_sprites', 'j_tron_labs_logo');
+    this.logo.width = 50;
+    this.logo.scale.y = this.sprite.scale.x;
+    this.logo.anchor.setTo(0.5, 0.5);
+    this.logo.x = this.game.world.centerX;
+    this.logo.y = this.game.world.height / 4;
+
+    this.loadingBar = new PhaserUI.ProgressBar(this.game, this.game.world.width / 2, 20, null, 2);
 
     //show splash screen for a few seconds. then call onLoadComplete
     this.splashScreenOver = false;
@@ -86,7 +86,7 @@ export default class Preload extends Phaser.State {
   finishedSplashScreen() {
     this.splashScreenOver = true;
 
-    this.moveOnToNextState();
+    this.checkPreloadFinishedAndTryStartNextState();
   }
 
   onLoadComplete() {
@@ -97,11 +97,11 @@ export default class Preload extends Phaser.State {
     this.game.bonuses = this.game.cache.getJSON('bonuses');
     this.initConfig();
 
-    this.moveOnToNextState();
+    this.checkPreloadFinishedAndTryStartNextState();
   }
 
-  moveOnToNextState() {
-    if (this.splashScreenOver && this.load.hasLoaded) { //splash screen has been shown for a minimum amount of time, and loading assets is finished
+  checkPreloadFinishedAndTryStartNextState() {
+    if (this.splashScreenOver && this.load.hasLoaded && this.savedGameLoaded) { //splash screen has been shown for a minimum amount of time, and loading assets is finished
       this.state.start('Store');
     }
   }

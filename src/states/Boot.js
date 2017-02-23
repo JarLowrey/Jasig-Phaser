@@ -52,18 +52,6 @@ export default class Boot extends Phaser.State {
     this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
     //setup functions that you'll want globally
-    this.game.getConfig = function(name) {
-      var storageVal = localStorage[name];
-      try {
-        storageVal = Number(storageVal);
-      } catch (e) {
-        //leave the value as a string
-      }
-      return storageVal;
-    }.bind(this);
-    this.game.storeConfig = function(name, value) {
-      localStorage[name] = value;
-    }.bind(this);
     this.game.nFormatter = function(num, digits = 1) { //source: http://stackoverflow.com/questions/9461621/how-to-format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900-in-javascrip
       var si = [{
           value: 1E18,
@@ -93,26 +81,11 @@ export default class Boot extends Phaser.State {
       }
       return num.toFixed(digits).replace(rx, '$1');
     }.bind(this);
-    this.game.resetConfig = function() {
-      this.game.storeConfig('gunLevel', 0);
-      this.game.storeConfig('damageLevel', 0);
-      this.game.storeConfig('fireRateLevel', 0);
-      this.game.storeConfig('defenseLevel', 0);
-      this.game.storeConfig('scoreBoostLevel', 0);
-      this.game.storeConfig('allyLevel', 0);
-      this.game.storeConfig('resources', 0);
-      this.game.storeConfig('waveNumber', 0);
-
-      const protagonistInfo = JsonInfo.getInfo(this.game, 'ships', 'protagonist');
-      this.game.storeConfig('health', protagonistInfo.health);
-    }.bind(this);
   }
 
   onLoadComplete() {
     //create variables that are required in the preload state
-    this.game.dimen = this.game.cache.getJSON('dimen');
     this.game.fonts = this.game.cache.getJSON('font_styles');
-
 
     // After applying the first adjustments and loading the splash screen
     // assets, move to the next game state.

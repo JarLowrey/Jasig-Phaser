@@ -54,12 +54,9 @@ export default {
     atlasURL: 'spritesheets/preload_sprites.json',
     textureURL: 'spritesheets/preload_sprites.png'
   }, {
-    key: 'progress-bar',
-    type: 'image'
-  }, {
-    key: 'dimen',
+    key: 'preload',
     type: 'json',
-    url: 'json/dimen.json'
+    url: 'json/preload.json'
   }, {
     key: 'font_styles',
     type: 'json',
@@ -68,6 +65,10 @@ export default {
 
   // -- General assets, used throughout the game.
   game: [{
+    key: 'dimen',
+    type: 'json',
+    url: 'json/dimen.json'
+  }, {
     key: 'ships',
     type: 'json',
     url: 'json/ships.json'
