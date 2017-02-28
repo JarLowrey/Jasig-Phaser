@@ -8,7 +8,7 @@
 import ParentSprite from './Parents/ParentSprite';
 
 export default class Bonus extends ParentSprite {
-  static getClassName() {
+  static className() {
     return 'Bonus';
   }
 

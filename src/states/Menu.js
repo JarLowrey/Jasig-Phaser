@@ -12,7 +12,7 @@ export default class Menu extends Phaser.State {
     this.stars = new Stars(this.game);
     this.stars.showStars();
 
-    this.game.stateTransition.to('Game');
+    this.game.state.start('Game', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
   }
 
   update() {

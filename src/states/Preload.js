@@ -106,7 +106,7 @@ export default class Preload extends Phaser.State {
   checkPreloadFinishedAndTryStartNextState() {
     if (this.splashScreenOver && this.load.hasLoaded && this.savedGameLoaded) { //splash screen has been shown for a minimum amount of time, and loading assets is finished
       this.game.data.play.playerInfo.health = this.game.entities.ships.protagonist.health;
-      this.state.start('Store');
+      this.state.start('Menu');
     }
   }
 

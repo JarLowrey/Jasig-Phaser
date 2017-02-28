@@ -8,7 +8,7 @@
 import Unit from '../Parents/Unit';
 
 export default class Meteor extends Unit {
-  static getClassName() {
+  static className() {
     return 'Meteor';
   }
 

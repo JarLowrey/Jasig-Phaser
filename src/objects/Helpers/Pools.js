@@ -15,7 +15,7 @@ export default class Pools {
     //create the groups and reassign this.pools
     for (var className in spriteIntializationDefinitions) {
       const newPool = this.game.add.group();
-      const poolInfo = this.pools[className];
+      const poolInfo = spriteIntializationDefinitions[className];
 
       newPool.classType = poolInfo['class'];
       newPool.createMultiple(poolInfo['count']);

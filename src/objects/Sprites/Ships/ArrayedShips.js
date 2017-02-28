@@ -8,7 +8,7 @@
 import Ship from '../Parents/Ship';
 
 export default class ArrayedShips extends Ship {
-  static getClassName() {
+  static className() {
     return 'ArrayedShips';
   }
 

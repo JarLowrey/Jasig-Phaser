@@ -12,7 +12,7 @@ import Store from '../../../states/Store';
 
 
 export default class Protagonist extends Ship {
-  static getClassName() {
+  static className() {
     return 'Protagonist';
   }
 

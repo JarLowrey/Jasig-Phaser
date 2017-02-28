@@ -12,7 +12,7 @@ import IconText from '../../UI/IconText';
 import ExplosionRecycler from '../../UI/ExplosionRecycler';
 
 export default class Unit extends ParentSprite {
-  static getClassName() {
+  static className() {
     return 'Unit';
   }
   get value() {
@@ -24,8 +24,9 @@ export default class Unit extends ParentSprite {
     return !this.isBeingKilled && this.prototype.alive;
   }
 
-  constructor(game) {
+  constructor(game, entityType, entityName) {
     super(game);
+    this.info = this.game.entities[entityType][entityName];
 
     this.explosionRecycler = new ExplosionRecycler(this.game, this);
     this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
@@ -56,7 +57,6 @@ export default class Unit extends ParentSprite {
 
   reset(entityName, isFriendly, entityType = 'units') {
     super.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
-    this.info = this.game.entities[entityType][entityName];
 
     //set texture and size
     this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);

@@ -8,7 +8,7 @@
 import Ship from '../Parents/Ship';
 
 export default class DiagonalMover extends Ship {
-  static getClassName() {
+  static className() {
     return 'DiagonalMover';
   }
 

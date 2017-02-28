@@ -12,7 +12,7 @@ import ParentSprite from './ParentSprite';
 import Bullet from '../Bullet';
 
 export default class Ship extends Unit {
-  static getClassName() {
+  static className() {
     return 'Ship';
   }
 
@@ -30,13 +30,12 @@ export default class Ship extends Unit {
 
     super.update();
 
-    if (this.constructor.getClassName() != 'Protagonist') {
+    if (!this.amPlayer()) {
       this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height / 2);
     }
   }
 
   reset(shipName, isFriendly) {
-    //super.reset(x, y, this.jsonInfo.health, this.jsonInfo.width, 'sprites', this.jsonInfo.frame, isFriendly, this.jsonInfo.explosionFrame, this.jsonInfo.destYInPercentOfScreen);
     super.reset(shipName, isFriendly, 'ships');
 
     this.healthbar.setPercent(100);

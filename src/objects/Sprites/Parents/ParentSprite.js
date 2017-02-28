@@ -7,7 +7,7 @@
  */
 
 export default class ParentSprite extends Phaser.Sprite {
-  static getClassName() {
+  static className() {
     return 'ParentSprite';
   }
 
