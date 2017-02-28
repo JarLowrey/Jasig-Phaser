@@ -5,12 +5,12 @@
  * ====
  *
  */
-import Ship from '../../Sprites/Ship';
-import ParentSprite from '../../Sprites/ParentSprite';
-import ProgressBar from '../../../objects/UI/ProgressBar';
+import Ship from '../Parents/Ship';
+import ParentSprite from '../Parents/ParentSprite';
+import ProgressBar from 'phaser-ui';
 import Store from '../../../states/Store';
 
-import GameData from '../../GameData';
+import GameData from '../../Helpers/GameData';
 
 export default class Protagonist extends Ship {
   static getClassName() {
@@ -80,12 +80,8 @@ export default class Protagonist extends Ship {
     super.damage(amt);
   }
 
-  finishKill() {
-    super.finishKill('GameOver');
-  }
-
   kill() {
-    super.kill();
+    super.kill(false);
 
     this.healthbar.visible = true; //leave healthbar showing while this is dying
   }

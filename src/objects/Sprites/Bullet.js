@@ -23,19 +23,19 @@ export default class Bullet extends Phaser.Bullet {
   reset(x, y, health) {
     super.reset(x, y, health);
 
-    //this.applyJsonInfo();
+    //this.applyInfo();
   }
 
-  applyJsonInfo(jsonInfo = this.jsonInfo) {
-    this.jsonInfo = jsonInfo;
+  applyInfo(info = this.info) {
+    this.info = info;
 
     const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-    if (this.jsonInfo.isTinted) this.tint = bulletTint;
+    if (this.info.isTinted) this.tint = bulletTint;
 
     //update sprite dimensions & its body dimensions
-    this.width = this.jsonInfo.width;
+    this.width = this.info.width;
     this.scale.y = this.scale.x;
-    this.body.setSize(this.jsonInfo.width, this.jsonInfo.height);
+    this.body.setSize(this.info.width, this.info.height);
   }
 
   /*
@@ -45,12 +45,12 @@ export default class Bullet extends Phaser.Bullet {
     this.shooter = shooter;
     this.target = target;
 
-    if(jsonInfo.isTinted){
+    if(info.isTinted){
       this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
     }
 
     shootingAngle = (this.shooter.isFriendly) ? 360 - shootingAngle : shootingAngle; //correct angle in bulletInfo for friendliness
-    this.game.physics.arcade.velocityFromAngle(shootingAngle, jsonInfo.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
+    this.game.physics.arcade.velocityFromAngle(shootingAngle, info.speed, this.body.velocity); //set x,y speed to coordinate with angle traveling
 
     this.dmg = 25;
   }

@@ -6,10 +6,10 @@
  *
  */
 
-import Unit from '../Sprites/Unit';
-import ProgressBar from '../../objects/UI/ProgressBar';
-import ParentSprite from '../Sprites/ParentSprite';
-import Bullet from '../Sprites/Bullet';
+import Unit from './Unit';
+import ProgressBar from 'phaser-ui';
+import ParentSprite from './ParentSprite';
+import Bullet from '../Bullet';
 
 export default class Ship extends Unit {
   static getClassName() {

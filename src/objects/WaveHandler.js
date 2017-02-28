@@ -5,17 +5,17 @@
  * ====
  *
  */
-import ParentSprite from '../objects/Sprites/ParentSprite';
-import Unit from '../objects/Sprites/Unit';
-import Ship from '../objects/Sprites/Ship';
-import SpritePooling from '../objects/Sprites/SpritePooling';
+import ParentSprite from './Sprites/Parents/ParentSprite';
+import Unit from './Sprites/Parents/Unit';
+import Ship from './Sprites/Parents/Ship';
+import Pools from './Helpers/Pools';
 
 //specific unit and ship classes
-import Meteor from '../objects/Sprites/Units/Meteor';
-import DiagonalMover from '../objects/Sprites/Ships/DiagonalMover';
-import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
+import Meteor from './Sprites/Units/Meteor';
+import DiagonalMover from './Sprites/Ships/DiagonalMover';
+import Kamikaze from './Sprites/Ships/Kamikaze';
 
-import ProgressBar from '../objects/UI/ProgressBar';
+import ProgressBar from 'phaser-ui';
 
 export default class WaveHandler {
 

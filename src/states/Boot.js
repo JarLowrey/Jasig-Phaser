@@ -10,7 +10,6 @@
  */
 
 import assets from '../assets';
-import JsonInfo from '../objects/JsonInfo';
 export default class Boot extends Phaser.State {
 
   preload() {

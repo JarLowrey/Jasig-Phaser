@@ -5,7 +5,7 @@
  * ====
  *
  */
-import Ship from '../Ship';
+import Ship from '../Parents/Ship';
 
 export default class ArrayedShips extends Ship {
   static getClassName() {

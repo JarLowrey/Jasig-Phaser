@@ -3,7 +3,7 @@
  *
  * Access global data in a convenient wrapper
  */
-import DbAccess from '../Helpers/DbAccess';
+import DbAccess from './DbAccess';
 
 export default class GameData {
 
@@ -61,7 +61,7 @@ export default class GameData {
       level: 0,
       wave: {
         number: 0
-      }
+      },
 
       serializedObjects: {
         player: null,

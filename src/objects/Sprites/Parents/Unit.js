@@ -6,18 +6,35 @@
  *
  */
 
-import ParentSprite from '../Sprites/ParentSprite';
-import Bonus from '../Sprites/Bonus';
+import ParentSprite from './ParentSprite';
+import Bonus from '../Bonus';
 
-import IconText from '../../objects/UI/IconText';
+import IconText from '../../UI/IconText';
+import ExplosionRecycler from '../../UI/ExplosionRecycler';
 
 export default class Unit extends ParentSprite {
   static getClassName() {
     return 'Unit';
   }
+  get value() {
+    let scaler = this.game.data.play.level / 5;
+    scaler = Math.min(1, scaler);
+    return this.info.gold * scaler;
+  }
+  get alive() {
+    return !this.isBeingKilled && this.prototype.alive;
+  }
 
   constructor(game) {
     super(game);
+
+    this.explosionRecycler = new ExplosionRecycler(this.game, this);
+    this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
+
+    this.game.physics.arcade.enableBody(this);
+    this.anchor.setTo(0.5, 0.5);
+    this.checkWorldBounds = true;
+    this.events.onOutOfBounds.add(this.silentKill, this);
 
     this.goldText = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.goldText.kill();
@@ -29,22 +46,44 @@ export default class Unit extends ParentSprite {
     if (!this.reachedYDestination && Math.abs(this.y - this.yDestination) < ParentSprite.dp(5)) {
       this.arrivedAtYDestionation();
     }
+
+    //debug body
+    /*
+    this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
+    this.game.debug.body(this,'rgba(255,0,0,0.8)');
+    this.game.debug.bodyInfo(this, this.x, this.y);
+    */
   }
 
-  reset(jsonInfo, isFriendly, jsonType = 'units') {
-    super.reset(jsonType, jsonInfo); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
+  reset(entityName, isFriendly, entityType = 'units') {
+    super.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
+    this.info = this.game.entities[entityType][entityName];
 
-    this.isFriendly = isFriendly;
-    this.setAnchor(isFriendly);
-    this.setYDestination();
+    //set texture and size
+    this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);
+    this.width = this.jsonInfo.width;
+    this.scale.y = Math.abs(this.scale.x);
+    this.body.setSize(this.width / this.scale.x, this.height / this.scale.y);
 
     //set body related variables
-    this.body.velocity.y = 300;
+    this.body.velocity.set(this.info.velocity.x, this.info.velocity.y);
     this.body.maxVelocity.setTo(600, 600);
     this.body.drag.setTo(0, 0);
 
+    //add properties
+    this.alpha = 1;
+    this.angle = 0;
+    this.maxHealth = this.info.health;
+    this.isFriendly = isFriendly;
+    this.setAnchor(isFriendly);
+    this.setYDestination();
     this.reachedYDestination = false;
     this.isBeingKilled = false;
+
+    //set default position
+    this.top = 0;
+    this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
+
   }
 
   setYDestination() {
@@ -67,33 +106,28 @@ export default class Unit extends ParentSprite {
   //set isBeingKilled to true to signal that death has begun. Call the cool tweens, and actually kill() 'this' after the juicy stuff has finished.
   //If the check for isBeingKilled is omitted, and kill() is immediately called,
   //'this' will be added back into the recycling pools. This causes problems.
-  kill(showCoolStuff = true) {
+  kill() {
     if (this.isBeingKilled) return;
     this.isBeingKilled = true;
 
     //check to see if a bonus should be made
-    if (this.constructor.getClassName() != 'Protagonist') {
-      this.createSprite(Bonus).reset('heal', this);
+    if (!this.amPlayer()) {
+      let bonus = this.game.spritePools.getInstance('Bonus');
+      bonus.reset('heal', this);
     }
 
-    if (showCoolStuff) this.showDeathAnimations();
-    else {
-      this.finishKill();
-      this.game.state.states.Game.incrementGameResources(this.jsonInfo.gold);
-    }
-  }
-  showDeathAnimations() {
-    this.goldText.showGoldText(this.getValue(), this.x, this.y);
+    //show some cool stuff as the entity dies
+    this.goldText.showGoldText(this.value, this.x, this.y);
     this.explosionRecycler.showExplosion();
     this.visible = false;
 
-    //leave eno ugh time for goldtext, explosion, and whatever else may happen in children, to finish
-    this.game.time.events.add(1000, this.finishKill, this);
+    //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
+    this.game.time.events.add(1000, this.finishKill(), this);
   }
-  finishKill(stateToStartAfterwards = 'Store') {
+
+  finshKill() {
     this.isBeingKilled = false;
-    super.kill(); //actually kill this sprite!
-    this.startNextStateIfPossible(stateToStartAfterwards);
+    super.kill();
   }
 
   setAnchor(isFriendly) {
@@ -116,8 +150,15 @@ export default class Unit extends ParentSprite {
     //enemyUnit.body.drag.setTo(10000,10000);
   }
 
-  isAlive() {
-    return !this.isBeingKilled && this.alive;
+
+  serialize() {
+    let data = super.serialize();
+    data.info = this.info;
+    return data;
+  }
+  deserialize(data) {
+    super.deserialize();
+    this.info = data.info;
   }
 
 }

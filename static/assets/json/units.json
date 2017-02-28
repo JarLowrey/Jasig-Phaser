@@ -3,12 +3,18 @@
     "frame":"meteor",
     "health":20,
     "width": 20,
-    "gold": 20
+    "gold": 20,
+    "velocity":{
+      "y":200,
+      "x":0
+    },
+    "circular":true
   },
   "giant_meteor":{
     "frame":"meteor",
     "health":50,
     "width": 75,
-    "gold": 100
+    "gold": 100,
+    "circular":true
   }
 }

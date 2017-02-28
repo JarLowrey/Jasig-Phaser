@@ -5,7 +5,7 @@
  * ====
  *
  */
-import ParentSprite from '../Sprites/ParentSprite';
+import ParentSprite from './Parents/ParentSprite';
 
 export default class Bonus extends ParentSprite {
   static getClassName() {
@@ -31,17 +31,12 @@ export default class Bonus extends ParentSprite {
     bonus.kill();
   }
 
-  kill() {
-    super.kill();
-    this.startNextStateIfPossible();
-  }
-
   /*
     METHODS FOR BONUS FUNCTIONS APPLIED UPON COLLISION
   */
 
   bonusFunction(hero) {
-    return Bonus[this.jsonInfo.bonusFunctionName](hero); //choose the bonus function and call it
+    return Bonus[this.info.bonusFunctionName](hero); //choose the bonus function and call it
   }
 
   static applyHeal(hero) {

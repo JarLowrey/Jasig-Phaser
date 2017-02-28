@@ -4,7 +4,7 @@
  * Store state
  */
 import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
-import ProgressBar from '../objects/UI/ProgressBar';
+import ProgressBar from 'phaser-ui';
 import UiHelper from '../objects/UI/UiHelper';
 import Stars from '../objects/UI/Stars';
 import IconBtn from '../objects/UI/IconBtn';

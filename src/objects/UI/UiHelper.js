@@ -6,7 +6,7 @@
  *
  */
 
-import ParentSprite from '../../objects/Sprites/ParentSprite';
+import ParentSprite from '../../objects/Sprites/Parents/ParentSprite';
 
 export default class UiHelper {
 

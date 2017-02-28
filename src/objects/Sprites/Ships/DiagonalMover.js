@@ -5,7 +5,7 @@
  * ====
  *
  */
-import Ship from '../Ship';
+import Ship from '../Parents/Ship';
 
 export default class DiagonalMover extends Ship {
   static getClassName() {

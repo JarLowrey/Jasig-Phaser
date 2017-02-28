@@ -11,7 +11,7 @@
 
 import assets from '../assets';
 
-import GameData from '../objects/GameData';
+import GameData from '../objects/Helpers/GameData';
 import * as PhaserUI from 'phaser-ui';
 
 import 'phaser-state-transition'; //only needs an import to setup ^.^
@@ -20,7 +20,7 @@ import 'phaser-kinetic-scrolling-plugin';
 export default class Preload extends Phaser.State {
 
   preload() {
-    this.minSplashScreenShowTime = this.game.cache.getJSON('preload').minSplashScreenShowTime; //seconds
+    this.minSplashScreenShowTime = this.game.cache.getJSON('preloadJSON').minSplashScreenShowTime; //seconds
     this.showSplashScreen();
 
     this.game.load.onFileComplete.add(this.fileComplete, this);
@@ -71,16 +71,18 @@ export default class Preload extends Phaser.State {
     //add logo and loading bar
     this.logo = this.add.sprite(0, 0, 'preload_sprites', 'j_tron_labs_logo');
     this.logo.width = 50;
-    this.logo.scale.y = this.sprite.scale.x;
+    this.logo.scale.y = this.logo.scale.x;
     this.logo.anchor.setTo(0.5, 0.5);
     this.logo.x = this.game.world.centerX;
     this.logo.y = this.game.world.height / 4;
 
     this.loadingBar = new PhaserUI.ProgressBar(this.game, this.game.world.width / 2, 20, null, 2);
+    this.loadingBar.x = this.game.world.centerX;
+    this.loadingBar.y = this.game.world.centerY;
 
     //show splash screen for a few seconds. then call onLoadComplete
     this.splashScreenOver = false;
-    this.game.time.events.add(Phaser.Timer.SECOND * this.minSplashScreenShowTime, this.finishedSplashScreen, this);
+    this.game.time.events.add(this.minSplashScreenShowTime, this.finishedSplashScreen, this);
   }
 
   finishedSplashScreen() {
@@ -90,12 +92,13 @@ export default class Preload extends Phaser.State {
   }
 
   onLoadComplete() {
-    this.game.units = this.game.cache.getJSON('units');
-    this.game.ships = this.game.cache.getJSON('ships');
-    this.game.weapons = this.game.cache.getJSON('weapons');
-    this.game.bullets = this.game.cache.getJSON('bullets');
-    this.game.bonuses = this.game.cache.getJSON('bonuses');
-    this.initConfig();
+    this.game.entities = {
+      'units': this.game.cache.getJSON('units'),
+      'ships': this.game.cache.getJSON('ships'),
+      'weapons': this.game.cache.getJSON('weapons'),
+      'bullets': this.game.cache.getJSON('bullets'),
+      'bonuses': this.game.cache.getJSON('bonuses'),
+    }
 
     this.checkPreloadFinishedAndTryStartNextState();
   }

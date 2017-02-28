@@ -54,7 +54,7 @@ export default {
     atlasURL: 'spritesheets/preload_sprites.json',
     textureURL: 'spritesheets/preload_sprites.png'
   }, {
-    key: 'preload',
+    key: 'preloadJSON',
     type: 'json',
     url: 'json/preload.json'
   }, {
