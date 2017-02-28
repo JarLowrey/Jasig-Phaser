@@ -23,17 +23,6 @@ export default class GameData {
     this._resetPlayData();
 
     this.stats = {
-      unlocks: {
-        purchases: {
-          gun: 0,
-          damage: 0,
-          fireRate: 0,
-          defense: 0,
-          scoreBoost: 0,
-          ally: 0
-        }
-      },
-
       kills: {},
       medals: {},
 
@@ -52,11 +41,26 @@ export default class GameData {
 
   _resetPlayData() {
     this.play = {
+      unlocks: {
+        purchases: {
+          gun: 0,
+          damage: 0,
+          fireRate: 0,
+          defense: 0,
+          scoreBoost: 0,
+          ally: 0
+        }
+      },
+
       score: 0,
       totalScore: 0,
 
       comboCount: 0,
       player: null,
+      playerInfo: {
+        health: 0,
+        maxHealth: 0
+      },
 
       level: 0,
       wave: {

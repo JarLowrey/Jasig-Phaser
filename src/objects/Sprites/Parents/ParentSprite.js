@@ -6,9 +6,6 @@
  *
  */
 
-import ExplosionRecycler from '../../UI/ExplosionRecycler';
-
-
 export default class ParentSprite extends Phaser.Sprite {
   static getClassName() {
     return 'ParentSprite';
@@ -64,7 +61,7 @@ export default class ParentSprite extends Phaser.Sprite {
       }
 
       const myArea = width * height;
-      const playerArea = this.game.play.player.width * this.game.play.player.height
+      const playerArea = this.game.play.player.width * this.game.play.player.height;
       this.body.mass = myArea / playerArea;
     }
   }
@@ -90,7 +87,7 @@ export default class ParentSprite extends Phaser.Sprite {
           x: this.body.velocity.x,
           y: this.body.velocity.y
         }
-      }
+      };
     }
 
     return serializedInfo;

@@ -10,7 +10,6 @@ import ParentSprite from '../Parents/ParentSprite';
 import ProgressBar from 'phaser-ui';
 import Store from '../../../states/Store';
 
-import GameData from '../../Helpers/GameData';
 
 export default class Protagonist extends Ship {
   static getClassName() {
@@ -41,6 +40,14 @@ export default class Protagonist extends Ship {
     return speed;
   }
 
+  static getMaxHealth(game) {
+    const defLevel = game.data.play.unlocks.purchases.defense;
+    const heroBaseHealth = game.entities.ships.protagonist.health;
+    const upgradeInfo = game.cache.getJSON('upgrades');
+
+    return (upgradeInfo.repair.valueIncreasePerLevel * defLevel) + heroBaseHealth;
+  }
+
   reset() {
     super.reset('protagonist', true);
 
@@ -50,7 +57,7 @@ export default class Protagonist extends Ship {
     this.body.collideWorldBounds = true;
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
-    this.health = this.game.getConfig('health');
+    this.health = this.game.data.play.playerInfo.health;
     this.maxHealth = Store.getMaxHealth(this.game);
 
     //setup healthbar

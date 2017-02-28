@@ -7,7 +7,6 @@
  */
 
 import ParentSprite from './ParentSprite';
-import Bonus from '../Bonus';
 
 import IconText from '../../UI/IconText';
 import ExplosionRecycler from '../../UI/ExplosionRecycler';

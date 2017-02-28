@@ -98,13 +98,14 @@ export default class Preload extends Phaser.State {
       'weapons': this.game.cache.getJSON('weapons'),
       'bullets': this.game.cache.getJSON('bullets'),
       'bonuses': this.game.cache.getJSON('bonuses'),
-    }
+    };
 
     this.checkPreloadFinishedAndTryStartNextState();
   }
 
   checkPreloadFinishedAndTryStartNextState() {
     if (this.splashScreenOver && this.load.hasLoaded && this.savedGameLoaded) { //splash screen has been shown for a minimum amount of time, and loading assets is finished
+      this.game.data.play.playerInfo.health = this.game.entities.ships.protagonist.health;
       this.state.start('Store');
     }
   }

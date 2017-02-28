@@ -100,7 +100,7 @@ export default class Game extends Phaser.State {
     this.overlapFriendlies(meteors);
 
     this.game.physics.arcade.overlap(
-      this.hero,
+      player,
       bonuses,
       Bonus.bonusCollision, null, this);
   }
@@ -113,7 +113,7 @@ export default class Game extends Phaser.State {
       shooters.forEach(function(shooter) { //iterate thru all shooters
         shooter.weapons.forEach(function(weapon) { //iterate thru all shooters weapons
           this.game.physics.arcade.overlap(weapon.bullets, receivers, Ship.bulletCollision, null, this); //collide weapon's bullets with all receivers
-        }.bind(this))
+        }.bind(this));
       }.bind(this));
     }.bind(this);
 

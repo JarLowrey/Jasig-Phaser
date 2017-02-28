@@ -4,8 +4,9 @@
  * Store state
  */
 import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
-import ProgressBar from 'phaser-ui';
+import * as PhaserUi from 'phaser-ui';
 import UiHelper from '../objects/UI/UiHelper';
+import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import Stars from '../objects/UI/Stars';
 import IconBtn from '../objects/UI/IconBtn';
 import IconText from '../objects/UI/IconText';
@@ -34,17 +35,17 @@ export default class Store extends Phaser.State {
     const bgColorPressed = 0xe1d999;
 
     this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
-    this.totalMoney.setText(this.game.nFormatter(this.game.getConfig('resources')));
+    this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
 
-    this.currentWave = this.game.add.text(0, 0, 'Wave ' + this.game.getConfig('waveNumber'), this.game.fonts.text);
+    this.currentWave = this.game.add.text(0, 0, 'Wave ' + this.game.data.play.wave.number, this.game.fonts.text);
     this.currentWave.anchor.setTo(0.5, 0.5);
 
     this.createUpgrades(width, upgradeHeight, margin, outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed);
 
-    this.healthbar = new ProgressBar(this.game, null, this.upgrades.width, btnLen, false, 4);
-    this.healthbar.setPercent((this.game.getConfig('health') / Store.getMaxHealth(this.game)) * 100);
-    this.healthbar.setText(this.game.getConfig('health') + '/' + Store.getMaxHealth(this.game));
-    this.healthbar.makePressable(this.upgradePressed('repair', 'health'), bgColor, 0xff0000);
+    const healthStr = this.game.data.play.playerInfo.health + '/' + Protagonist.getMaxHealth(this.game);
+    this.healthbar = new PhaserUi.ProgressBar(this.game, this.upgrades.width, 20, null, 9, healthStr, this.game.fonts.text);
+    this.healthbar.progress = this.game.data.play.playerInfo.health / Protagonist.getMaxHealth(this.game);
+    this.healthbar.makePressable(this.upgradePressed('repair', 'health'), outlineColorPressed, outlineColorPressed);
 
     const len = this.upgrades.width;
     this.createTextBox(len, this.upgrades.width, outlineWidth, outlineColor, bgColor);
@@ -56,11 +57,6 @@ export default class Store extends Phaser.State {
     this.assignUpgradePressedFunctions(); //assign functions after creation of upgrade displays and text box
 
     this.game.kineticScrolling.start();
-
-    //simulate a press of an upgrade to set some valid text into the text box
-    this.healthbar.onDown();
-    this.healthbar.onUp();
-    //this.setScrollArea();
   }
 
   positionStoreItems() {
@@ -157,20 +153,23 @@ export default class Store extends Phaser.State {
   }
   purchaseAttempt(groupName, upgradeName, cost) {
     return function() {
-      const currentMoney = this.game.getConfig('resources');
-      const currentLevel = this.game.getConfig(upgradeName);
+      const currentMoney = this.game.data.play.score;
+      const currentLevel = this.game.data.play.upgrades[upgradeName];
 
       if (cost < currentMoney) { //purchase successful
-        this.game.storeConfig('resources', currentMoney - cost); //subtract cost
-        this.game.storeConfig(upgradeName, 1 + currentLevel); //increment the config
+        this.game.data.play.score -= cost;
+        this.game.data.play.upgrades[upgradeName]++;
 
         //perform extra processing for upgrades with special cases
         if (upgradeName == 'health' || upgradeName == 'defenseLevel') {
           //max out health and set the Store healthbar
-          const health = Store.getMaxHealth(this.game);
-          this.game.storeConfig('health', Store.getMaxHealth(this.game)); //set health to maxHealth
-          this.healthbar.setPercent(100); //set healthbar properties
-          this.healthbar.setText(health + '/' + health);
+          const maxHealth = Protagonist.getMaxHealth(this.game);
+          //update data
+          this.game.data.play.playerInfo.health = maxHealth;
+          this.game.data.play.playerInfo.maxHealth = maxHealth;
+          //update UI
+          this.healthbar.progress = 1;
+          this.healthbar.setText(maxHealth + '/' + maxHealth);
         }
 
         if (this[groupName]) {
@@ -182,7 +181,7 @@ export default class Store extends Phaser.State {
         //purchase unsuccessful. show alert TODO
       }
 
-      this.totalMoney.setText(this.game.nFormatter(this.game.getConfig('resources')));
+      this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
     };
   }
   upgradePressed(groupName, upgradeName) {
@@ -200,7 +199,7 @@ export default class Store extends Phaser.State {
     }.bind(this);
   }
   getCost(groupName, upgradeName) {
-    const currentLevel = this.game.getConfig(upgradeName);
+    const currentLevel = this.game.data.play.unlocks.purchases[upgradeName];
     if (this.upgradeMaxedOut(groupName, upgradeName)) return null; //if the upgrade is maxed, return a null cost
 
     const info = this.upgradeInfo[groupName];
@@ -209,13 +208,13 @@ export default class Store extends Phaser.State {
     var cost = info.baseCost * Math.pow(info.costIncreasePerLevel, currentLevel);
     if (info.maxCost) cost = Math.min(cost, info.maxCost);
 
-    if (!cost) cost = info.baseCost * (1 + this.game.getConfig('waveNumber')); //cost not found: maybe cost is linearly proportional to wave number
+    if (!cost) cost = info.baseCost * (1 + this.game.data.play.wave.number); //cost not found: maybe cost is linearly proportional to wave number
     if (!cost) cost = info.levels[currentLevel].cost; //cost not found: cost is manually defined for each level, ignore everything above and just set it
 
     return cost;
   }
   getMsg(groupName, upgradeName) {
-    const currentLevel = this.game.getConfig(upgradeName);
+    const currentLevel = this.game.data.play.unlocks.purchases[upgradeName];
     const info = this.upgradeInfo[groupName];
 
     var msg = info.msg;
@@ -224,18 +223,11 @@ export default class Store extends Phaser.State {
 
     return msg;
   }
-  static getMaxHealth(game) {
-    const defLevel = game.getConfig('defenseLevel');
-    const heroBaseHealth = game.cache.getJSON('ships').protagonist.health;
-    const upgradeInfo = game.cache.getJSON('upgrades');
-
-    return (upgradeInfo.repair.valueIncreasePerLevel * defLevel) + heroBaseHealth;
-  }
   upgradeMaxedOut(groupName, upgradeName) {
-    const currentLevel = this.game.getConfig(upgradeName);
+    const currentLevel = this.game.data.play.unlocks[upgradeName];
     const info = this.upgradeInfo[groupName];
 
-    const isHealthAndIsMaxed = upgradeName == 'health' && this.game.getConfig('health') == Store.getMaxHealth(this.game);
+    const isHealthAndIsMaxed = upgradeName == 'health' && this.game.data.play.playerInfo.health == Protagonist.getMaxHealth(this.game);
     const pastMaxLevel = info && currentLevel >= info.maxLevel;
     const pastDefinedLevels = info && info.levels && currentLevel >= info.levels.length;
 
@@ -246,32 +238,32 @@ export default class Store extends Phaser.State {
     this.upgrades = new Phaser.Group(this.game);
 
     this.guns = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('gunLevel'), this.upgradeInfo.guns.levels.length, 'icons', this.upgradeInfo.guns.icon,
+      this.game.data.play.unlocks.purchases.gun, this.upgradeInfo.guns.levels.length, 'icons', this.upgradeInfo.guns.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.damage = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('damageLevel'), this.upgradeInfo.damage.maxLevel, 'icons', this.upgradeInfo.damage.icon,
+      this.game.data.play.unlocks.purchases.damage, this.upgradeInfo.damage.maxLevel, 'icons', this.upgradeInfo.damage.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.fireRate = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('fireRateLevel'), this.upgradeInfo.fireRate.maxLevel, 'icons', this.upgradeInfo.fireRate.icon,
+      this.game.data.play.unlocks.purchases.fireRate, this.upgradeInfo.fireRate.maxLevel, 'icons', this.upgradeInfo.fireRate.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.defense = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('defenseLevel'), this.upgradeInfo.defense.maxLevel, 'icons', this.upgradeInfo.defense.icon,
+      this.game.data.play.unlocks.purchases.defense, this.upgradeInfo.defense.maxLevel, 'icons', this.upgradeInfo.defense.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.scoreBoost = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('scoreBoostLevel'), this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
+      this.game.data.play.unlocks.purchases.scooreBoost, this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.ally = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.getConfig('allyLevel'), this.upgradeInfo.ally.maxLevel, 'icons', this.upgradeInfo.ally.icon,
+      this.game.data.play.unlocks.purchases.ally, this.upgradeInfo.ally.maxLevel, 'icons', this.upgradeInfo.ally.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 

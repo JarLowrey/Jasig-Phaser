@@ -7,7 +7,7 @@
  */
 import ParentSprite from './Sprites/Parents/ParentSprite';
 import Unit from './Sprites/Parents/Unit';
-import Ship from './Sprites/Parents/Ship';
+//import Ship from './Sprites/Parents/Ship';
 import Pools from './Helpers/Pools';
 
 //specific unit and ship classes
@@ -100,7 +100,7 @@ export default class WaveHandler {
   }
 
   spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false) {
-    const poolName = SpritePooling.getPoolName(newEnemyClass, isFriendly);
+    const poolName = Pools.getPoolName(newEnemyClass, isFriendly);
     var newEnemy = this.game.state.states.Game.spritePools.getNewSprite(poolName);
 
     newEnemy.reset(newEnemyJsonName, isFriendly);
