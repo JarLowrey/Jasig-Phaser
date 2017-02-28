@@ -37,15 +37,16 @@ export default class Store extends Phaser.State {
     this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
 
-    this.currentWave = this.game.add.text(0, 0, 'Wave ' + this.game.data.play.wave.number, this.game.fonts.text);
+    this.currentWave = this.game.add.text(0, 0, 'Day ' + this.game.data.play.wave.number, this.game.fonts.text);
     this.currentWave.anchor.setTo(0.5, 0.5);
 
     this.createUpgrades(width, upgradeHeight, margin, outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed);
 
     const healthStr = this.game.data.play.playerInfo.health + '/' + Protagonist.getMaxHealth(this.game);
-    this.healthbar = new PhaserUi.ProgressBar(this.game, this.upgrades.width, 20, null, 9, healthStr, this.game.fonts.text);
+    this.healthbar = new PhaserUi.ProgressBar(this.game, this.upgrades.width, 20, null, 9);
+    this.healthbar.setText(healthStr, this.game.fonts.text);
     this.healthbar.progress = this.game.data.play.playerInfo.health / Protagonist.getMaxHealth(this.game);
-    this.healthbar.makePressable(this.upgradePressed('repair', 'health'), outlineColorPressed, outlineColorPressed);
+    this.healthbar.makePressable(this.upgradePressed('repair', 'health'), 0xffffff, 0xffffff);
 
     const len = this.upgrades.width;
     this.createTextBox(len, this.upgrades.width, outlineWidth, outlineColor, bgColor);
