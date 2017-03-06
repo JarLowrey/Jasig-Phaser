@@ -21,8 +21,6 @@ export default class Bonus extends ParentSprite {
 
     this.x = enemy.x;
     this.y = enemy.y;
-
-    this.body.velocity.y = ParentSprite.dp(100);
   }
 
   static bonusCollision(hero, bonus) {

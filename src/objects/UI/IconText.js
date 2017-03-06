@@ -122,7 +122,7 @@ export default class IconText extends Phaser.Group {
     //Common usage of IconText will  be to show the gold amount when an enemy ship dies. Set up variables for that use-case below.
     //Needs to be in reset rather than constructor as you cannot change the properties of a tween after setting them the first time.
     this.goldTween = this.game.add.tween(this).to({
-      y: '-' + ParentSprite.dp(25), //tween it relative to the current position. Needs to be a string
+      y: '-' + (25), //tween it relative to the current position. Needs to be a string
       alpha: 0
     }, 750, Phaser.Easing.Linear.In);
     this.goldTween.onComplete.add(function() {

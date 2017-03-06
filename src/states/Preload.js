@@ -99,6 +99,7 @@ export default class Preload extends Phaser.State {
       'bullets': this.game.cache.getJSON('bullets'),
       'bonuses': this.game.cache.getJSON('bonuses'),
     };
+    this.game.dimen = this.game.cache.getJSON('dimen');
 
     this.checkPreloadFinishedAndTryStartNextState();
   }

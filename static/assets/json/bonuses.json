@@ -1,20 +1,40 @@
 {
-  "heal":{
-    "key":"icons",
-    "frame":"heal",
+  "heal": {
+    "key": "icons",
+    "frame": "heal",
     "width": 40,
-    "bonusFunctionName":"applyHeal",
-    "background_color":"0#ffffff",
-    "stroke_color":"0#ff0000",
-    "probability":0.5
+    "bonusFunctionName": "applyHeal",
+    "background_color": "0#ffffff",
+    "stroke_color": "0#ff0000",
+    "probability": 0.5,
+    "velocity": {
+      "min": {
+        "x": 0,
+        "y": 80
+      },
+      "max": {
+        "x": 0,
+        "y": 120
+      }
+    }
   },
-  "money":{
-    "key":"icons",
-    "frame":"resources",
+  "money": {
+    "key": "icons",
+    "frame": "resources",
     "width": 40,
-    "bonusFunctionName":"addResources",
-    "background_color":"0#ffffff",
-    "stroke_color":"0#ff0000",
-    "probability":0.5
+    "bonusFunctionName": "addResources",
+    "background_color": "0#ffffff",
+    "stroke_color": "0#ff0000",
+    "probability": 0.5,
+    "velocity": {
+      "min": {
+        "x": 0,
+        "y": 90
+      },
+      "max": {
+        "x": 0,
+        "y": 130
+      }
+    }
   }
 }

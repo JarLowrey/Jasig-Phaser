@@ -18,6 +18,9 @@ export default class DiagonalMover extends Ship {
 
   reset(jsonName, isFriendly) {
     super.reset(jsonName || 'diagonal', isFriendly);
+    if (Math.random() < 0.5) {
+      this.body.velocity.x *= -1;
+    }
   }
 
 }

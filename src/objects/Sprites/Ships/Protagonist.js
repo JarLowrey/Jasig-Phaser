@@ -7,21 +7,13 @@
  */
 import Ship from '../Parents/Ship';
 import ParentSprite from '../Parents/ParentSprite';
-import ProgressBar from 'phaser-ui';
+import * as PhaserUi from 'phaser-ui';
 import Store from '../../../states/Store';
 
 
 export default class Protagonist extends Ship {
   static className() {
     return 'Protagonist';
-  }
-
-  constructor(game) {
-    super(game);
-
-    this.game.world.add(this); //need to set the parent to the world group, as it is not done automatically
-
-    this.speed = 5;
   }
 
   update() {
@@ -34,8 +26,8 @@ export default class Protagonist extends Ship {
     const activePointerPos = activePointer.position;
     const distToPointer = Phaser.Point.distance(this, activePointerPos);
 
-    var speed = distToPointer * this.speed;
-    speed = Math.max(speed, ParentSprite.dp(50)); //set a min speed. This causes a shaking effect when still
+    var speed = distToPointer * 5;
+    speed = Math.max(speed, (50)); //set a min speed. This causes a shaking effect when still
 
     return speed;
   }
@@ -58,17 +50,16 @@ export default class Protagonist extends Ship {
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
     this.health = this.game.data.play.playerInfo.health;
-    this.maxHealth = Store.getMaxHealth(this.game);
+    this.maxHealth = Protagonist.getMaxHealth(this.game); //used in parent
 
     //setup healthbar
     const healthbarJson = this.game.dimen.game_health;
     this.healthbar.destroy(); //delete the bar given to this by the parent, Ship
-    this.healthbar = new ProgressBar(this.game, null, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
-      false, healthbarJson.strokeLength);
-    this.healthbar.setText(this.getHealthbarText());
+    this.healthbar = new PhaserUi.ProgressBar(this.game, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
+      null, healthbarJson.strokeLength);
     this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width / 2;
     this.healthbar.y = healthbarJson.y;
-    this.healthbar.setTextSizeToBarSize();
+    this.updateHealthbar();
 
     this.body.mass = 0.001; //reduce the mass so collisions aren't as forceful
     this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
@@ -91,10 +82,6 @@ export default class Protagonist extends Ship {
     super.kill(false);
 
     this.healthbar.visible = true; //leave healthbar showing while this is dying
-  }
-
-  getHealthbarText() {
-    return Math.max(this.health, 0) + '/' + this.maxHealth;
   }
 
 }

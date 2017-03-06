@@ -1,5 +1,3 @@
-/* jshint esversion: 6 */
-
 /*
  * Unit
  * ====
@@ -15,30 +13,26 @@ export default class Unit extends ParentSprite {
     return 'Unit';
   }
   get value() {
-    let scaler = this.game.data.play.level / 5;
-    scaler = Math.min(1, scaler);
-    return this.info.gold * scaler;
+    if (!this.info) {
+      return 0;
+    }
+    return this.info.gold;
   }
-  get alive() {
-    return !this.isBeingKilled && this.prototype.alive;
+  get isAlive() {
+    return !this.isBeingKilled && this.alive;
   }
 
   constructor(game) {
     super(game);
-
-    this.game.physics.arcade.enableBody(this);
-    this.anchor.setTo(0.5, 0.5);
-    this.checkWorldBounds = true;
-    this.events.onOutOfBounds.add(this.silentKill, this);
 
     this.goldText = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.goldText.kill();
   }
 
   update() {
-    if (!this.alive) return;
+    if (!this.isAlive) return;
 
-    if (!this.reachedYDestination && Math.abs(this.y - this.yDestination) < ParentSprite.dp(5)) {
+    if (!this.reachedYDestination && Math.abs(this.y - this.yDestination) < (5)) {
       this.arrivedAtYDestionation();
     }
 
@@ -51,44 +45,24 @@ export default class Unit extends ParentSprite {
   }
 
   reset(entityName, isFriendly, entityType = 'units') {
-    this.info = this.game.entities[entityType][entityName];
-
-    super.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
-
-    //set texture and size
-    this.loadTexture(this.jsonInfo.key || 'sprites', this.jsonInfo.frame);
-    this.width = this.jsonInfo.width;
-    this.scale.y = Math.abs(this.scale.x);
-    this.body.setSize(this.width / this.scale.x, this.height / this.scale.y);
-
-    //set body related variables
-    this.body.velocity.set(this.info.velocity.x, this.info.velocity.y);
-    this.body.maxVelocity.setTo(600, 600);
-    this.body.drag.setTo(0, 0);
+    super.reset(entityType, entityName); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
     //add properties
-    this.alpha = 1;
-    this.angle = 0;
     this.maxHealth = this.info.health;
     this.isFriendly = isFriendly;
     this.setAnchor(isFriendly);
     this.setYDestination();
     this.reachedYDestination = false;
     this.isBeingKilled = false;
-
-    //set default position
-    this.top = 0;
-    this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
-
   }
 
   setYDestination() {
     //get the defined destination in the JSON file. default to 100 (moving off the bottom of the screen)
-    var destYInPercentOfScreen = this.jsonInfo.destYInPercentOfScreen || 100;
+    var destYInPercentOfScreen = this.info.destYInPercentOfScreen || 100;
 
     if (typeof destYInPercentOfScreen != 'number') { //destination is not a number, must be an object. Get the min and max destination values and choose a random position in between
-      const min = this.jsonInfo.destYInPercentOfScreen.min || 10;
-      const max = this.jsonInfo.destYInPercentOfScreen.max || 50;
+      const min = this.info.destYInPercentOfScreen.min || 10;
+      const max = this.info.destYInPercentOfScreen.max || 50;
       destYInPercentOfScreen = min + (max - min) * Math.random();
     } else if (destYInPercentOfScreen >= 100) { //needs to move off the bottom of screen
       destYInPercentOfScreen = 1000000;
@@ -109,7 +83,7 @@ export default class Unit extends ParentSprite {
     //check to see if a bonus should be made
     if (!this.amPlayer()) {
       let bonus = this.game.spritePools.getInstance('Bonus');
-      bonus.reset('heal', this);
+      bonus.reset(this.getRandomBonusType(), this);
     }
 
     //show some cool stuff as the entity dies
@@ -118,10 +92,14 @@ export default class Unit extends ParentSprite {
     this.visible = false;
 
     //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
-    this.game.time.events.add(1000, this.finishKill(), this);
+    this.game.time.events.add(1000, this.finishKill, this);
   }
 
-  finshKill() {
+  getRandomBonusType() {
+    return 'heal';
+  }
+
+  finishKill() {
     this.isBeingKilled = false;
     super.kill();
   }
@@ -138,8 +116,8 @@ export default class Unit extends ParentSprite {
 
   static unitCollision(friendlyUnit, enemyUnit) {
     //apply their damages, so long as they are still alive
-    if (enemyUnit.isAlive()) friendlyUnit.damage(50);
-    if (friendlyUnit.isAlive()) enemyUnit.damage(10);
+    if (enemyUnit.isAlive) friendlyUnit.damage(50);
+    if (friendlyUnit.isAlive) enemyUnit.damage(10);
 
     //set a high drag after colliding so enemies dont go flying offscreen.
     //NOTE: this will cause enemies to stop moving after colliding. It's not the best option but it's the best I got for now

@@ -17,7 +17,7 @@ export default class Kamikaze extends Ship {
   }
 
   update() {
-    if (!this.alive) return;
+    if (!this.isAlive) return;
     super.update();
 
     if (this.y < this.trackingObject.y) {

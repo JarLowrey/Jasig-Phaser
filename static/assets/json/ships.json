@@ -1,28 +1,38 @@
 {
-  "protagonist":{
-    "frame":"ship_protagonist",
-    "health":1000,
+  "protagonist": {
+    "frame": "ship_protagonist",
+    "health": 1000,
     "width": 50,
-    "weapons":{
-      "startingGun":{
-        "weaponName":"angledTriShot",
-        "x%Pos":50
+    "weapons": {
+      "startingGun": {
+        "weaponName": "angledTriShot",
+        "x%Pos": 50
       }
     }
   },
-  "diagonal":{
-    "frame":"ship_enemy_diagonal_full_screen",
-    "health":100,
+  "diagonal": {
+    "frame": "ship_enemy_diagonal_full_screen",
+    "health": 100,
     "width": 50,
     "gold": 50,
+    "velocity": {
+      "min": {
+        "x": 30,
+        "y": 200
+      },
+      "max": {
+        "x": 50,
+        "y": 200
+      }
+    },
     "destYInPercentOfScreen": {
       "min": 5,
       "max": 50
     },
-    "weapons":{
-      "startingGun":{
-        "weaponName":"straightShot",
-        "x%Pos":50
+    "weapons": {
+      "startingGun": {
+        "weaponName": "straightShot",
+        "x%Pos": 50
       }
     }
   }

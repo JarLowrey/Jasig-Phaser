@@ -26,7 +26,7 @@ export default class Ship extends Unit {
   }
 
   update() {
-    if (!this.alive) return;
+    if (!this.isAlive) return;
 
     super.update();
 
@@ -38,7 +38,7 @@ export default class Ship extends Unit {
   reset(shipName, isFriendly) {
     super.reset(shipName, isFriendly, 'ships');
 
-    this.healthbar.setWidth(this.width);
+    this.healthbar.width = (this.width);
     this.updateHealthbar();
     this.healthbar.visible = true;
 
@@ -47,22 +47,21 @@ export default class Ship extends Unit {
 
     const applyBulletJson = function(json) {
       return function(bullet) {
-        console.log(bullet, json);
-        //bullet.applyJsonInfo(json);
+        //console.log(bullet, json);
       };
     };
 
-    for (var weaponName in this.jsonInfo.weapons) {
-      const weaponInfo = this.jsonInfo.weapons[weaponName];
+    for (var weaponName in this.info.weapons) {
+      const weaponInfo = this.info.weapons[weaponName];
       const bulletType = weaponInfo.bulletType || 'default';
-      const bulletInfo = this.game.bullets[bulletType];
+      const bulletInfo = this.game.entities.bullets[bulletType];
       const ammo = (weaponInfo.ammo !== undefined) ? weaponInfo.ammo : -1; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.add.weapon(30, bulletInfo.key, bulletInfo.frame);
       weapon.weaponName = weaponName;
       weapon.bulletType = bulletType;
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-      weapon.bulletSpeed = ParentSprite.dp(500);
+      weapon.bulletSpeed = 500;
       weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
 
       weapon.bulletClass = Bullet;
@@ -93,7 +92,7 @@ export default class Ship extends Unit {
   }
 
   startShooting() {
-    if (!this.isAlive()) return;
+    if (!this.isAlive) return;
 
     this.weapons.forEach(function(weapon) {
       weapon.autofire = true;
@@ -153,7 +152,7 @@ export default class Ship extends Unit {
   //Overrides super method. this is called at the end of super.kill()
   showDeathAnimations() {
     //setup tween to be played upon this.kill()
-    const xTweenLen = ParentSprite.dp(15) * Math.random() + ParentSprite.dp(15);
+    const xTweenLen = (15) * Math.random() + (15);
     const tweenAngle = 30 + 30 * Math.random();
     const tweenTime = 35;
     var tween = this.game.add.tween(this)
@@ -177,15 +176,15 @@ export default class Ship extends Unit {
   static bulletCollision(unit, bullet) {
     //if the parameters come out of order, ensure that unit is a Unit and bullet is a Phaser.Bullet
     //check if the bullet is actually a Unit by seeing if it has a property (function) that is defined for Unit
-    if (bullet.isAlive) {
+    if (bullet.alive) {
       const temp = unit;
       unit = bullet;
       bullet = temp;
     }
 
     const shootingWeapon = bullet.parent.myWeapon;
-    if (unit.isAlive()) bullet.kill();
-    if (unit.isAlive()) unit.damage(shootingWeapon.dmg);
+    if (unit.isAlive) bullet.kill();
+    if (unit.isAlive) unit.damage(shootingWeapon.dmg);
   }
 
 }

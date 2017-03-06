@@ -12,7 +12,7 @@ export default class Bullet extends Phaser.Bullet {
     super(game, x, y, key, frame);
   }
   update() {
-    if (this.target && this.target.alive) {
+    if (this.target && this.target.isAlive) {
       this.game.physics.arcade.moveToObject(this, this.target, this.body.velocity); //track towards object
       this.body.angle = this.game.physics.arcade.angleBetween(this, this.target); //set bullet rotation angle to point towards target
     } else { //target could be revived after awhile, and then bullet would track wrong thing.

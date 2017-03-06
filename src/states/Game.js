@@ -34,6 +34,7 @@ export default class Game extends Phaser.State {
     this.game.time.advancedTiming = true;
 
     this.game.data.play.player = new Protagonist(this.game);
+    this.game.data.play.player.reset();
     this.add.existing(this.game.data.play.player);
 
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
@@ -87,7 +88,7 @@ export default class Game extends Phaser.State {
 
   incrementGameResources(amt) {
     this.game.waveHandler.earnedResources += amt;
-    this.totalMoney.setText(this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.getConfig('resources')));
+    this.totalMoney.setText(this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.data.play.score));
   }
 
   collisionDectection() {

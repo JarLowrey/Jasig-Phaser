@@ -52,7 +52,7 @@ export default class Pools {
       emitter.minParticleScale = this._widthToScale(key, frame, particleWidth.min);
       emitter.minParticleScale = this._widthToScale(key, frame, particleWidth.max);
 
-      emitter.jsonInfo = info;
+      emitter.info = info;
 
       this.emitters[name] = emitter;
     }
@@ -107,20 +107,15 @@ export default class Pools {
       emitter.y = spriteExplodingFrom.y;
     }
 
-    for (let explosion in emitter.jsonInfo.explosions) {
+    for (let name in emitter.info.explosions) {
+      let explosion = emitter.info.explosions[name];
       emitter.minParticleSpeed.set(explosion.speed.min.x, explosion.speed.min.y);
       emitter.maxParticleSpeed.set(explosion.speed.max.x, explosion.speed.max.y);
       emitter.start(explosion.explode, explosion.lifeSpan, explosion.frequency, explosion.quantity, explosion.forceQuantity);
     }
   }
 
-  getInstance(className, x, y) {
-    const sprite = this.getPool(className).getFirstDead(true);
-    sprite.reset();
-
-    if (x !== undefined) sprite.x = x;
-    if (y !== undefined) sprite.y = y;
-
-    return sprite;
+  getInstance(className) {
+    return this.getPool(className).getFirstDead(true);
   }
 }

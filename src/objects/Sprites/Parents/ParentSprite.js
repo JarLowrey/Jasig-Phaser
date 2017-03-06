@@ -10,6 +10,48 @@ export default class ParentSprite extends Phaser.Sprite {
   static className() {
     return 'ParentSprite';
   }
+  constructor(game) {
+    super(game);
+
+    this.game.physics.arcade.enableBody(this);
+    this.anchor.setTo(0.5, 0.5);
+    this.checkWorldBounds = true;
+    this.events.onOutOfBounds.add(this.silentKill, this);
+  }
+
+  reset(entityType, entityName) {
+    super.reset();
+    this.info = this.game.entities[entityType][entityName];
+
+    //set size+texture
+    this.loadTexture(this.info.key || 'sprites', this.info.frame);
+    this.setSize(this.info.width, this.info.isCircular, this.info.height);
+
+    //set body related variables
+    let v = this.info.velocity || {
+      'max': {
+        'x': 0,
+        'y': 0
+      },
+      'min': {
+        'x': 0,
+        'y': 0
+      }
+    };
+    let xSpd = Math.random() * (v.max.x - v.min.x) + v.min.x;
+    let ySpd = Math.random() * (v.max.y - v.min.y) + v.min.y;
+    this.body.velocity.set(xSpd, ySpd);
+    this.body.maxVelocity.setTo(600, 600);
+    this.body.drag.setTo(0, 0);
+
+    //other properties
+    this.alpha = 1;
+    this.angle = 0;
+
+    //set default position
+    this.top = 0;
+    this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
+  }
 
   silentKill() {
     this.kill();
@@ -32,7 +74,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   amPlayer() {
-    return this == this.game.play.player;
+    return this == this.game.data.play.player;
   }
 
   setSize(width, isCircular = false, height) {
@@ -61,7 +103,7 @@ export default class ParentSprite extends Phaser.Sprite {
       }
 
       const myArea = width * height;
-      const playerArea = this.game.play.player.width * this.game.play.player.height;
+      const playerArea = this.game.data.play.player.width * this.game.data.play.player.height;
       this.body.mass = myArea / playerArea;
     }
   }
