@@ -52,6 +52,13 @@ export default class ParentSprite extends Phaser.Sprite {
     this.top = 0;
     this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
   }
+  update() {
+    //debug body
+
+    //this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
+    //this.game.debug.body(this, 'rgba(255,0,0,0.8)');
+    //this.game.debug.bodyInfo(this, this.x, this.y);
+  }
 
   silentKill() {
     this.kill();
@@ -91,11 +98,12 @@ export default class ParentSprite extends Phaser.Sprite {
       const scaledHeight = Math.abs(this.height / this.scale.y);
 
       //Set body size a bit smaller than the actual sprite due to using Arcade Physics - don't want user to get mad that 2 bodies 'didnt really touch'
-      const widthShrinkAmount = scaledWidth * 0; //this.game.integers.bodyShrink;
-      const heightShrinkAmount = scaledHeight * 0; //this.game.integers.bodyShrink;
+      const widthShrinkAmount = 0; //this.game.integers.bodyShrink;
+      const heightShrinkAmount = 0; //this.game.integers.bodyShrink;
 
       if (isCircular) {
-        const radius = (scaledWidth + scaledHeight) / 2;
+        //not sure why this works...but it does!
+        const radius = this.width / 2;
         this.body.setCircle(radius, (scaledWidth - radius) / 2, (scaledHeight - radius) / 2);
       } else {
         this.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,

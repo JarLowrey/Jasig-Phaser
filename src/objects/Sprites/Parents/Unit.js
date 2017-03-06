@@ -31,17 +31,11 @@ export default class Unit extends ParentSprite {
 
   update() {
     if (!this.isAlive) return;
+    super.update();
 
     if (!this.reachedYDestination && Math.abs(this.y - this.yDestination) < (5)) {
       this.arrivedAtYDestionation();
     }
-
-    //debug body
-    /*
-    this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
-    this.game.debug.body(this,'rgba(255,0,0,0.8)');
-    this.game.debug.bodyInfo(this, this.x, this.y);
-    */
   }
 
   reset(entityName, isFriendly, entityType = 'units') {
