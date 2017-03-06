@@ -7,7 +7,7 @@
     "test-dist": "npm run dist && browser-sync start -c gulpfile.js/bs-config.js"
   },
   "dependencies": {
-    "phaser-ce": "^2.7.0",
+    "phaser-ce": "^2.7.3",
     "phaser-kinetic-scrolling-plugin": "^1.0.2",
     "phaser-state-transition": "^2.3.1",
     "phaser-ui": "^0.0.7"

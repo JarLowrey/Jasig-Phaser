@@ -18,18 +18,16 @@ export default class Bonus extends ParentSprite {
 
   reset(bonusType, x, y) {
     super.reset('bonuses', bonusType);
-    console.log('bonus reset', x, y)
+
     this.x = x;
     this.y = y;
   }
 
   kill() {
     super.kill();
-    console.log('bonus killed')
   }
 
   static bonusCollision(hero, bonus) {
-    console.log('bonus collison')
     bonus.bonusFunction(hero);
 
     bonus.kill();
@@ -42,7 +40,6 @@ export default class Bonus extends ParentSprite {
 
     this.game.debug.geom(this.getBounds());
     this.game.debug.body(this, 'rgba(255,0,0,0.8)');
-
   }
 
   /*

@@ -111,7 +111,6 @@ export default class Pools {
 
     for (let name in emitter.info.explosions) {
       let explosion = emitter.info.explosions[name];
-      console.log(explosion)
 
       emitter.minParticleSpeed.set(explosion.speed.min.x, explosion.speed.min.y);
       emitter.maxParticleSpeed.set(explosion.speed.max.x, explosion.speed.max.y);

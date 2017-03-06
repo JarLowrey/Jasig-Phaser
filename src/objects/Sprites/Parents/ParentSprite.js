@@ -20,7 +20,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   reset(entityType, entityName) {
-    super.reset();
+    super.reset(0, 0);
     this.info = this.game.entities[entityType][entityName];
 
     //set size+texture
