@@ -16,7 +16,7 @@ export default class ParentSprite extends Phaser.Sprite {
     this.game.physics.arcade.enableBody(this);
     this.anchor.setTo(0.5, 0.5);
     this.checkWorldBounds = true;
-    this.events.onOutOfBounds.add(this.silentKill, this);
+    this.outOfBoundsKill = true;
   }
 
   reset(entityType, entityName) {
@@ -54,34 +54,38 @@ export default class ParentSprite extends Phaser.Sprite {
   }
   update() {
     //debug body
-
-    //this.game.debug.geom(this.getBounds()); //better way of showing the bounding box when debugging
-    //this.game.debug.body(this, 'rgba(255,0,0,0.8)');
-    //this.game.debug.bodyInfo(this, this.x, this.y);
+    if (!this.alive) {
+      return;
+    }
+    /*
+    this.game.debug.geom(this.getBounds());
+    this.game.debug.body(this, 'rgba(255,0,0,0.8)');
+    this.game.debug.bodyInfo(this, this.x, this.y);
+    */
   }
 
-  silentKill() {
-    this.kill();
-  }
   kill() {
-    this.startNextStateIfPossible();
     super.kill();
+    this.startNextStateIfPossible();
   }
+
   startNextStateIfPossible() {
     const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() === 0;
     const noActiveBonuses = this.game.spritePools.getPool('Bonus').getFirstAlive() === null;
-    const gameOver = allEnemiesDead && noActiveBonuses;
+    const waveOver = allEnemiesDead && noActiveBonuses;
+    //console.log(this.game.waveHandler.isWaveOver(), this.game.waveHandler.livingEnemiesTotalValue(), noActiveBonuses, this.game.spritePools.getPool('Bonus').getFirstAlive())
 
     if (this.amPlayer()) {
       this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-    } else if (gameOver) {
+    } else if (waveOver) {
+      this.game.data.saveGame();
+      this.game.data.saveStats();
       this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-      this.game.waveHandler.saveWaveValues();
     }
   }
 
   amPlayer() {
-    return this == this.game.data.play.player;
+    return this === this.game.data.play.player;
   }
 
   setSize(width, isCircular = false, height) {
@@ -127,7 +131,7 @@ export default class ParentSprite extends Phaser.Sprite {
       x: this.x,
       y: this.y,
 
-      className: this.className(),
+      className: this.constructor.className(),
       frame: this.frameName
     };
 

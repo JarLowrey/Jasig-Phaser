@@ -16,17 +16,33 @@ export default class Bonus extends ParentSprite {
     super(game);
   }
 
-  reset(bonusType, enemy) {
+  reset(bonusType, x, y) {
     super.reset('bonuses', bonusType);
+    console.log('bonus reset', x, y)
+    this.x = x;
+    this.y = y;
+  }
 
-    this.x = enemy.x;
-    this.y = enemy.y;
+  kill() {
+    super.kill();
+    console.log('bonus killed')
   }
 
   static bonusCollision(hero, bonus) {
+    console.log('bonus collison')
     bonus.bonusFunction(hero);
 
     bonus.kill();
+  }
+  update() {
+    //debug body
+    if (!this.alive) {
+      return;
+    }
+
+    this.game.debug.geom(this.getBounds());
+    this.game.debug.body(this, 'rgba(255,0,0,0.8)');
+
   }
 
   /*
@@ -34,7 +50,7 @@ export default class Bonus extends ParentSprite {
   */
 
   bonusFunction(hero) {
-    return Bonus[this.info.bonusFunctionName](hero); //choose the bonus function and call it
+    return Bonus[this.info.bonusFunctionName](hero); //choose the bonus function on this object by using JSON and call it
   }
 
   static applyHeal(hero) {

@@ -44,13 +44,14 @@ export default class Pools {
         };
 
       //create emitter
+
       var emitter = this.game.add.emitter(0, 0, info.maxParticles);
       emitter.makeParticles(key, frame);
       emitter.gravity = gravity;
       emitter.setRotation(rotation.min, rotation.max);
       emitter.setAlpha(alpha.min, alpha.max);
       emitter.minParticleScale = this._widthToScale(key, frame, particleWidth.min);
-      emitter.minParticleScale = this._widthToScale(key, frame, particleWidth.max);
+      emitter.maxParticleScale = this._widthToScale(key, frame, particleWidth.max);
 
       emitter.info = info;
 
@@ -97,6 +98,7 @@ export default class Pools {
     return emitter;
   }
 
+  //convenience method for using explosions designed via JSON instead of in a JS file
   explode(emitterName, spriteExplodingFrom) {
     let emitter = this.getEmitter(emitterName);
 
@@ -109,13 +111,11 @@ export default class Pools {
 
     for (let name in emitter.info.explosions) {
       let explosion = emitter.info.explosions[name];
+      console.log(explosion)
+
       emitter.minParticleSpeed.set(explosion.speed.min.x, explosion.speed.min.y);
       emitter.maxParticleSpeed.set(explosion.speed.max.x, explosion.speed.max.y);
       emitter.start(explosion.explode, explosion.lifeSpan, explosion.frequency, explosion.quantity, explosion.forceQuantity);
     }
-  }
-
-  getInstance(className) {
-    return this.getPool(className).getFirstDead(true);
   }
 }

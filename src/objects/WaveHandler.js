@@ -18,8 +18,6 @@ export default class WaveHandler {
     this.game = game;
     this.hero = hero;
 
-    this.earnedResources = 0;
-
     //variables to determine how much stuff can be on screen at once
     this.minMeteors = 4;
     this.minShips = 1;
@@ -87,10 +85,8 @@ export default class WaveHandler {
   }
 
   spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false) {
-    var newEnemy = this.game.spritePools.getInstance(newEnemyClass.className());
-
+    var newEnemy = this.game.spritePools.getPool(newEnemyClass.className()).getFirstDead(true)
     newEnemy.reset(newEnemyJsonName, isFriendly);
-
     return newEnemy;
   }
 
@@ -110,7 +106,7 @@ export default class WaveHandler {
     var time = 1000 * 20;
     time += wave * 2.5;
     //return Math.min(time, 1000 * 90);
-    return time;
+    return 1500;
   }
 
   livingEnemiesTotalValue() {

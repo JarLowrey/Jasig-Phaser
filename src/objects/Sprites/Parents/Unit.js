@@ -22,12 +22,6 @@ export default class Unit extends ParentSprite {
     return !this.isBeingKilled && this.alive;
   }
 
-  constructor(game) {
-    super(game);
-
-    this.goldText = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
-    this.goldText.kill();
-  }
 
   update() {
     if (!this.isAlive) return;
@@ -72,30 +66,32 @@ export default class Unit extends ParentSprite {
   //'this' will be added back into the recycling pools. This causes problems.
   kill() {
     if (this.isBeingKilled) return;
-    this.isBeingKilled = true;
+    if (!this.inWorld) { //if not inworld, then ran off edge of screen. do not display fancy animations
+      this.game.state.states.Game.incrementGameResources(Math.ceil(this.value / 3));
+      super.kill()
+      return;
+    }
 
     //check to see if a bonus should be made
     if (!this.amPlayer()) {
-      let bonus = this.game.spritePools.getInstance('Bonus');
-      bonus.reset(this.getRandomBonusType(), this);
+      let bonus = this.game.spritePools.getPool('Bonus').getFirstDead(true);
+      bonus.reset(this.getRandomBonusType(), this.x, this.y);
     }
 
     //show some cool stuff as the entity dies
-    this.goldText.showGoldText(this.value, this.x, this.y);
-    this.game.spritePools.explode('explosion1', this);
-    this.visible = false;
+    //this.goldText.fadeOut(this.value, this.x, this.y);
+    this.game.state.states.Game.incrementGameResources(this.value);
 
-    //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish
-    this.game.time.events.add(1000, this.finishKill, this);
+    if (this.showDeathAnimations) {
+      this.body.velocity.setTo(0, 0);
+      this.showDeathAnimationsThenKill()
+    } else {
+      super.kill();
+    }
   }
 
   getRandomBonusType() {
     return 'heal';
-  }
-
-  finishKill() {
-    this.isBeingKilled = false;
-    super.kill();
   }
 
   setAnchor(isFriendly) {
@@ -116,6 +112,16 @@ export default class Unit extends ParentSprite {
     //set a high drag after colliding so enemies dont go flying offscreen.
     //NOTE: this will cause enemies to stop moving after colliding. It's not the best option but it's the best I got for now
     //enemyUnit.body.drag.setTo(10000,10000);
+  }
+
+  damage(amount) {
+    super.damage(amount);
+
+    //flash a different color
+    this.tint = '0xff0000';
+    this.game.time.events.add(150, function() {
+      this.tint = '0xffffff';
+    }, this);
   }
 
 

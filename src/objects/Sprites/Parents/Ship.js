@@ -144,17 +144,22 @@ export default class Ship extends Unit {
     if (this.isBeingKilled) return;
 
     this.stopShooting();
+    this.game.spritePools.explode('explosion1', this);
     this.healthbar.visible = false;
-
     super.kill();
   }
-
+  finishKill() {
+    this.isBeingKilled = false;
+    super.kill();
+  }
   //Overrides super method. this is called at the end of super.kill()
-  showDeathAnimations() {
+  showDeathAnimationsThenKill() {
+    this.isBeingKilled = true;
+
     //setup tween to be played upon this.kill()
-    const xTweenLen = (15) * Math.random() + (15);
-    const tweenAngle = 30 + 30 * Math.random();
-    const tweenTime = 35;
+    const xTweenLen = 10 * Math.random() + 10;
+    const tweenAngle = 20 + 20 * Math.random();
+    const tweenTime = 30;
     var tween = this.game.add.tween(this)
       .to({
         x: '-' + xTweenLen
@@ -170,7 +175,7 @@ export default class Ship extends Unit {
       }, tweenTime, Phaser.Easing.Linear.In)
       .repeatAll(1);
     tween.start();
-    tween.onComplete.add(super.showDeathAnimations, this);
+    tween.onComplete.add(this.finishKill, this);
   }
 
   static bulletCollision(unit, bullet) {

@@ -87,8 +87,9 @@ export default class Game extends Phaser.State {
   }
 
   incrementGameResources(amt) {
-    this.game.waveHandler.earnedResources += amt;
-    this.totalMoney.setText(this.game.nFormatter(this.game.waveHandler.earnedResources + this.game.data.play.score));
+    this.game.data.play.score += amt;
+    this.game.data.play.totalScore += amt;
+    this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
   }
 
   collisionDectection() {

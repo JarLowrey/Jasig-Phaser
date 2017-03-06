@@ -27,11 +27,11 @@
           "max": {
             "x": 400,
             "y": 300
-          },
-          "explode": true,
-          "lifeSpan": 400,
-          "quantity": 2
-        }
+          }
+        },
+        "explode": true,
+        "lifeSpan": 400,
+        "quantity": 2
       },
       "right": {
         "speed": {
@@ -42,11 +42,11 @@
           "max": {
             "x": 400,
             "y": 300
-          },
-          "explode": true,
-          "lifeSpan": 400,
-          "quantity": 2
-        }
+          }
+        },
+        "explode": true,
+        "lifeSpan": 400,
+        "quantity": 2
       },
       "up": {
         "speed": {
@@ -57,11 +57,11 @@
           "max": {
             "x": 300,
             "y": -300
-          },
-          "explode": true,
-          "lifeSpan": 400,
-          "quantity": 2
-        }
+          }
+        },
+        "explode": true,
+        "lifeSpan": 400,
+        "quantity": 2
       },
       "down": {
         "speed": {
@@ -72,11 +72,11 @@
           "max": {
             "x": 300,
             "y": 400
-          },
-          "explode": true,
-          "lifeSpan": 400,
-          "quantity": 2
-        }
+          }
+        },
+        "explode": true,
+        "lifeSpan": 400,
+        "quantity": 2
       }
     }
   }
