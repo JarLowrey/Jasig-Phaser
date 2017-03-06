@@ -9,7 +9,6 @@
 import ParentSprite from './ParentSprite';
 
 import IconText from '../../UI/IconText';
-import ExplosionRecycler from '../../UI/ExplosionRecycler';
 
 export default class Unit extends ParentSprite {
   static className() {
@@ -24,12 +23,8 @@ export default class Unit extends ParentSprite {
     return !this.isBeingKilled && this.prototype.alive;
   }
 
-  constructor(game, entityType, entityName) {
+  constructor(game) {
     super(game);
-    this.info = this.game.entities[entityType][entityName];
-
-    this.explosionRecycler = new ExplosionRecycler(this.game, this);
-    this.explosionRecycler.addExplosionEmitter(this.jsonInfo.explosionKey || 'sprites', this.jsonInfo.explosionFrame || 'explosion1');
 
     this.game.physics.arcade.enableBody(this);
     this.anchor.setTo(0.5, 0.5);
@@ -56,6 +51,8 @@ export default class Unit extends ParentSprite {
   }
 
   reset(entityName, isFriendly, entityType = 'units') {
+    this.info = this.game.entities[entityType][entityName];
+
     super.reset(); //reset the physics body in addition to reviving the sprite. Otherwise collisions could be messed up
 
     //set texture and size
@@ -117,7 +114,7 @@ export default class Unit extends ParentSprite {
 
     //show some cool stuff as the entity dies
     this.goldText.showGoldText(this.value, this.x, this.y);
-    this.explosionRecycler.showExplosion();
+    this.game.spritePools.explode('explosion1', this);
     this.visible = false;
 
     //leave enough time for goldtext, explosion, and whatever else may happen in children, to finish

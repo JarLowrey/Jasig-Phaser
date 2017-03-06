@@ -73,7 +73,10 @@ export default class Game extends Phaser.State {
       }
     };
 
-    this.game.spritePools = new Pools(this.game, pools);
+    this.game.spritePools = new Pools(this.game,
+      pools,
+      this.game.data.play.serializedObjects.sprites,
+      this.game.cache.getJSON('emitters'));
   }
 
   update() {

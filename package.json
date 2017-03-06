@@ -10,7 +10,7 @@
     "phaser-ce": "^2.7.0",
     "phaser-kinetic-scrolling-plugin": "^1.0.2",
     "phaser-state-transition": "^2.3.1",
-    "phaser-ui": "^0.0.5"
+    "phaser-ui": "^0.0.7"
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.15.0",

@@ -7,7 +7,7 @@
  */
 
 import Unit from './Unit';
-import ProgressBar from 'phaser-ui';
+import * as PhaserUi from 'phaser-ui';
 import ParentSprite from './ParentSprite';
 import Bullet from '../Bullet';
 
@@ -19,7 +19,7 @@ export default class Ship extends Unit {
   constructor(game) {
     super(game);
 
-    this.healthbar = new ProgressBar(this.game);
+    this.healthbar = new PhaserUi.ProgressBar(this.game, this.width, 10, null, 2);
     this.healthbar.visible = false; //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
 
     this.weapons = [];
@@ -38,10 +38,8 @@ export default class Ship extends Unit {
   reset(shipName, isFriendly) {
     super.reset(shipName, isFriendly, 'ships');
 
-    this.healthbar.setPercent(100);
-    this.healthbar.setText(this.getHealthbarText());
     this.healthbar.setWidth(this.width);
-
+    this.updateHealthbar();
     this.healthbar.visible = true;
 
     //add all the weapons from the json file
@@ -88,10 +86,6 @@ export default class Ship extends Unit {
     }
   }
 
-  getHealthbarText() {
-    return Math.max(this.health, 0);
-  }
-
   arrivedAtYDestionation() {
     super.arrivedAtYDestionation();
 
@@ -132,20 +126,19 @@ export default class Ship extends Unit {
     tween.onComplete.add(resetAngle, this);
     tween.start();
 
-    this.setHealthBarPercentage();
-    this.healthbar.setText(this.getHealthbarText());
+    this.updateHealthbar();
   }
 
   heal(amount) {
     super.heal(amount);
 
-    this.setHealthBarPercentage();
-    this.healthbar.setText(this.getHealthbarText());
+    this.updateHealthbar();
   }
 
-  setHealthBarPercentage() {
-    const healthPercentLeft = 100 * (this.health / this.maxHealth);
-    this.healthbar.setPercent(healthPercentLeft);
+  updateHealthbar() {
+    const healthPercentLeft = (this.health / this.maxHealth);
+    this.healthbar.progress = healthPercentLeft;
+    this.healthbar.setText(Math.max(this.health, 0));
   }
 
   kill() {
