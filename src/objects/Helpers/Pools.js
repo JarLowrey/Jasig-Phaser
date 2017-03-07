@@ -4,8 +4,6 @@
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
 
-import * as PhaserUi from 'phaser-ui';
-
 export default class Pools {
 
   constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters) {

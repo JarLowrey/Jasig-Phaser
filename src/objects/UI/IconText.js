@@ -3,8 +3,6 @@
  * ====
  *
  */
-import ParentSprite from '../../objects/Sprites/Parents/ParentSprite';
-
 
 export default class IconText extends Phaser.Group {
 

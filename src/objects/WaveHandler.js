@@ -85,7 +85,7 @@ export default class WaveHandler {
   }
 
   spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false) {
-    var newEnemy = this.game.spritePools.getPool(newEnemyClass.className()).getFirstDead(true)
+    var newEnemy = this.game.spritePools.getPool(newEnemyClass.className()).getFirstDead(true);
     newEnemy.reset(newEnemyJsonName, isFriendly);
     return newEnemy;
   }
@@ -106,7 +106,7 @@ export default class WaveHandler {
     var time = 1000 * 20;
     time += wave * 2.5;
     //return Math.min(time, 1000 * 90);
-    return 1500;
+    return time;
   }
 
   livingEnemiesTotalValue() {

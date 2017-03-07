@@ -49,20 +49,20 @@ export default class Ship extends Unit {
       var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.weaponName = weaponName;
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-      weapon.bulletSpeed = 500;
-      weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
+      weapon.bulletSpeed = weaponInfo.bulletSpeed || 500;
+      weapon.fireAngle = this._getWeaponAngle(weaponInfo.angle);
 
       weapon.bulletClass = Ship._getBulletClass();
       weapon.createBullets(ammo);
       weapon.autoExpandBulletsGroup = !Boolean(weaponInfo.ammo).valueOf(); //if ammo was defined, do not auto expand group
 
-      weapon.fireRate = 50; //this.getFireRate();
+      weapon.fireRate = weaponInfo.fireRate || 200;
       //weapon.dmg = this.getDamage();
       weapon.dmg = 25; //this does nothing right now
       weapon.bullets.myWeapon = weapon;
 
       const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;
-      const xPixelOffset = this.width * percentOffset;
+      const xPixelOffset = Math.abs(this.width) * percentOffset;
       const yPixelOffset = -this.anchor.y * this.height + this.height / 2; //regardless of anchor, bullets start in middle Y of sprite
       weapon.trackSprite(this, xPixelOffset, yPixelOffset);
 
@@ -70,12 +70,21 @@ export default class Ship extends Unit {
     }
   }
 
+  _getWeaponAngle(angle) {
+    let newAngle = 0;
+    if (angle === undefined) {
+      newAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
+    } else {
+      newAngle = (this.isFriendly) ? 360 - angle : angle;
+    }
+    return newAngle;
+  }
+
   static cleanupAllWeapons(game) {
     //clean up all the weapons
     let destroyWeapons = function(sprite) {
       if (sprite.weapons) {
         for (let weapon of sprite.weapons) {
-          weapon.autofire = false;
           weapon.destroy();
         }
       }
@@ -101,7 +110,6 @@ export default class Ship extends Unit {
 
   arrivedAtYDestionation() {
     super.arrivedAtYDestionation();
-
     this.startShooting();
   }
 

@@ -6,8 +6,6 @@
 
 import ParentSprite from './ParentSprite';
 
-import IconText from '../../UI/IconText';
-
 export default class Unit extends ParentSprite {
   static className() {
     return 'Unit';
@@ -68,7 +66,7 @@ export default class Unit extends ParentSprite {
     if (this.isBeingKilled) return;
     if (!this.inWorld) { //if not inworld, then ran off edge of screen. do not display fancy animations
       this.game.state.states.Game.incrementGameResources(Math.ceil(this.value / 3));
-      super.kill()
+      super.kill();
       return;
     }
 
@@ -84,7 +82,7 @@ export default class Unit extends ParentSprite {
 
     if (this.showDeathAnimations) {
       this.body.velocity.setTo(0, 0);
-      this.showDeathAnimationsThenKill()
+      this.showDeathAnimationsThenKill();
     } else {
       super.kill();
     }

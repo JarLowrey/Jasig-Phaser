@@ -36,8 +36,8 @@ export default class Bonus extends ParentSprite {
       return;
     }
 
-    this.game.debug.geom(this.getBounds());
-    this.game.debug.body(this, 'rgba(255,0,0,0.8)');
+    //this.game.debug.geom(this.getBounds());
+    //this.game.debug.body(this, 'rgba(255,0,0,0.8)');
   }
 
   /*

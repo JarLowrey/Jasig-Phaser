@@ -79,10 +79,6 @@ export default {
     type: 'json',
     url: 'json/units.json'
   }, {
-    key: 'weapons',
-    type: 'json',
-    url: 'json/weapons.json'
-  }, {
     key: 'bonuses',
     type: 'json',
     url: 'json/bonuses.json'

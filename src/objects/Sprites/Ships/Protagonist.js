@@ -4,9 +4,7 @@
  *
  */
 import Ship from '../Parents/Ship';
-import ParentSprite from '../Parents/ParentSprite';
 import * as PhaserUi from 'phaser-ui';
-import Store from '../../../states/Store';
 
 
 export default class Protagonist extends Ship {

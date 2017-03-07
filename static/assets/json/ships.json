@@ -5,8 +5,8 @@
     "width": 50,
     "weapons": {
       "startingGun": {
-        "weaponName": "angledTriShot",
-        "x%Pos": 50
+        "angle": 100,
+        "xPercentOffset": 0
       }
     }
   },
@@ -31,8 +31,9 @@
     },
     "weapons": {
       "startingGun": {
-        "weaponName": "straightShot",
-        "x%Pos": 50
+        "angle": 100,
+        "xPercentOffset": 0,
+        "fireRate": 1000
       }
     }
   }

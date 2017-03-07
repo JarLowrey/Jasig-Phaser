@@ -153,7 +153,6 @@ export default class Store extends Phaser.State {
   purchaseAttempt(groupName, upgradeName, cost) {
     return function() {
       const currentMoney = this.game.data.play.score;
-      const currentLevel = this.game.data.play.upgrades[upgradeName];
 
       if (cost < currentMoney) { //purchase successful
         this.game.data.play.score -= cost;
