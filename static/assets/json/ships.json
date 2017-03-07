@@ -4,10 +4,13 @@
     "health": 1000,
     "width": 50,
     "weapons": {
-      "startingGun": {
-        "angle": 100,
-        "xPercentOffset": 0
-      }
+      "low_level": [{
+        "angle": 100
+      }, {
+        "angle": 90
+      }, {
+        "angle": 80
+      }]
     }
   },
   "diagonal": {
@@ -30,11 +33,11 @@
       "max": 50
     },
     "weapons": {
-      "startingGun": {
-        "angle": 100,
+      "low_level": [{
+        "angle": 90,
         "xPercentOffset": 0,
         "fireRate": 1000
-      }
+      }]
     }
   }
 }

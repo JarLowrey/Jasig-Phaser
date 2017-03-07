@@ -116,21 +116,22 @@ export default class Game extends Phaser.State {
   overlapFriendlies(enemies) {
     const player = this.game.data.play.player;
 
-    const overlapWeaponsBullets = function(shooters, receivers) {
-      shooters.forEach(function(shooter) { //iterate thru all shooters
-        shooter.weapons.forEach(function(weapon) { //iterate thru all shooters weapons
-          this.game.physics.arcade.overlap(weapon.bullets, receivers, Ship.bulletCollision, null, this); //collide weapon's bullets with all receivers
-        }.bind(this));
-      }.bind(this));
+    const overlapBullets = function(shooter, receivers) {
+      for (let weapon of shooter.weapons) {
+        //receivers must be first param before bullets - http://phaser.io/docs/2.6.2/Phaser.Physics.Arcade.html#overlap
+        this.game.physics.arcade.overlap(receivers, weapon.bullets, Ship.bulletCollision, null, this);
+      }
     }.bind(this);
 
     //if enemy has weapons, check to see if those weapon's bullets have hit friendlies
     if (enemies.getChildAt(0).weapons) {
-      overlapWeaponsBullets(enemies, player);
+      enemies.forEachAlive(function(enemy) {
+        overlapBullets(enemy, player);
+      });
     }
 
     //check to see friendlies' weapon's bullets have hit enemies
-    overlapWeaponsBullets([player], enemies);
+    overlapBullets(player, enemies);
 
     //check to see if friendlies and enemies have collided
     this.game.physics.arcade.overlap(player, enemies, Unit.unitCollision, null, this);

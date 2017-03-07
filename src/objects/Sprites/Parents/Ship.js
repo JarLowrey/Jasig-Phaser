@@ -42,12 +42,12 @@ export default class Ship extends Unit {
 
     //add all the weapons from the json file
     this.weapons = [];
-    for (var weaponName in this.info.weapons) {
-      const weaponInfo = this.info.weapons[weaponName];
+    const leveledWeapon = this.info.weapons['low_level'];
+    for (var i in leveledWeapon) {
+      const weaponInfo = leveledWeapon[i];
       const ammo = weaponInfo.ammo || 10; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.plugins.add(Phaser.Weapon);
-      weapon.weaponName = weaponName;
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
       weapon.bulletSpeed = weaponInfo.bulletSpeed || 500;
       weapon.fireAngle = this._getWeaponAngle(weaponInfo.angle);
@@ -212,14 +212,6 @@ export default class Ship extends Unit {
   }
 
   static bulletCollision(unit, bullet) {
-    //if the parameters come out of order, ensure that unit is a Unit and bullet is a Phaser.Bullet
-    //check if the bullet is actually a Unit by seeing if it has a property (function) that is defined for Unit
-    if (bullet.alive) {
-      const temp = unit;
-      unit = bullet;
-      bullet = temp;
-    }
-
     const shootingWeapon = bullet.parent.myWeapon;
     if (unit.isAlive) bullet.kill();
     if (unit.isAlive) unit.damage(shootingWeapon.dmg);
