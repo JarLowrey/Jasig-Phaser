@@ -13,7 +13,6 @@ import Pools from '../objects/Helpers/Pools';
 
 import WaveHandler from '../objects/WaveHandler';
 
-import Stars from '../objects/UI/Stars';
 import IconText from '../objects/UI/IconText';
 
 //specific unit and ship classes
@@ -26,6 +25,11 @@ export default class Game extends Phaser.State {
   create() {
     //this.stars = new Stars(this.game);
     //this.stars.showStars();
+    this.bg = this.game.add.image(0, 0, 'background');
+    this.bg.width = Math.max(this.game.width, this.bg.width);
+    this.bg.height = Math.max(this.game.height, this.bg.height);
+    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
+    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield2');
 
     this.setupSpritePools();
 
@@ -87,7 +91,9 @@ export default class Game extends Phaser.State {
   }
 
   update() {
-    this.game.waveHandler.updateProgressBar();
+    this.starfield.tilePosition.y += 4;
+    this.starfield2.tilePosition.y += 6;
+    //this.bg.tilePosition.y += 2;
 
     this.collisionDectection();
   }

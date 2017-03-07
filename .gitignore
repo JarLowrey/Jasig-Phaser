@@ -11,3 +11,6 @@ node_modules/
 !.eslint*
 !.yo-rc.json
 !.editorconfig
+
+#ignore some of the non-final images so they do not clog up the git history
+static/assets/imgs/background.png

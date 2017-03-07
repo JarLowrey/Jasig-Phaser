@@ -87,14 +87,18 @@ export default {
     type: 'json',
     url: 'json/upgrades.json'
   }, {
-    // {
-    //   //  Example: Add an image.
-    //   //
-    //   //  If `url` is omitted, a pattern `<key>.png` is assumed.
-    //   key: 'example',
-    //   type: 'image',
-    //   url: 'example.png'
-    // }, {
+    key: 'starfield',
+    type: 'image',
+    url: 'imgs/starfield.png'
+  }, {
+    key: 'starfield2',
+    type: 'image',
+    url: 'imgs/starfield2.png'
+  }, {
+    key: 'background',
+    type: 'image',
+    url: 'imgs/background.png'
+  }, {
     //   //  Example: Add a text file.
     //   //
     //   //  If `url` is omitted, a pattern `<key>.txt` is assumed.

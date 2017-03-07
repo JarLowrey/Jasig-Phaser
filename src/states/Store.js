@@ -5,7 +5,6 @@ import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
 import * as PhaserUi from 'phaser-ui';
 import UiHelper from '../objects/UI/UiHelper';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
-import Stars from '../objects/UI/Stars';
 import IconBtn from '../objects/UI/IconBtn';
 import IconText from '../objects/UI/IconText';
 
@@ -15,8 +14,11 @@ export default class Store extends Phaser.State {
   create() {
     this.upgradeInfo = this.game.cache.getJSON('upgrades');
 
-    this.stars = new Stars(this.game);
-    this.stars.showStars();
+    this.bg = this.game.add.image(0, 0, 'background');
+    this.starfield = this.game.add.image(0, 0, 'starfield');
+    this.starfield2 = this.game.add.image(0, 0, 'starfield2');
+    this.bg.width = Math.max(this.game.width, this.bg.width);
+    this.bg.height = Math.max(this.game.height, this.bg.height);
 
     this.game.world.setBounds(0, 0, this.game.width, this.game.height);
 
