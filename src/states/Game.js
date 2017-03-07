@@ -52,15 +52,15 @@ export default class Game extends Phaser.State {
     let pools = {
       [Kamikaze.className()]: {
         'class': Kamikaze,
-        'count': 25
+        'count': 50
       },
       [DiagonalMover.className()]: {
         'class': DiagonalMover,
-        'count': 20
+        'count': 50
       },
       [Meteor.className()]: {
         'class': Meteor,
-        'count': 35
+        'count': 50
       },
       [Unit.className()]: {
         'class': Unit,
@@ -68,7 +68,7 @@ export default class Game extends Phaser.State {
       },
       [Bonus.className()]: {
         'class': Bonus,
-        'count': 4
+        'count': 50
       },
       'friendlyShips': {
         'class': Ship,

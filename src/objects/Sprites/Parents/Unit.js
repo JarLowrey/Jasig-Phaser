@@ -35,6 +35,7 @@ export default class Unit extends ParentSprite {
 
     //add properties
     this.maxHealth = this.info.health;
+    this.health = this.info.health;
     this.isFriendly = isFriendly;
     this.setAnchor(isFriendly);
     this.setYDestination();
@@ -116,9 +117,9 @@ export default class Unit extends ParentSprite {
     super.damage(amount);
 
     //flash a different color
-    this.tint = '0xff0000';
-    this.game.time.events.add(150, function() {
-      this.tint = '0xffffff';
+    this.tint = 0xff69b4;
+    this.game.time.events.add(250, function() {
+      this.tint = 0xffffff;
     }, this);
   }
 

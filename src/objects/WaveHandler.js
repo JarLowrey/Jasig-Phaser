@@ -34,6 +34,7 @@ export default class WaveHandler {
     const countDownJson = this.game.dimen.game_countdown;
     this.progressBar = new PhaserUi.ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
       null, countDownJson.strokeLength);
+    this.progressBar.setText('', Object.assign({}, this.game.fonts.text));
     this.progressBar.frontGraphicColor = '0x75c9e5';
     this.progressBar.x = this.game.world.width - countDownJson.x - this.progressBar.width / 2;
     this.progressBar.y = countDownJson.y;

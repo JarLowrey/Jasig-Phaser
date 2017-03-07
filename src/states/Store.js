@@ -35,14 +35,14 @@ export default class Store extends Phaser.State {
     this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
     this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
 
-    this.currentWave = this.game.add.text(0, 0, 'Day ' + this.game.data.play.wave.number, this.game.fonts.text);
+    this.currentWave = this.game.add.text(0, 0, 'Day ' + this.game.data.play.wave.number, Object.assign({}, this.game.fonts.text));
     this.currentWave.anchor.setTo(0.5, 0.5);
 
     this.createUpgrades(width, upgradeHeight, margin, outlineWidth, outlineColor, bgColor, outlineColorPressed, bgColorPressed);
 
     const healthStr = this.game.data.play.playerInfo.health + '/' + Protagonist.getMaxHealth(this.game);
     this.healthbar = new PhaserUi.ProgressBar(this.game, this.upgrades.width, 20, null, 9);
-    this.healthbar.setText(healthStr, this.game.fonts.text);
+    this.healthbar.setText(healthStr, Object.assign({}, this.game.fonts.text));
     this.healthbar.progress = this.game.data.play.playerInfo.health / Protagonist.getMaxHealth(this.game);
     this.healthbar.makePressable(this.upgradePressed('repair', 'health'), 0xffffff, 0xffffff);
 
@@ -319,12 +319,12 @@ export default class Store extends Phaser.State {
     this.txtBackground.endFill();
 
     //create title
-    this.title = this.game.add.text(0, 0, 'Store', this.game.fonts.title);
+    this.title = this.game.add.text(0, 0, 'Store', Object.assign({}, this.game.fonts.title));
     this.title.anchor.setTo(0.5, 0);
     this.title.top = -this.txtBackground.height / 2 + this.txtBgOutlineWidth;
 
     //create msg
-    this.msg = this.game.add.text(0, this.title.bottom, 'Store', this.game.fonts.text);
+    this.msg = this.game.add.text(0, this.title.bottom, 'Store', Object.assign({}, this.game.fonts.text));
     this.msg.anchor.setTo(0.5, 0);
     this.msg.wordWrapWidth = this.txtBackground.width * 0.9;
 

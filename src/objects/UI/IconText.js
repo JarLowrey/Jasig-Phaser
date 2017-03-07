@@ -12,7 +12,11 @@ export default class IconText extends Phaser.Group {
 
     this.marginBtwSpriteAndText = marginBtwSpriteAndText;
 
-    style = this.game.fonts[style] || this.game.fonts['text'];
+    if (style) {
+      style = Object.assign({}, this.game.fonts[style]);
+    } else {
+      style = Object.assign({}, this.game.fonts.text);
+    }
     style.fontSize = fontHeight;
     this.text = this.game.add.text(0, 0, text, style);
 

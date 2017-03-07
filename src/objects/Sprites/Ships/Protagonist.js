@@ -53,6 +53,7 @@ export default class Protagonist extends Ship {
     this.healthbar.destroy(); //delete the bar given to this by the parent, Ship
     this.healthbar = new PhaserUi.ProgressBar(this.game, (parseFloat(healthbarJson.width) / 100) * this.game.width, healthbarJson.height,
       null, healthbarJson.strokeLength);
+    this.healthbar.setText('', Object.assign({}, this.game.fonts.text));
     this.healthbar.x = this.game.world.width - healthbarJson.x - this.healthbar.width / 2;
     this.healthbar.y = healthbarJson.y;
     this.updateHealthbar();

@@ -28,10 +28,6 @@
         "y": 200
       }
     },
-    "destYInPercentOfScreen": {
-      "min": 5,
-      "max": 50
-    },
     "weapons": {
       "low_level": [{
         "angle": 90,

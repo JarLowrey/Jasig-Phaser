@@ -17,35 +17,37 @@ export default class Ship extends Unit {
   constructor(game) {
     super(game);
 
-    this.healthbar = new PhaserUi.ProgressBar(this.game, this.width, 10, null, 2);
+    this.healthbar = new PhaserUi.ProgressBar(this.game, 100, 15, null, 2);
+    this.addChild(this.healthbar)
     this.healthbar.visible = false; //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
-
-    this.weapons = [];
   }
 
   update() {
     if (!this.isAlive) return;
 
     super.update();
-
-    if (!this.amPlayer()) {
-      this.healthbar.alignTo(this, Phaser.TOP_CENTER, 0, -this.healthbar.height / 2);
-    }
   }
 
   reset(shipName, isFriendly) {
     super.reset(shipName, isFriendly, 'ships');
 
-    this.healthbar.width = (this.width);
+    this.healthbar.width = this.width / this.scale.x;
+    this.healthbar.scale.y = Math.abs(this.healthbar.scale.x);
+    this.healthbar.y = -(10 + this.height / 2) / Math.abs(this.scale.y);
+    this.healthbar.setText('', Object.assign({}, this.game.fonts.text));
     this.updateHealthbar();
     this.healthbar.visible = true;
 
+    this._setupWeapons();
+  }
+
+  _setupWeapons() {
     //add all the weapons from the json file
     this.weapons = [];
     const leveledWeapon = this.info.weapons['low_level'];
     for (var i in leveledWeapon) {
       const weaponInfo = leveledWeapon[i];
-      const ammo = weaponInfo.ammo || 10; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.ammo || 100; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;

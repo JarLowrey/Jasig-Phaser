@@ -23,6 +23,9 @@ export default class DiagonalMover extends Ship {
   }
 
   update() {
+    if (!this.isAlive) return;
+    super.update();
+
     this.reverseXonEdges();
   }
 
