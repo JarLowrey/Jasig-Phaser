@@ -3,12 +3,15 @@
  * ====
  *
  */
-import ParentSprite from './Parents/ParentSprite';
+
 
 export default class Bullet extends Phaser.Bullet {
 
-  constructor(game, x, y, key, frame) {
-    super(game, x, y, key, frame);
+  reset(x, y, health) {
+    super.reset(x, y, health);
+
+    this.shooter = this.parent.myWeapon.trackedSprite;
+    this.setFriendlinessAngle();
   }
   update() {
     if (this.target && this.target.isAlive) {
@@ -22,22 +25,6 @@ export default class Bullet extends Phaser.Bullet {
     this.game.debug.geom(this.getBounds());
     this.game.debug.body(this, 'rgba(255,0,0,0.8)');
     */
-  }
-
-  reset(x, y, health) {
-    super.reset(x, y, health);
-
-    //this.applyInfo();
-  }
-
-  applyInfo(info = this.info) {
-    this.info = info;
-
-    const bulletTint = (this.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
-    if (this.info.isTinted) this.tint = bulletTint;
-
-    //update sprite dimensions & its body dimensions
-    ParentSprite.setSize(this, this.info.width, this.info.isCircular);
   }
 
   /*
@@ -57,5 +44,11 @@ export default class Bullet extends Phaser.Bullet {
     this.dmg = 25;
   }
 */
+  setFriendlinessAngle() {
+    this.angle = (this.shooter.isFriendly) ? 360 - 0 : 0; //correct angle in bulletInfo for friendliness
+  }
+  setFriendlinessTint() {
+    this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
+  }
 
 }

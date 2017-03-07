@@ -44,6 +44,10 @@ export default class Game extends Phaser.State {
     this.incrementGameResources(0);
   }
 
+  shutdown() {
+    Ship.cleanupAllWeapons(this.game);
+  }
+
   setupSpritePools() {
     let pools = {
       [Kamikaze.className()]: {

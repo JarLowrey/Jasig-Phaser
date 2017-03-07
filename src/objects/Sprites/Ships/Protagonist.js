@@ -64,7 +64,7 @@ export default class Protagonist extends Ship {
 
     //setup begin/end shooting events
     this.game.input.onDown.add(this.startShooting.bind(this), this);
-    this.game.input.onUp.add(this.stopShooting.bind(this), this.gun);
+    this.game.input.onUp.add(this.stopShooting.bind(this), this);
   }
 
   damage(amt) {

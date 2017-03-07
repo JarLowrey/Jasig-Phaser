@@ -6,8 +6,8 @@
 
 import Unit from './Unit';
 import * as PhaserUi from 'phaser-ui';
-import ParentSprite from './ParentSprite';
-import Bullet from '../Bullet';
+
+import DefaultBullet from '../Bullets/DefaultBullet';
 
 export default class Ship extends Unit {
   static className() {
@@ -42,27 +42,19 @@ export default class Ship extends Unit {
 
     //add all the weapons from the json file
     this.weapons = [];
-
     for (var weaponName in this.info.weapons) {
       const weaponInfo = this.info.weapons[weaponName];
-      const bulletType = weaponInfo.bulletType || 'default';
-      const bulletInfo = this.game.entities.bullets[bulletType];
-      const ammo = weaponInfo.ammo || -1; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.ammo || 10; //has unlimited ammo unless set otherwise in JSON
 
-      var weapon = new Phaser.Weapon(this.game, this);
+      var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.weaponName = weaponName;
-      weapon.bulletType = bulletType;
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
       weapon.bulletSpeed = 500;
       weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
 
-      weapon.bulletClass = Bullet;
-      weapon.createBullets(10, bulletInfo.key, bulletInfo.frame);
-      weapon.autoExpandBulletsGroup = true
-
-      for (let bullet of weapon.bullets.children) {
-        bullet.applyInfo(bulletInfo);
-      }
+      weapon.bulletClass = Ship._getBulletClass();
+      weapon.createBullets(ammo);
+      weapon.autoExpandBulletsGroup = !Boolean(weaponInfo.ammo).valueOf(); //if ammo was defined, do not auto expand group
 
       weapon.fireRate = 50; //this.getFireRate();
       //weapon.dmg = this.getDamage();
@@ -70,13 +62,41 @@ export default class Ship extends Unit {
       weapon.bullets.myWeapon = weapon;
 
       const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;
-      const bulletMidpoint = bulletInfo.width / 2;
       const xPixelOffset = this.width * percentOffset;
       const yPixelOffset = -this.anchor.y * this.height + this.height / 2; //regardless of anchor, bullets start in middle Y of sprite
       weapon.trackSprite(this, xPixelOffset, yPixelOffset);
 
       this.weapons.push(weapon);
     }
+  }
+
+  static cleanupAllWeapons(game) {
+    //clean up all the weapons
+    let destroyWeapons = function(sprite) {
+      if (sprite.weapons) {
+        for (let weapon of sprite.weapons) {
+          weapon.autofire = false;
+          weapon.destroy();
+        }
+      }
+    };
+
+    destroyWeapons(game.data.play.player);
+
+    for (let poolName in game.spritePools.pools) {
+      let pool = game.spritePools.pools[poolName];
+      pool.forEachAlive(function(child) {
+        destroyWeapons(child);
+      }, this);
+    }
+  }
+
+  static _getBulletClass(classKey) {
+    let newClass = null;
+    switch (classKey) {
+      default: newClass = DefaultBullet;
+    }
+    return newClass;
   }
 
   arrivedAtYDestionation() {
