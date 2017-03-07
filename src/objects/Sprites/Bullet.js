@@ -1,11 +1,9 @@
-/* jshint esversion: 6 */
-import ParentSprite from './Parents/ParentSprite';
-
 /*
  * Bullet
  * ====
  *
  */
+import ParentSprite from './Parents/ParentSprite';
 
 export default class Bullet extends Phaser.Bullet {
 

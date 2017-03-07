@@ -1,5 +1,3 @@
-/* jshint esversion: 6 */
-
 /*
  * Stars
  * ====
@@ -33,9 +31,9 @@ export default class Stars {
     this.layerTwoStars = this.game.add.emitter(this.game.world.centerX, this.game.world.centerY, this.maxNumParticles);
     this.layerThreeStars = this.game.add.emitter(this.game.world.centerX, this.game.world.centerY, this.maxNumParticles);
 
-    this.__setupEmitter(this.layerOneStars,1);
-    this.__setupEmitter(this.layerTwoStars,2);
-    this.__setupEmitter(this.layerThreeStars,3);
+    this.__setupEmitter(this.layerOneStars, 1);
+    this.__setupEmitter(this.layerTwoStars, 2);
+    this.__setupEmitter(this.layerThreeStars, 3);
   }
 
   /**
@@ -51,16 +49,16 @@ export default class Stars {
     emitter.width = this.game.world.width;
     emitter.height = this.game.world.height;
 
-    emitter.gravity.set(0,0);
+    emitter.gravity.set(0, 0);
     emitter.setRotation(0, 0);
 
     emitter.minParticleSpeed.set(0, this.baseMinStarSpeed - this.baseMinStarSpeed / relativeDistToPlayer);
-    emitter.maxParticleSpeed.set(0, 5*this.baseMaxStarSpeed - this.baseMaxStarSpeed / relativeDistToPlayer);
+    emitter.maxParticleSpeed.set(0, 5 * this.baseMaxStarSpeed - this.baseMaxStarSpeed / relativeDistToPlayer);
 
-    emitter.setAlpha(0.75 - relativeDistToPlayer/10, 1 - relativeDistToPlayer/10);
+    emitter.setAlpha(0.75 - relativeDistToPlayer / 10, 1 - relativeDistToPlayer / 10);
 
-    emitter.minParticleScale = .1 - relativeDistToPlayer/100;
-    emitter.maxParticleScale = .5 - relativeDistToPlayer/100;
+    emitter.minParticleScale = .1 - relativeDistToPlayer / 100;
+    emitter.maxParticleScale = .5 - relativeDistToPlayer / 100;
 
     emitter.setAlpha(0.75, 1);
   }
@@ -81,8 +79,8 @@ export default class Stars {
     this.layerThreeStars.flow(this.lifespan, this.emitFreq, this.numEmitPer, -1, true);
     */
 
-    this.layerOneStars.explode(0,this.maxNumParticles);
-    this.layerTwoStars.explode(0,this.maxNumParticles);
-    this.layerThreeStars.explode(0,this.maxNumParticles);
+    this.layerOneStars.explode(0, this.maxNumParticles);
+    this.layerTwoStars.explode(0, this.maxNumParticles);
+    this.layerThreeStars.explode(0, this.maxNumParticles);
   }
 }
