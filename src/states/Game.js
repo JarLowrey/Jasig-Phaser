@@ -24,8 +24,8 @@ import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
 export default class Game extends Phaser.State {
 
   create() {
-    this.stars = new Stars(this.game);
-    this.stars.showStars();
+    //this.stars = new Stars(this.game);
+    //this.stars.showStars();
 
     this.setupSpritePools();
 
@@ -50,25 +50,29 @@ export default class Game extends Phaser.State {
 
   setupSpritePools() {
     let pools = {
+      /*
       [Kamikaze.className()]: {
         'class': Kamikaze,
-        'count': 50
+        'count': 0
       },
+      */
       [DiagonalMover.className()]: {
         'class': DiagonalMover,
-        'count': 50
+        'count': 15
       },
       [Meteor.className()]: {
         'class': Meteor,
-        'count': 50
+        'count': 15
       },
+      /*
       [Unit.className()]: {
         'class': Unit,
-        'count': 7
+        'count': 0
       },
+      */
       [Bonus.className()]: {
         'class': Bonus,
-        'count': 50
+        'count': 5
       },
       'friendlyShips': {
         'class': Ship,
@@ -102,7 +106,7 @@ export default class Game extends Phaser.State {
     const player = this.game.data.play.player;
 
     //this.enemyFriendlyOverlap(Ship);
-    this.overlapFriendlies(kamikazes);
+    //this.overlapFriendlies(kamikazes);
     this.overlapFriendlies(diagonalmovers);
     this.overlapFriendlies(meteors);
 

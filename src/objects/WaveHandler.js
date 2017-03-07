@@ -69,7 +69,7 @@ export default class WaveHandler {
 
   spawn() {
     var enemyTotal = this.livingEnemiesTotalValue();
-    const enemiesThresholdValue = 100000; //this.spawnValueThresholdForAdvancedEnemies();
+    const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
     if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
@@ -116,11 +116,9 @@ export default class WaveHandler {
       if (!child.isFriendly) total += child.value;
     };
 
-    this.game.spritePools.getPool(Unit.className()).forEachAlive(addToTotal);
+    //this.game.spritePools.getPool(Unit.className()).forEachAlive(addToTotal);
     this.game.spritePools.getPool(Meteor.className()).forEachAlive(addToTotal);
-
-    //this.getPool(Ship).forEachAlive(addToTotal);
-    this.game.spritePools.getPool(Kamikaze.className()).forEachAlive(addToTotal);
+    //this.game.spritePools.getPool(Kamikaze.className()).forEachAlive(addToTotal);
     this.game.spritePools.getPool(DiagonalMover.className()).forEachAlive(addToTotal);
 
     return total;

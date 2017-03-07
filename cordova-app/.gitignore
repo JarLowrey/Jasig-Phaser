@@ -1,0 +1,6 @@
+platforms/
+www/
+plugins/
+
+#do not upload your passwords in plain text! build.json will prompt for your password if you leave those fields blank
+#build.json

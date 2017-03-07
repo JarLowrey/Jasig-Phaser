@@ -18,7 +18,7 @@ export default class Ship extends Unit {
     super(game);
 
     this.healthbar = new PhaserUi.ProgressBar(this.game, 100, 15, null, 2);
-    this.addChild(this.healthbar)
+    this.addChild(this.healthbar);
     this.healthbar.visible = false; //since many sprites are preallocated in pools, you need to manually hide the healthbar upon creation
   }
 
@@ -47,7 +47,7 @@ export default class Ship extends Unit {
     const leveledWeapon = this.info.weapons['low_level'];
     for (var i in leveledWeapon) {
       const weaponInfo = leveledWeapon[i];
-      const ammo = weaponInfo.ammo || 100; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.preallocation || 40; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -56,7 +56,7 @@ export default class Ship extends Unit {
 
       weapon.bulletClass = Ship._getBulletClass();
       weapon.createBullets(ammo);
-      weapon.autoExpandBulletsGroup = !Boolean(weaponInfo.ammo).valueOf(); //if ammo was defined, do not auto expand group
+      weapon.autoExpandBulletsGroup = true; //if ammo was defined, do not auto expand group
 
       weapon.fireRate = weaponInfo.fireRate || 200;
       //weapon.dmg = this.getDamage();

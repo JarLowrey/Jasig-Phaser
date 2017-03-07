@@ -13,6 +13,7 @@ import * as states from './states';
 
 export function init() {
   const game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO);
+  console.log('Device = ', game.device);
 
   // Dynamically add all required game states.
   Object

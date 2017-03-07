@@ -5,11 +5,14 @@
     "width": 50,
     "weapons": {
       "low_level": [{
-        "angle": 100
+        "angle": 100,
+        "preallocation": 50
       }, {
-        "angle": 90
+        "angle": 90,
+        "preallocation": 50
       }, {
-        "angle": 80
+        "angle": 80,
+        "preallocation": 50
       }]
     }
   },
@@ -32,7 +35,8 @@
       "low_level": [{
         "angle": 90,
         "xPercentOffset": 0,
-        "fireRate": 1000
+        "fireRate": 1000,
+        "preallocation": 10
       }]
     }
   }

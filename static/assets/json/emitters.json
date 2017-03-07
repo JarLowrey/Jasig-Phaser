@@ -4,6 +4,7 @@
       "key": "sprites",
       "frame": "explosion1"
     },
+    "maxParticles": 20,
     "gravity": 0,
     "rotation": {
       "min": -90,

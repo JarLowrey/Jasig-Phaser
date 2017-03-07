@@ -13,7 +13,7 @@ export default class Stars {
   constructor(game) {
     this.game = game;
 
-    this.maxNumParticles = 75;
+    this.maxNumParticles = 15;
     //this.lifespan = 10000;
     this.emitFreq = 150;
     this.numEmitPer = 2;
