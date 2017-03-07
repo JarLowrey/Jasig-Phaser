@@ -68,7 +68,7 @@ export default class WaveHandler {
 
   spawn() {
     var enemyTotal = this.livingEnemiesTotalValue();
-    const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
+    const enemiesThresholdValue = 100000; //this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
     if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {

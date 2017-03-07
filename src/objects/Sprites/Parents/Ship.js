@@ -45,19 +45,13 @@ export default class Ship extends Unit {
     //add all the weapons from the json file
     this.weapons = [];
 
-    const applyBulletJson = function(json) {
-      return function(bullet) {
-        //console.log(bullet, json);
-      };
-    };
-
     for (var weaponName in this.info.weapons) {
       const weaponInfo = this.info.weapons[weaponName];
       const bulletType = weaponInfo.bulletType || 'default';
       const bulletInfo = this.game.entities.bullets[bulletType];
-      const ammo = (weaponInfo.ammo !== undefined) ? weaponInfo.ammo : -1; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.ammo || -1; //has unlimited ammo unless set otherwise in JSON
 
-      var weapon = this.game.add.weapon(30, bulletInfo.key, bulletInfo.frame);
+      var weapon = new Phaser.Weapon(this.game, this);
       weapon.weaponName = weaponName;
       weapon.bulletType = bulletType;
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -65,13 +59,15 @@ export default class Ship extends Unit {
       weapon.fireAngle = (this.isFriendly) ? Phaser.ANGLE_UP : Phaser.ANGLE_DOWN;
 
       weapon.bulletClass = Bullet;
-      weapon.createBullets(ammo);
+      weapon.createBullets(10, bulletInfo.key, bulletInfo.frame);
+      weapon.autoExpandBulletsGroup = true
 
-      weapon.bullets.forEach(applyBulletJson(bulletInfo));
+      for (let bullet of weapon.bullets.children) {
+        bullet.applyInfo(bulletInfo);
+      }
 
       weapon.fireRate = 50; //this.getFireRate();
       //weapon.dmg = this.getDamage();
-
       weapon.dmg = 25; //this does nothing right now
       weapon.bullets.myWeapon = weapon;
 
@@ -178,6 +174,15 @@ export default class Ship extends Unit {
       .repeatAll(1);
     tween.start();
     tween.onComplete.add(this.finishKill, this);
+  }
+
+  reverseXonEdges() {
+    const vx = Math.abs(this.body.velocity.x);
+    if (this.left < 0) {
+      this.body.velocity.x = vx;
+    } else if (this.right > this.game.world.width) {
+      this.body.velocity.x = -vx;
+    }
   }
 
   static bulletCollision(unit, bullet) {

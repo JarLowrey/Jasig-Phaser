@@ -27,13 +27,4 @@ export default class DiagonalMover extends Ship {
     this.reverseXonEdges();
   }
 
-  reverseXonEdges() {
-    const vx = Math.abs(this.body.velocity.x);
-    if (this.left < 0) {
-      this.body.velocity.x = vx;
-    } else if (this.right > this.game.world.width) {
-      this.body.velocity.x = -vx;
-    }
-  }
-
 }

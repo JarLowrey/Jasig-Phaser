@@ -1,4 +1,5 @@
 /* jshint esversion: 6 */
+import ParentSprite from './Parents/ParentSprite';
 
 /*
  * Bullet
@@ -20,7 +21,7 @@ export default class Bullet extends Phaser.Bullet {
     }
 
     /*
-    this.game.debug.geom(this.getBounds()); 
+    this.game.debug.geom(this.getBounds());
     this.game.debug.body(this, 'rgba(255,0,0,0.8)');
     */
   }
@@ -38,9 +39,7 @@ export default class Bullet extends Phaser.Bullet {
     if (this.info.isTinted) this.tint = bulletTint;
 
     //update sprite dimensions & its body dimensions
-    this.width = this.info.width;
-    this.scale.y = this.scale.x;
-    this.body.setSize(this.info.width, this.info.height);
+    ParentSprite.setSize(this, this.info.width, this.info.isCircular);
   }
 
   /*

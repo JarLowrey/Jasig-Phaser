@@ -25,7 +25,7 @@ export default class ParentSprite extends Phaser.Sprite {
 
     //set size+texture
     this.loadTexture(this.info.key || 'sprites', this.info.frame);
-    this.setSize(this.info.width, this.info.isCircular, this.info.height);
+    ParentSprite.setSize(this, this.info.width, this.info.isCircular, this.info.height);
 
     //set body related variables
     let v = this.info.velocity || {
@@ -88,18 +88,18 @@ export default class ParentSprite extends Phaser.Sprite {
     return this === this.game.data.play.player;
   }
 
-  setSize(width, isCircular = false, height) {
-    this.width = width;
+  static setSize(sprite, width, isCircular = false, height) {
+    sprite.width = width;
     if (height) {
-      this.height = height;
+      sprite.height = height;
     } else {
-      this.scale.y = this.scale.x;
+      sprite.scale.y = sprite.scale.x;
     }
 
-    if (this.body) {
+    if (sprite.body) {
       //body must be divided by scale, does not do this automatically
-      const scaledWidth = Math.abs(this.width / this.scale.x);
-      const scaledHeight = Math.abs(this.height / this.scale.y);
+      const scaledWidth = Math.abs(sprite.width / sprite.scale.x);
+      const scaledHeight = Math.abs(sprite.height / sprite.scale.y);
 
       //Set body size a bit smaller than the actual sprite due to using Arcade Physics - don't want user to get mad that 2 bodies 'didnt really touch'
       const widthShrinkAmount = 0; //this.game.integers.bodyShrink;
@@ -107,16 +107,16 @@ export default class ParentSprite extends Phaser.Sprite {
 
       if (isCircular) {
         //not sure why this works...but it does!
-        const radius = this.width / 2;
-        this.body.setCircle(radius, (scaledWidth - radius) / 2, (scaledHeight - radius) / 2);
+        const radius = sprite.width / 2;
+        sprite.body.setCircle(radius, (scaledWidth - radius) / 2, (scaledHeight - radius) / 2);
       } else {
-        this.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,
+        sprite.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,
           widthShrinkAmount / 2, heightShrinkAmount / 2);
       }
 
       const myArea = width * height;
-      const playerArea = this.game.data.play.player.width * this.game.data.play.player.height;
-      this.body.mass = myArea / playerArea;
+      const playerArea = sprite.game.data.play.player.width * sprite.game.data.play.player.height;
+      sprite.body.mass = myArea / playerArea;
     }
   }
 
@@ -148,7 +148,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   deserialize(info) {
-    this.setSize(info.width, info.height);
+    ParentSprite.setSize(this, info.width, info.isCircular, info.height);
     this.x = info.x;
     this.y = info.y;
 
