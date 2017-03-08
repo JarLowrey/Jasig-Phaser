@@ -8,7 +8,7 @@
         "angle": 100,
         "preallocation": 50
       }, {
-        "fireRate": 750,
+        "fireRate": 300,
         "angle": 90,
         "preallocation": 50
       }, {

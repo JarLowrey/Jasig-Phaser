@@ -47,7 +47,7 @@ export default class Ship extends Unit {
     const leveledWeapon = this.info.weapons['low_level'];
     for (var i in leveledWeapon) {
       const weaponInfo = leveledWeapon[i];
-      const ammo = weaponInfo.preallocation || 75; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.preallocation || 20; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;

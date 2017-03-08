@@ -13,8 +13,7 @@
         "x": 50,
         "y": 200
       }
-    },
-    "isCircular": true
+    }
   },
   "giant_meteor": {
     "frame": "meteor",
@@ -30,7 +29,6 @@
         "x": 50,
         "y": 200
       }
-    },
-    "isCircular": true
+    }
   }
 }

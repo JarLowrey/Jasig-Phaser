@@ -32,6 +32,9 @@ export default class Game extends Phaser.State {
     this.game.data.play.player.reset();
     this.add.existing(this.game.data.play.player);
 
+    this.game.time.advancedTiming = true;
+    this
+
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();
 
@@ -80,7 +83,8 @@ export default class Game extends Phaser.State {
   update() {
     this.starfield.tilePosition.y += 4;
     this.starfield2.tilePosition.y += 6;
-    //this.bg.tilePosition.y += 2;
+
+    this.game.debug.text(this.game.time.fps, this.game.world.centerX, this.game.world.centerY);
 
     this.collisionDectection();
   }

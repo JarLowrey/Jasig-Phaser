@@ -103,6 +103,7 @@ export default class ParentSprite extends Phaser.Sprite {
       const widthShrinkAmount = 0; //this.game.integers.bodyShrink;
       const heightShrinkAmount = 0; //this.game.integers.bodyShrink;
 
+      /*
       if (isCircular) {
         //not sure why this works...but it does!
         const radius = sprite.width / 2;
@@ -111,6 +112,9 @@ export default class ParentSprite extends Phaser.Sprite {
         sprite.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,
           widthShrinkAmount / 2, heightShrinkAmount / 2);
       }
+      */
+      sprite.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,
+        widthShrinkAmount / 2, heightShrinkAmount / 2);
 
       const myArea = width * height;
       const playerArea = sprite.game.data.play.player.width * sprite.game.data.play.player.height;
