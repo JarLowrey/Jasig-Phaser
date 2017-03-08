@@ -14,6 +14,22 @@
       }, {
         "angle": 80,
         "preallocation": 50
+      }, {
+        "fireRate": 300,
+        "angle": 110,
+        "preallocation": 50
+      }, {
+        "fireRate": 300,
+        "angle": 120,
+        "preallocation": 50
+      }, {
+        "fireRate": 300,
+        "angle": 70,
+        "preallocation": 50
+      }, {
+        "fireRate": 300,
+        "angle": 60,
+        "preallocation": 50
       }]
     }
   },
@@ -37,7 +53,7 @@
         "angle": 90,
         "xPercentOffset": 0,
         "fireRate": 1000,
-        "preallocation": 10
+        "preallocation": 50
       }]
     }
   }

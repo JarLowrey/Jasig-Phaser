@@ -33,7 +33,7 @@ export default class Game extends Phaser.State {
     this.add.existing(this.game.data.play.player);
 
     this.game.time.advancedTiming = true;
-    this
+    //this.game.forceSingleUpdate = true; //http://www.html5gamedevs.com/topic/13514-simple-game-horrible-performance-on-androidcooconjs/#comment-77719
 
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();

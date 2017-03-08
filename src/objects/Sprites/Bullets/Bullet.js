@@ -11,6 +11,9 @@ export default class Bullet extends Phaser.Bullet {
     super.reset(x, y, health);
 
     this.shooter = this.parent.myWeapon.trackedSprite;
+
+    this.checkWorldBounds = true;
+    this.outOfBoundsKill = true;
   }
 
   update() {
@@ -33,5 +36,4 @@ export default class Bullet extends Phaser.Bullet {
   setFriendlinessTint() {
     this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
   }
-
 }
