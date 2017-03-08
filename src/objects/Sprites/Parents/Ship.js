@@ -47,7 +47,7 @@ export default class Ship extends Unit {
     const leveledWeapon = this.info.weapons['low_level'];
     for (var i in leveledWeapon) {
       const weaponInfo = leveledWeapon[i];
-      const ammo = weaponInfo.preallocation || 40; //has unlimited ammo unless set otherwise in JSON
+      const ammo = weaponInfo.preallocation || 75; //has unlimited ammo unless set otherwise in JSON
 
       var weapon = this.game.plugins.add(Phaser.Weapon);
       weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -58,7 +58,7 @@ export default class Ship extends Unit {
       weapon.createBullets(ammo);
       weapon.autoExpandBulletsGroup = true; //if ammo was defined, do not auto expand group
 
-      weapon.fireRate = weaponInfo.fireRate || 200;
+      weapon.fireRate = weaponInfo.fireRate || 500;
       //weapon.dmg = this.getDamage();
       weapon.dmg = 25; //this does nothing right now
       weapon.bullets.myWeapon = weapon;

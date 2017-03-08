@@ -30,7 +30,7 @@ export default class WaveHandler {
     this.timeToCheckForNewSpawn = 1000;
     this.spawnTimer = game.time.create(false);
     this.waveTimer = game.time.create(false);
-    this.game.time.events.loop(Phaser.Timer.SECOND, this.updateProgressBar, this);
+    this.game.time.events.loop(100, this.updateProgressBar, this);
 
     const countDownJson = this.game.dimen.game_countdown;
     this.progressBar = new PhaserUi.ProgressBar(this.game, (parseFloat(countDownJson.width) / 100) * this.game.width, countDownJson.height,
@@ -47,7 +47,7 @@ export default class WaveHandler {
   updateProgressBar() {
     const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.game.data.play.wave.number);
     this.progressBar.progress = percentLeft;
-    this.progressBar.setText(Math.round(this.waveTimer.duration / 1000));
+    this.progressBar.setText((this.waveTimer.duration / 1000).toFixed(1));
   }
 
   startWave() {

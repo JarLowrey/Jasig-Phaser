@@ -20,7 +20,6 @@ export default class Bullet extends Phaser.Bullet {
     } else { //target could be revived after awhile, and then bullet would track wrong thing.
       this.target = null;
     }
-    //this.game.debug.geom(this.getBounds());
     //this.game.debug.body(this, 'rgba(255,0,0,0.8)');
   }
 

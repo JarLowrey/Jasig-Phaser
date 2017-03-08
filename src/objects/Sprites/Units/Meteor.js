@@ -17,5 +17,4 @@ export default class Meteor extends Unit {
   reset(entityName) {
     super.reset(entityName || 'meteor', false);
   }
-
 }

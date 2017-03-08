@@ -23,17 +23,10 @@ import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
 export default class Game extends Phaser.State {
 
   create() {
-    //this.stars = new Stars(this.game);
-    //this.stars.showStars();
-    this.bg = this.game.add.image(0, 0, 'background');
-    this.bg.width = Math.max(this.game.width, this.bg.width);
-    this.bg.height = Math.max(this.game.height, this.bg.height);
-    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
-    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield2');
+    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
+    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
     this.setupSpritePools();
-
-    this.game.time.advancedTiming = true;
 
     this.game.data.play.player = new Protagonist(this.game);
     this.game.data.play.player.reset();
@@ -62,21 +55,15 @@ export default class Game extends Phaser.State {
       */
       [DiagonalMover.className()]: {
         'class': DiagonalMover,
-        'count': 15
+        'count': 7
       },
       [Meteor.className()]: {
         'class': Meteor,
         'count': 15
       },
-      /*
-      [Unit.className()]: {
-        'class': Unit,
-        'count': 0
-      },
-      */
       [Bonus.className()]: {
         'class': Bonus,
-        'count': 5
+        'count': 6
       },
       'friendlyShips': {
         'class': Ship,
@@ -145,10 +132,6 @@ export default class Game extends Phaser.State {
 
     //check to see if friendlies and enemies have collided
     this.game.physics.arcade.overlap(player, enemies, Unit.unitCollision, null, this);
-  }
-
-  render() {
-    this.game.debug.text('fps=' + this.game.time.fps || '--', this.game.world.centerX, 100, '#ffff00');
   }
 
 }

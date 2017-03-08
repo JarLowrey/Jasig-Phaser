@@ -72,7 +72,7 @@ export default class Unit extends ParentSprite {
     }
 
     //check to see if a bonus should be made
-    if (!this.amPlayer()) {
+    if (Math.random() < 0.1 && !this.amPlayer()) {
       let bonus = this.game.spritePools.getPool('Bonus').getFirstDead(true);
       bonus.reset(this.getRandomBonusType(), this.x, this.y);
     }

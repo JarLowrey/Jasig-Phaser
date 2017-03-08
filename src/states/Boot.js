@@ -8,6 +8,7 @@
  */
 
 import assets from '../assets';
+
 export default class Boot extends Phaser.State {
 
   preload() {
@@ -16,7 +17,7 @@ export default class Boot extends Phaser.State {
 
     // Initialize physics engines here. Remember that Phaser builds including
     // Arcade Physics have it enabled by default.
-    //this.physics.startSystem(Phaser.Physics.P2);
+    //this.physics.arcade.OVERLAP_BIAS = 10;
 
     // Adjust how many pointers Phaser will check for input events.
     this.input.maxPointers = 2;
@@ -77,6 +78,13 @@ export default class Boot extends Phaser.State {
         }
       }
       return num.toFixed(digits).replace(rx, '$1');
+    }.bind(this);
+
+    this.game.addBgImg = function(key, frame) {
+      let img = this.game.add.image(0, 0, key, frame);
+      img.width = Math.max(img.width, this.game.world.width);
+      img.height = Math.max(img.height, this.game.world.height);
+      return img;
     }.bind(this);
   }
 

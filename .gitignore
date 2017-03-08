@@ -12,5 +12,7 @@ node_modules/
 !.yo-rc.json
 !.editorconfig
 
-#ignore some of the non-final images so they do not clog up the git history
-static/assets/imgs/background.png
+#ignore the non-final assets so they do not clog up the git history. Save these somewhere else
+static/assets/imgs/*
+static/assets/spritesheets/*
+#do not ignore the json or fonts, that's not a big deal
