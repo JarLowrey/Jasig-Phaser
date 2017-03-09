@@ -3,7 +3,6 @@
  *
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
-import BulletExplosion from '../Sprites/Bullets/BulletExplosion';
 
 export default class Pools {
 
@@ -133,11 +132,6 @@ export default class Pools {
   }
 
   _getParticleClass(className) {
-    switch (className) {
-      case 'BulletExplosion':
-        return BulletExplosion;
-      default:
-        return Phaser.Particle;
-    }
+    return Phaser.Particle;
   }
 }

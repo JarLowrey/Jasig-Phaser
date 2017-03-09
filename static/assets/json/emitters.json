@@ -37,54 +37,6 @@
     },
     "explosions": {}
   },
-  "laserBlueExplosion": {
-    "image": {
-      "key": "sprites",
-      "frame": "laserBlue08"
-    },
-    "particleClass": "BulletExplosion",
-    "maxParticles": 10,
-    "explosions": {
-      "default": {
-        "quantity": {
-          "min": 0,
-          "max": 1
-        }
-      }
-    }
-  },
-  "laserGreenExplosion": {
-    "image": {
-      "key": "sprites",
-      "frame": "laserGreen14"
-    },
-    "particleClass": "BulletExplosion",
-    "maxParticles": 10,
-    "explosions": {
-      "default": {
-        "quantity": {
-          "min": 0,
-          "max": 1
-        }
-      }
-    }
-  },
-  "laserRedExplosion": {
-    "image": {
-      "key": "sprites",
-      "frame": "laserRed08"
-    },
-    "particleClass": "BulletExplosion",
-    "maxParticles": 10,
-    "explosions": {
-      "default": {
-        "quantity": {
-          "min": 0,
-          "max": 1
-        }
-      }
-    }
-  },
   "scrap1": {
     "image": {
       "key": "sprites",

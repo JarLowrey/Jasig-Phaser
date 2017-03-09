@@ -14,17 +14,20 @@
     ]
   },
   "laserRedExplosion": {
-    "key": "sonicExplosion",
+    "key": "laserRedExplosion",
+    "width": 20,
     "frameRate": 15,
     "frames": ["laserRed08", "laserRed09", "laserRed10", "laserRed11"]
   },
   "laserBlueExplosion": {
-    "key": "sonicExplosion",
+    "key": "laserBlueExplosion",
+    "width": 20,
     "frameRate": 15,
     "frames": ["laserBlue08", "laserBlue09", "laserBlue10", "laserBlue11"]
   },
   "laserGreenExplosion": {
-    "key": "sonicExplosion",
+    "key": "laserGreenExplosion",
+    "width": 20,
     "frameRate": 15,
     "frames": ["laserGreen14", "laserGreen15", "laserGreen16", "laserGreen01"]
   }

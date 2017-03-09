@@ -127,7 +127,7 @@ export default class Ship extends Unit {
 
     if (this.inWorld) {
       this.game.spritePools.explode('primaryExplosion', 'default', this);
-      this.game.spritePools.getPool('Explosion').getFirstDead(true).reset(this.x, this.y);
+      this.game.spritePools.getPool('Explosion').getFirstDead(true).reset(this);
     }
     this.weapons.stopShooting();
     this.healthbar.visible = false;
