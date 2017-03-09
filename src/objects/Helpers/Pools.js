@@ -90,30 +90,41 @@ export default class Pools {
         y: 0
       },
       rotation = explosion.rotation || {
-        min: 0,
-        max: 0
+        min: -360,
+        max: 360
       },
       alpha = explosion.alpha || {
         start: 1,
-        end: 1
+        end: 0.01
       },
       particleWidth = explosion.particleWidth || {
-        min: 50,
-        max: 50
+        min: 5,
+        max: 10
       },
       quantity = explosion.quantity || {
-        min: 1,
-        max: 1
+        min: 3,
+        max: 5
       },
+      speed = explosion.speed || {
+        'x': {
+          'min': -50,
+          'max': 50
+        },
+        'y': {
+          'min': -50,
+          'max': 50
+        }
+      },
+      lifespan = explosion.lifeSpan || 2000,
       minScale = this.game.spritePools._widthToScale(emitter.info.image.key, emitter.info.image.frame, particleWidth.min),
       maxScale = this.game.spritePools._widthToScale(emitter.info.image.key, emitter.info.image.frame, particleWidth.max);
 
     emitter.gravity = Phaser.Point.parse(gravity);
-    emitter.setXSpeed(explosion.speed.x.min, explosion.speed.x.max);
-    emitter.setYSpeed(explosion.speed.y.min, explosion.speed.y.max);
+    emitter.setXSpeed(speed.x.min, speed.x.max);
+    emitter.setYSpeed(speed.y.min, speed.y.max);
     emitter.setRotation(rotation.min, rotation.max);
-    emitter.setAlpha(alpha.start, alpha.end, explosion.lifeSpan);
+    emitter.setAlpha(alpha.start, alpha.end, lifespan);
     emitter.setScale(minScale, maxScale, minScale, maxScale);
-    emitter.explode(explosion.lifeSpan, Phaser.Math.between(quantity.min, quantity.max));
+    emitter.explode(lifespan, Phaser.Math.between(quantity.min, quantity.max));
   }
 }

@@ -32,7 +32,7 @@ export default class Ship extends Unit {
   }
 
   showDamagedParticles() {
-
+    //this.game.spritePools.explode(emitterKey, 'default', this);
   }
 
   reset(shipName, isFriendly) {

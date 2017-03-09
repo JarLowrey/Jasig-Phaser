@@ -7,18 +7,6 @@
     "maxParticles": 30,
     "explosions": {
       "default": {
-        "rotation": {
-          "min": -360,
-          "max": 360
-        },
-        "particleWidth": {
-          "min": 20,
-          "max": 40
-        },
-        "alpha": {
-          "start": 1,
-          "end": 0.01
-        },
         "speed": {
           "x": {
             "min": -300,
@@ -44,35 +32,7 @@
     },
     "maxParticles": 30,
     "explosions": {
-      "default": {
-        "rotation": {
-          "min": -360,
-          "max": 360
-        },
-        "particleWidth": {
-          "min": 5,
-          "max": 10
-        },
-        "alpha": {
-          "start": 1,
-          "end": 0.01
-        },
-        "speed": {
-          "x": {
-            "min": -50,
-            "max": 50
-          },
-          "y": {
-            "min": -50,
-            "max": 50
-          }
-        },
-        "lifeSpan": 2000,
-        "quantity": {
-          "min": 2,
-          "max": 5
-        }
-      }
+      "default": {}
     }
   },
   "meter_small_grey": {
@@ -82,35 +42,7 @@
     },
     "maxParticles": 30,
     "explosions": {
-      "default": {
-        "rotation": {
-          "min": -360,
-          "max": 360
-        },
-        "particleWidth": {
-          "min": 5,
-          "max": 10
-        },
-        "alpha": {
-          "start": 1,
-          "end": 0.01
-        },
-        "speed": {
-          "x": {
-            "min": -50,
-            "max": 50
-          },
-          "y": {
-            "min": -50,
-            "max": 50
-          }
-        },
-        "lifeSpan": 2000,
-        "quantity": {
-          "min": 2,
-          "max": 5
-        }
-      }
+      "default": {}
     }
   }
 }
