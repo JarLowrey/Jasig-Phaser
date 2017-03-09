@@ -1,14 +1,14 @@
 {
   "regularExplosion": {
     "key": "regularExplosion",
-    "frameRate": 20,
+    "frameRate": 15,
     "frames": ["regularExplosion00", "regularExplosion01", "regularExplosion02", "regularExplosion03",
       "regularExplosion04", "regularExplosion05", "regularExplosion06", "regularExplosion07", "regularExplosion08"
     ]
   },
   "sonicExplosion": {
     "key": "sonicExplosion",
-    "frameRate": 20,
+    "frameRate": 15,
     "frames": ["sonicExplosion00", "sonicExplosion01", "sonicExplosion02", "sonicExplosion03",
       "regularExplosion04", "regularExplosion05", "regularExplosion06", "regularExplosion07", "regularExplosion08"
     ]

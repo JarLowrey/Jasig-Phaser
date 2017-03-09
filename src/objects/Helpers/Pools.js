@@ -26,33 +26,12 @@ export default class Pools {
       //define emitter properties with defaults
       let info = emitters[name];
       let key = info.image.key,
-        frame = info.image.frame,
-        gravity = info.gravity || 0,
-        rotation = info.rotation || {
-          min: 0,
-          max: 0
-        },
-        alpha = info.alpha || {
-          min: 1,
-          max: 1
-        },
-        particleWidth = info.particleWidth || {
-          min: 50,
-          max: 50
-        };
+        frame = info.image.frame;
 
       //create emitter
-
       var emitter = this.game.add.emitter(0, 0, info.maxParticles);
       emitter.makeParticles(key, frame);
-      emitter.gravity = gravity;
-      emitter.setRotation(rotation.min, rotation.max);
-      emitter.setAlpha(alpha.min, alpha.max);
-      emitter.minParticleScale = this._widthToScale(key, frame, particleWidth.min);
-      emitter.maxParticleScale = this._widthToScale(key, frame, particleWidth.max);
-
       emitter.info = info;
-
       this.emitters[name] = emitter;
     }
 
@@ -97,22 +76,36 @@ export default class Pools {
   }
 
   //convenience method for using explosions designed via JSON instead of in a JS file
-  explode(emitterName, spriteExplodingFrom) {
+  explode(emitterName, explosionName, spriteExplodingFrom) {
     let emitter = this.getEmitter(emitterName);
 
-    if (spriteExplodingFrom) {
-      emitter.width = spriteExplodingFrom.width;
-      emitter.height = spriteExplodingFrom.height;
-      emitter.x = spriteExplodingFrom.x;
-      emitter.y = spriteExplodingFrom.y;
-    }
+    emitter.width = spriteExplodingFrom.width;
+    emitter.height = spriteExplodingFrom.height;
+    emitter.x = spriteExplodingFrom.x;
+    emitter.y = spriteExplodingFrom.y;
 
-    for (let name in emitter.info.explosions) {
-      let explosion = emitter.info.explosions[name];
+    const explosion = emitter.info.explosions[explosionName];
+    const gravity = explosion.gravity || 0,
+      rotation = explosion.rotation || {
+        min: 0,
+        max: 0
+      },
+      alpha = explosion.alpha || {
+        start: 1,
+        end: 1
+      },
+      particleWidth = explosion.particleWidth || {
+        min: 50,
+        max: 50
+      },
+      minScale = this.game.spritePools._widthToScale(emitter.info.image.key, emitter.info.image.frame, 20),
+      maxScale = this.game.spritePools._widthToScale(emitter.info.image.key, emitter.info.image.frame, 40);
 
-      emitter.minParticleSpeed.set(explosion.speed.min.x, explosion.speed.min.y);
-      emitter.maxParticleSpeed.set(explosion.speed.max.x, explosion.speed.max.y);
-      emitter.start(explosion.explode, explosion.lifeSpan, explosion.frequency, explosion.quantity, explosion.forceQuantity);
-    }
+    emitter.setXSpeed(explosion.speed.x.min, explosion.speed.x.max);
+    emitter.setYSpeed(explosion.speed.y.min, explosion.speed.y.max);
+    emitter.setRotation(rotation.min, rotation.max);
+    emitter.setAlpha(alpha.start, alpha.end, explosion.lifeSpan);
+    emitter.setScale(minScale, maxScale, minScale, maxScale);
+    emitter.explode(explosion.lifeSpan, explosion.quantity);
   }
 }

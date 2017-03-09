@@ -10,6 +10,10 @@ export default class Meteor extends Unit {
     return 'Meteor';
   }
 
+  showDamagedParticles() {
+
+  }
+
   reset(entityName) {
     super.reset(entityName || 'meteor', false);
     this.angle = Math.random() * 360;

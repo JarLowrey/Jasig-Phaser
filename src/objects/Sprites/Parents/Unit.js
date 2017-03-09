@@ -116,6 +116,10 @@ export default class Unit extends ParentSprite {
   damage(amount) {
     super.damage(amount);
 
+    if (this.alive) {
+      this.showDamagedParticles();
+    }
+
     //flash a different color
     this.tint = 0xff0000;
     if (this.dmgOverlay) this.dmgOverlay.tint = 0xff0000;

@@ -15,8 +15,8 @@ export default class Explosion extends Phaser.Sprite {
     this.loadTexture('sprites');
 
     this.explosions = [
-      this.game.animations.regularExplosion,
       this.game.animations.sonicExplosion,
+      this.game.animations.regularExplosion
     ];
 
     ParentSprite.setupAnimations(this, this.explosions);
@@ -25,11 +25,12 @@ export default class Explosion extends Phaser.Sprite {
   reset(x, y) {
     super.reset(x, y);
 
-    this.width = 50;
-    this.height = 50;
-
     let randAnimationJSON = this.explosions[Math.floor(Math.random() * this.explosions.length)];
     this.play(randAnimationJSON.key, null, null, true);
+
+    this.width = 75;
+    this.height = 75;
+    this.angle = Math.random() * 360;
   }
 
 }
