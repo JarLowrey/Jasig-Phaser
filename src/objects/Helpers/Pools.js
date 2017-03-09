@@ -3,6 +3,7 @@
  *
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
+import BulletExplosion from '../Sprites/Bullets/BulletExplosion';
 
 export default class Pools {
 
@@ -26,11 +27,13 @@ export default class Pools {
       //define emitter properties with defaults
       let info = emitters[name];
       let key = info.image.key,
-        frame = info.image.frame;
+        frame = info.image.frame,
+        particleClass = this._getParticleClass(info.particleClass);
 
       //create emitter
       var emitter = this.game.add.emitter(0, 0, info.maxParticles || 30);
-      emitter.makeParticles(key, frame);
+      emitter.particleClass = particleClass;
+      emitter.makeParticles(key, frame, Math.MAX_SAFE_INTEGER, false, false, info.arguments);
       emitter.info = info;
       this.emitters[name] = emitter;
     }
@@ -79,6 +82,7 @@ export default class Pools {
   explode(emitterName, explosionName, spriteExplodingFrom) {
     let emitter = this.getEmitter(emitterName);
 
+    emitter.spriteExplodingFrom = spriteExplodingFrom;
     emitter.width = spriteExplodingFrom.width;
     emitter.height = spriteExplodingFrom.height;
     emitter.x = spriteExplodingFrom.x;
@@ -126,5 +130,14 @@ export default class Pools {
     emitter.setAlpha(alpha.start, alpha.end, lifespan);
     emitter.setScale(minScale, maxScale, minScale, maxScale);
     emitter.explode(lifespan, this.game.between(quantity.min, quantity.max));
+  }
+
+  _getParticleClass(className) {
+    switch (className) {
+      case 'BulletExplosion':
+        return BulletExplosion;
+      default:
+        return Phaser.Particle;
+    }
   }
 }

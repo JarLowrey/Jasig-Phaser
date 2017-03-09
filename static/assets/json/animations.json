@@ -12,5 +12,20 @@
     "frames": ["sonicExplosion00", "sonicExplosion01", "sonicExplosion02", "sonicExplosion03",
       "regularExplosion04", "regularExplosion05", "regularExplosion06", "regularExplosion07", "regularExplosion08"
     ]
+  },
+  "laserRedExplosion": {
+    "key": "sonicExplosion",
+    "frameRate": 15,
+    "frames": ["laserRed08", "laserRed09", "laserRed10", "laserRed11"]
+  },
+  "laserBlueExplosion": {
+    "key": "sonicExplosion",
+    "frameRate": 15,
+    "frames": ["laserBlue08", "laserBlue09", "laserBlue10", "laserBlue11"]
+  },
+  "laserGreenExplosion": {
+    "key": "sonicExplosion",
+    "frameRate": 15,
+    "frames": ["laserGreen14", "laserGreen15", "laserGreen16", "laserGreen01"]
   }
 }

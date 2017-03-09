@@ -26,11 +26,23 @@ export default class Bullet extends Phaser.Bullet {
     //this.game.debug.body(this, 'rgba(255,0,0,0.8)');
   }
 
+  deathExplosions() {
+    this.game.spritePools.explode('laserBlueExplosion', 'default', this);
+  }
+
   static createCircleBmd(game, diameter) {
     const radius = diameter / 2;
     let key = game.add.bitmapData(diameter, diameter);
     key.circle(radius, radius, radius, '#ffffff');
     return key;
+  }
+
+  kill() {
+    if (this.inWorld) {
+      this.deathExplosions();
+    }
+
+    super.kill();
   }
 
   setFriendlinessTint() {

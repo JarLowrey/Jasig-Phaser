@@ -4,7 +4,6 @@
  * Convenience class to manage having multiple weapons
  */
 import DefaultBullet from '../Sprites/Bullets/DefaultBullet';
-import Ship from '../Sprites/Parents/Ship';
 
 export default class Weapons {
   constructor(shooter) {
