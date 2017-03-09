@@ -7,9 +7,11 @@
 
 import Bonus from '../objects/Sprites/Bonus';
 import Unit from '../objects/Sprites/Parents/Unit';
+import Explosion from '../objects/Sprites/Explosion';
 import Ship from '../objects/Sprites/Parents/Ship';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import Pools from '../objects/Helpers/Pools';
+import Weapons from '../objects/Helpers/Weapons';
 
 import WaveHandler from '../objects/WaveHandler';
 
@@ -23,6 +25,7 @@ import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
 export default class Game extends Phaser.State {
 
   create() {
+    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'background');
     this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
@@ -45,7 +48,7 @@ export default class Game extends Phaser.State {
   }
 
   shutdown() {
-    Ship.cleanupAllWeapons(this.game);
+    Weapons.cleanupAllWeapons(this.game);
   }
 
   setupSpritePools() {
@@ -58,6 +61,10 @@ export default class Game extends Phaser.State {
       */
       [DiagonalMover.className()]: {
         'class': DiagonalMover,
+        'count': 7
+      },
+      ['Explosion']: {
+        'class': Explosion,
         'count': 7
       },
       [Meteor.className()]: {
@@ -81,8 +88,9 @@ export default class Game extends Phaser.State {
   }
 
   update() {
+    this.bg.tilePosition.y += 2;
     this.starfield.tilePosition.y += 4;
-    this.starfield2.tilePosition.y += 6;
+    this.starfield2.tilePosition.y += 8;
 
     this.game.debug.text(this.game.time.fps, this.game.world.centerX, this.game.world.centerY);
 
@@ -117,22 +125,15 @@ export default class Game extends Phaser.State {
   overlapFriendlies(enemies) {
     const player = this.game.data.play.player;
 
-    const overlapBullets = function(shooter, receivers) {
-      for (let weapon of shooter.weapons) {
-        //receivers must be first param before bullets - http://phaser.io/docs/2.6.2/Phaser.Physics.Arcade.html#overlap
-        this.game.physics.arcade.overlap(receivers, weapon.bullets, Ship.bulletCollision, null, this);
-      }
-    }.bind(this);
-
     //if enemy has weapons, check to see if those weapon's bullets have hit friendlies
     if (enemies.getChildAt(0).weapons) {
       enemies.forEachAlive(function(enemy) {
-        overlapBullets(enemy, player);
+        enemy.weapons.overlapBullets(player);
       });
     }
 
     //check to see friendlies' weapon's bullets have hit enemies
-    overlapBullets(player, enemies);
+    player.weapons.overlapBullets(enemies);
 
     //check to see if friendlies and enemies have collided
     this.game.physics.arcade.overlap(player, enemies, Unit.unitCollision, null, this);

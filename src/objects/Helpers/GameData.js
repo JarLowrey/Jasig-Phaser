@@ -59,7 +59,9 @@ export default class GameData {
       player: null,
       playerInfo: {
         health: 0,
-        maxHealth: 0
+        maxHealth: 0,
+        frame: 'playerShip1_green',
+        shipFrameType: 1
       },
 
       level: 0,

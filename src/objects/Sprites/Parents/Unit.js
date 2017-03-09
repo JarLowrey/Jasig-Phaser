@@ -117,9 +117,11 @@ export default class Unit extends ParentSprite {
     super.damage(amount);
 
     //flash a different color
-    this.tint = 0xff69b4;
+    this.tint = 0xff0000;
+    if (this.dmgOverlay) this.dmgOverlay.tint = 0xff0000;
     this.game.time.events.add(250, function() {
       this.tint = 0xffffff;
+      if (this.dmgOverlay) this.dmgOverlay.tint = 0xffffff;
     }, this);
   }
 

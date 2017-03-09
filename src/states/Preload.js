@@ -65,6 +65,7 @@ export default class Preload extends Phaser.State {
     this.loadingBar.progress = progress / 100;
   }
 
+
   showSplashScreen() {
     //add logo and loading bar
     this.logo = this.add.sprite(0, 0, 'preload_sprites', 'j_tron_labs_logo');
@@ -93,8 +94,9 @@ export default class Preload extends Phaser.State {
     this.game.entities = {
       'units': this.game.cache.getJSON('units'),
       'ships': this.game.cache.getJSON('ships'),
-      'bonuses': this.game.cache.getJSON('bonuses'),
+      'bonuses': this.game.cache.getJSON('bonuses')
     };
+    this.game.animations = this.game.cache.getJSON('animations');
     this.game.dimen = this.game.cache.getJSON('dimen');
 
     this.checkPreloadFinishedAndTryStartNextState();

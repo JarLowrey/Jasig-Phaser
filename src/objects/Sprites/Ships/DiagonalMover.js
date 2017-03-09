@@ -19,7 +19,7 @@ export default class DiagonalMover extends Ship {
     if (Math.random() < 0.5) {
       this.body.velocity.x *= -1;
     }
-    this.startShooting();
+    this.weapons.startShooting();
   }
 
   update() {

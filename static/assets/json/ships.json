@@ -1,6 +1,7 @@
 {
   "protagonist": {
-    "frame": "ship_protagonist",
+    "frame": "playerShip1_green",
+    "shipFrameType": 1,
     "health": 1000,
     "width": 50,
     "weapons": {
@@ -18,7 +19,7 @@
     }
   },
   "diagonal": {
-    "frame": "ship_enemy_diagonal_full_screen",
+    "frame": "enemyBlack1",
     "health": 100,
     "width": 50,
     "gold": 50,

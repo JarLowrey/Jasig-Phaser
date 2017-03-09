@@ -67,6 +67,10 @@ export default {
     type: 'json',
     url: 'json/dimen.json'
   }, {
+    key: 'animations',
+    type: 'json',
+    url: 'json/animations.json'
+  }, {
     key: 'emitters',
     type: 'json',
     url: 'json/emitters.json'

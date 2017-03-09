@@ -22,7 +22,13 @@ export default class ParentSprite extends Phaser.Sprite {
     this.info = this.game.entities[entityType][entityName];
 
     //set size+texture
-    this.loadTexture(this.info.key || 'sprites', this.info.frame);
+    let frame = null;
+    if (Array.isArray(this.info.frame)) {
+      frame = this.info.frame[Math.floor(Math.random() * this.info.frame.length)];
+    } else {
+      frame = this.info.frame;
+    }
+    this.loadTexture(this.info.key || 'sprites', frame);
     ParentSprite.setSize(this, this.info.width, this.info.isCircular, this.info.height);
 
     //set body related variables
@@ -84,6 +90,12 @@ export default class ParentSprite extends Phaser.Sprite {
 
   amPlayer() {
     return this === this.game.data.play.player;
+  }
+
+  static setupAnimations(sprite, animations) {
+    for (let animation of animations) {
+      sprite.animations.add(animation.key, animation.frames, animation.frameRate, animation.looped || false);
+    }
   }
 
   static setSize(sprite, width, isCircular = false, height) {

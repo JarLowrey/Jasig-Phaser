@@ -76,6 +76,9 @@ export default class WaveHandler {
 
     if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
       let meteor = this.spawnSprite(Meteor, 'meteor');
+      this.spawnSprite(Meteor, 'small_meteor');
+      this.spawnSprite(Meteor, 'big_meteor');
+      this.spawnSprite(Meteor, 'giant_meteor');
       enemyTotal += meteor.value;
     }
     if (enemyTotal < enemiesThresholdValue) {

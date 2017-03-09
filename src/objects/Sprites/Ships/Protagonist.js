@@ -12,6 +12,24 @@ export default class Protagonist extends Ship {
     return 'Protagonist';
   }
 
+  constructor(game) {
+    super(game);
+
+    this.body.collideWorldBounds = true;
+
+    //  Add an emitter for the ship's trail
+    this.shipTrail = this.game.add.emitter(0, 0, 50);
+    this.shipTrail.width = 10;
+    this.shipTrail.makeParticles('sprites', 'explosion1');
+    this.shipTrail.setXSpeed(-75, 75);
+    this.shipTrail.setYSpeed(150, 300);
+    this.shipTrail.setRotation(50, -50);
+    this.shipTrail.setAlpha(1, 0.01, 800);
+    this.shipTrail.setScale(0.05, 0.4, 0.05, 0.4, 2000, Phaser.Easing.Quintic.Out);
+    this.shipTrail.start(false, 500, 20);
+    this.addChild(this.shipTrail);
+  }
+
   update() {
     super.update();
 
@@ -42,7 +60,6 @@ export default class Protagonist extends Ship {
     this.x = this.game.world.centerX;
     this.y = this.game.world.height;
 
-    this.body.collideWorldBounds = true;
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
     this.health = this.game.data.play.playerInfo.health;
@@ -62,8 +79,14 @@ export default class Protagonist extends Ship {
     this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
 
     //setup begin/end shooting events
-    this.game.input.onDown.add(this.startShooting.bind(this), this);
-    this.game.input.onUp.add(this.stopShooting.bind(this), this);
+    this.game.input.onDown.add(this.weapons.startShooting.bind(this.weapons), this);
+    this.game.input.onUp.add(this.weapons.stopShooting.bind(this.weapons), this);
+  }
+
+  checkForDamageOverlay() {
+    super.checkForDamageOverlay();
+    //player has a different anchor than other ships, must account for this in its overlay
+    this.dmgOverlay.y = -this.height;
   }
 
   damage(amt) {
