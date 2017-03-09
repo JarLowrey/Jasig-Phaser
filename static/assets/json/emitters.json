@@ -4,7 +4,6 @@
       "key": "sprites",
       "frame": "explosion1"
     },
-    "maxParticles": 30,
     "explosions": {
       "default": {
         "speed": {
@@ -17,7 +16,6 @@
             "max": 300
           }
         },
-        "lifeSpan": 2000,
         "quantity": {
           "min": 4,
           "max": 9
@@ -30,19 +28,58 @@
       "key": "sprites",
       "frame": "meteorBrown_tiny1"
     },
-    "maxParticles": 30,
-    "explosions": {
-      "default": {}
-    }
+    "explosions": {}
   },
   "meter_small_grey": {
     "image": {
       "key": "sprites",
       "frame": "meteorGrey_tiny1"
     },
-    "maxParticles": 30,
+    "explosions": {}
+  },
+  "scrap1": {
+    "image": {
+      "key": "sprites",
+      "frame": "beam1"
+    },
+    "maxParticles": 10,
     "explosions": {
-      "default": {}
+      "default": {
+        "quantity": {
+          "min": 0,
+          "max": 1
+        }
+      }
+    }
+  },
+  "scrap2": {
+    "image": {
+      "key": "sprites",
+      "frame": "beam2"
+    },
+    "maxParticles": 10,
+    "explosions": {
+      "default": {
+        "quantity": {
+          "min": 0,
+          "max": 1
+        }
+      }
+    }
+  },
+  "scrap3": {
+    "image": {
+      "key": "sprites",
+      "frame": "beam3"
+    },
+    "maxParticles": 10,
+    "explosions": {
+      "default": {
+        "quantity": {
+          "min": 0,
+          "max": 1
+        }
+      }
     }
   }
 }

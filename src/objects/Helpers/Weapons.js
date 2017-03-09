@@ -17,7 +17,7 @@ export default class Weapons {
   overlapBullets(receivers) {
     for (let weapon of this.weapons) {
       //receivers must be first param before bullets - http://phaser.io/docs/2.6.2/Phaser.Physics.Arcade.html#overlap
-      this.game.physics.arcade.overlap(receivers, weapon.bullets, Ship.bulletCollision, null, this);
+      this.game.physics.arcade.overlap(receivers, weapon.bullets, Weapons.bulletCollision, null, this);
     }
   }
 
@@ -98,6 +98,12 @@ export default class Weapons {
       default: newClass = DefaultBullet;
     }
     return newClass;
+  }
+
+  static bulletCollision(unit, bullet) {
+    const shootingWeapon = bullet.parent.myWeapon;
+    if (unit.isAlive) bullet.kill();
+    if (unit.isAlive) unit.damage(shootingWeapon.dmg, true);
   }
 
 }

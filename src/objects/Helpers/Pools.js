@@ -29,7 +29,7 @@ export default class Pools {
         frame = info.image.frame;
 
       //create emitter
-      var emitter = this.game.add.emitter(0, 0, info.maxParticles);
+      var emitter = this.game.add.emitter(0, 0, info.maxParticles || 30);
       emitter.makeParticles(key, frame);
       emitter.info = info;
       this.emitters[name] = emitter;
@@ -84,7 +84,7 @@ export default class Pools {
     emitter.x = spriteExplodingFrom.x;
     emitter.y = spriteExplodingFrom.y;
 
-    const explosion = emitter.info.explosions[explosionName];
+    const explosion = emitter.info.explosions[explosionName] || {};
     const gravity = explosion.gravity || {
         x: 0,
         y: 0
@@ -125,6 +125,6 @@ export default class Pools {
     emitter.setRotation(rotation.min, rotation.max);
     emitter.setAlpha(alpha.start, alpha.end, lifespan);
     emitter.setScale(minScale, maxScale, minScale, maxScale);
-    emitter.explode(lifespan, Phaser.Math.between(quantity.min, quantity.max));
+    emitter.explode(lifespan, this.game.between(quantity.min, quantity.max));
   }
 }

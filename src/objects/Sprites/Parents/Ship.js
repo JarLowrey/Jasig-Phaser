@@ -32,7 +32,9 @@ export default class Ship extends Unit {
   }
 
   showDamagedParticles() {
-    //this.game.spritePools.explode(emitterKey, 'default', this);
+    this.game.spritePools.explode('scrap1', 'default', this);
+    this.game.spritePools.explode('scrap2', 'default', this);
+    this.game.spritePools.explode('scrap3', 'default', this);
   }
 
   reset(shipName, isFriendly) {
@@ -169,12 +171,6 @@ export default class Ship extends Unit {
     } else if (this.right > this.game.world.width) {
       this.body.velocity.x = -vx;
     }
-  }
-
-  static bulletCollision(unit, bullet) {
-    const shootingWeapon = bullet.parent.myWeapon;
-    if (unit.isAlive) bullet.kill();
-    if (unit.isAlive) unit.damage(shootingWeapon.dmg);
   }
 
 }

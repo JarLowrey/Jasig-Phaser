@@ -29,11 +29,13 @@ export default class Game extends Phaser.State {
     this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
-    this.setupSpritePools();
 
     this.game.data.play.player = new Protagonist(this.game);
     this.game.data.play.player.reset();
     this.add.existing(this.game.data.play.player);
+
+    //setup pools after player so emitters are shown on top
+    this.setupSpritePools();
 
     this.game.time.advancedTiming = true;
     //this.game.forceSingleUpdate = true; //http://www.html5gamedevs.com/topic/13514-simple-game-horrible-performance-on-androidcooconjs/#comment-77719
