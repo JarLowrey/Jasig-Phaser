@@ -42,8 +42,8 @@ export default class ParentSprite extends Phaser.Sprite {
         'y': 0
       }
     };
-    let xSpd = Math.random() * (v.max.x - v.min.x) + v.min.x;
-    let ySpd = Math.random() * (v.max.y - v.min.y) + v.min.y;
+    let xSpd = Phaser.Math.random(v.min.x, v.max.x);
+    let ySpd = Phaser.Math.random(v.min.y, v.max.y);
     this.body.velocity.set(xSpd, ySpd);
     this.body.maxVelocity.setTo(600, 600);
     this.body.drag.setTo(0, 0);

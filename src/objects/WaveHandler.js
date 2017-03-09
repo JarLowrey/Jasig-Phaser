@@ -74,18 +74,18 @@ export default class WaveHandler {
     const enemiesThresholdValue = 1000000; //this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
-    /*
-        if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
-          let meteor = this.spawnSprite(Meteor, 'meteor');
-          this.spawnSprite(Meteor, 'small_meteor');
-          this.spawnSprite(Meteor, 'big_meteor');
-          this.spawnSprite(Meteor, 'giant_meteor');
-          enemyTotal += meteor.value;
-        }
-        */
+
+    if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
+      //let meteor = this.spawnSprite(Meteor, 'meteor');
+      this.spawnSprite(Meteor, 'small_meteor');
+      //this.spawnSprite(Meteor, 'big_meteor');
+      //this.spawnSprite(Meteor, 'giant_meteor');
+      //enemyTotal += meteor.value;
+    }
+
     if (enemyTotal < enemiesThresholdValue) {
       const enemyInfo = this.chooseEnemy();
-      this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
+      //  this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
     }
 
     this.spawnTimer.add(this.timeToCheckForNewSpawn, this.spawn, this);

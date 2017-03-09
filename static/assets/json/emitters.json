@@ -4,10 +4,9 @@
       "key": "sprites",
       "frame": "explosion1"
     },
-    "maxParticles": 80,
+    "maxParticles": 30,
     "explosions": {
-      "all": {
-        "gravity": 0,
+      "default": {
         "rotation": {
           "min": -360,
           "max": 360
@@ -31,7 +30,10 @@
           }
         },
         "lifeSpan": 2000,
-        "quantity": 8
+        "quantity": {
+          "min": 4,
+          "max": 9
+        }
       }
     }
   },
@@ -40,6 +42,75 @@
       "key": "sprites",
       "frame": "meteorBrown_tiny1"
     },
-    "maxParticles": 10
+    "maxParticles": 30,
+    "explosions": {
+      "default": {
+        "rotation": {
+          "min": -360,
+          "max": 360
+        },
+        "particleWidth": {
+          "min": 5,
+          "max": 10
+        },
+        "alpha": {
+          "start": 1,
+          "end": 0.01
+        },
+        "speed": {
+          "x": {
+            "min": -50,
+            "max": 50
+          },
+          "y": {
+            "min": -50,
+            "max": 50
+          }
+        },
+        "lifeSpan": 2000,
+        "quantity": {
+          "min": 2,
+          "max": 5
+        }
+      }
+    }
+  },
+  "meter_small_grey": {
+    "image": {
+      "key": "sprites",
+      "frame": "meteorGrey_tiny1"
+    },
+    "maxParticles": 30,
+    "explosions": {
+      "default": {
+        "rotation": {
+          "min": -360,
+          "max": 360
+        },
+        "particleWidth": {
+          "min": 5,
+          "max": 10
+        },
+        "alpha": {
+          "start": 1,
+          "end": 0.01
+        },
+        "speed": {
+          "x": {
+            "min": -50,
+            "max": 50
+          },
+          "y": {
+            "min": -50,
+            "max": 50
+          }
+        },
+        "lifeSpan": 2000,
+        "quantity": {
+          "min": 2,
+          "max": 5
+        }
+      }
+    }
   }
 }

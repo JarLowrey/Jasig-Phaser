@@ -116,7 +116,7 @@ export default class Unit extends ParentSprite {
   damage(amount) {
     super.damage(amount);
 
-    if (this.alive) {
+    if (this.isAlive) {
       this.showDamagedParticles();
     }
 

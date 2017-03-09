@@ -11,7 +11,12 @@ export default class Meteor extends Unit {
   }
 
   showDamagedParticles() {
+    let emitterKey = 'meter_small_brown';
+    if (this.frameName.includes('Grey')) {
+      emitterKey = 'meter_small_grey';
+    }
 
+    this.game.spritePools.explode(emitterKey, 'default', this);
   }
 
   reset(entityName) {
