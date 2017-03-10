@@ -67,7 +67,7 @@ export default class Game extends Phaser.State {
       },
       ['Explosion']: {
         'class': Explosion,
-        'count': 7
+        'count': 25
       },
       [Meteor.className()]: {
         'class': Meteor,

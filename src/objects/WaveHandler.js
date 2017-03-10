@@ -69,23 +69,27 @@ export default class WaveHandler {
     return this.waveIsOver;
   }
 
+  _chooseRandMeteorKey() {
+    const meteors = this.game.entities.units
+    const keys = Object.keys(meteors);
+    const randIdx = this.game.between(0, keys.length);
+    return keys[randIdx];
+  }
+
   spawn() {
     var enemyTotal = this.livingEnemiesTotalValue();
-    const enemiesThresholdValue = 1000000; //this.spawnValueThresholdForAdvancedEnemies();
+    const enemiesThresholdValue = this.spawnValueThresholdForAdvancedEnemies();
     const meteorsThresholdValue = this.spawnValueThresholdForMeteors();
 
 
     if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
-      //let meteor = this.spawnSprite(Meteor, 'meteor');
-      this.spawnSprite(Meteor, 'small_meteor');
-      //this.spawnSprite(Meteor, 'big_meteor');
-      //this.spawnSprite(Meteor, 'giant_meteor');
-      //enemyTotal += meteor.value;
+      let meteor = this.spawnSprite(Meteor, this._chooseRandMeteorKey());
+      enemyTotal += meteor.value;
     }
 
     if (enemyTotal < enemiesThresholdValue) {
       const enemyInfo = this.chooseEnemy();
-      //  this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
+      this.spawnSprite(enemyInfo.newEnemyClass, enemyInfo.newEnemyJsonName);
     }
 
     this.spawnTimer.add(this.timeToCheckForNewSpawn, this.spawn, this);
