@@ -16,6 +16,7 @@ export default class Protagonist extends Ship {
     super(game);
 
     this.body.collideWorldBounds = true;
+    this.maxSpeed = 50
 
     //  Add an emitter for the ship's trail
     this.shipTrail = this.game.add.emitter(0, 0, 50);
@@ -33,6 +34,9 @@ export default class Protagonist extends Ship {
   update() {
     super.update();
 
+    const bank = this.body.velocity.x / this.maxSpeed;
+    const normalizedAngle = Math.min(Math.abs(bank * 10), 90);
+    this.angle = normalizedAngle * Math.sign(bank);
     this.game.physics.arcade.moveToPointer(this, this.getSpeed());
   }
 
@@ -41,7 +45,7 @@ export default class Protagonist extends Ship {
     const distToPointer = Phaser.Point.distance(this, activePointerPos);
 
     var speed = distToPointer * 5;
-    speed = Math.max(speed, (50)); //set a min speed. This causes a shaking effect when still
+    speed = Math.max(speed, this.maxSpeed); //set a min speed. This causes a shaking effect when still
 
     return speed;
   }
