@@ -54,11 +54,15 @@ export default class Game extends Phaser.State {
   shutdown() {
     document.documentElement.style.cursor = 'default';
 
-    //save necessary data
-    this.game.data.play.playerInfo.health = this.game.data.play.player.health;
-
     //delete objects as needed
     Weapons.cleanupAllWeapons(this.game);
+
+    //save necessary data
+    this.game.data.play.playerInfo.health = this.game.data.play.player.health;
+    this.game.spritePools = null;
+    this.game.data.play.player = null;
+
+    this.game.data.saveGame();
   }
 
   setupSpritePools() {

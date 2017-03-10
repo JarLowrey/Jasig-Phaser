@@ -9,20 +9,14 @@ export default class GameData {
 
   constructor(game) {
     this.game = game;
-
-    this._defineDefaultData();
   }
 
   _applySettings() {
     this.game.sound.volume = Number(!this.game.data.settings.muted); //apply volume settings
   }
 
-  _defineDefaultData() {
-    const defaults = this.game.cache.getJSON('preloadJSON').defaults;
-
-    this._resetPlayData();
-
-    this.stats = {
+  _defaultStats() {
+    return {
       kills: {},
       medals: {},
 
@@ -31,16 +25,20 @@ export default class GameData {
         score: 0
       }
     };
+  }
+  _defaultSettings() {
+    const defaults = this.game.cache.getJSON('preloadJSON').defaults;
 
-    this.settings = {
+    return {
       vibration: defaults.settings.vibration,
       screenShake: defaults.settings.screenShake,
       muted: defaults.settings.muted
     };
   }
 
-  _resetPlayData() {
-    this.play = {
+  _defaultPlay() {
+    const defaults = this.game.cache.getJSON('preloadJSON').defaults;
+    return {
       unlocks: {
         purchases: {
           gun: 0,
@@ -52,17 +50,12 @@ export default class GameData {
         }
       },
 
-      score: 0,
+      score: 10000000,
       totalScore: 0,
 
       comboCount: 0,
       player: null,
-      playerInfo: {
-        health: 0,
-        maxHealth: 0,
-        frame: 'playerShip1_green',
-        shipFrameType: 1
-      },
+      playerInfo: defaults.playerInfo,
 
       level: 0,
       wave: {
@@ -86,14 +79,16 @@ export default class GameData {
   }
 
   resetGame() {
-    this._resetPlayData();
+    this.play = this._defaultPlay();
     DbAccess.setKey('savedGame', this.play);
   }
 
   saveGame() {
     //auto-save in Db storage
-    this.play.serializedObjects.player = this.play.player.serialize();
-    this.play.serializedObjects.sprites = this.game.spritePools.serialize();
+    if (this.play.player && this.game.spritePools) {
+      this.play.serializedObjects.player = this.play.player.serialize();
+      this.play.serializedObjects.sprites = this.game.spritePools.serialize();
+    }
 
     //copy play data to a temp array and remove pointers to sprites (otherwise it crashes)
     let save = {};
@@ -105,9 +100,9 @@ export default class GameData {
 
   async load() {
     await DbAccess.open(this.game, {
-      'stats': this.stats,
-      'savedGame': this.play,
-      'settings': this.settings
+      'stats': this._defaultStats(),
+      'savedGame': this._defaultPlay(),
+      'settings': this._defaultSettings()
     });
 
     //load long term info

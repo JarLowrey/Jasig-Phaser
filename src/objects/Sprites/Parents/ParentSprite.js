@@ -82,8 +82,6 @@ export default class ParentSprite extends Phaser.Sprite {
     if (this.amPlayer()) {
       this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
     } else if (waveOver) {
-      this.game.data.saveGame();
-      this.game.data.saveStats();
       this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
     }
   }

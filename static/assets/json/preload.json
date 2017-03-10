@@ -1,15 +1,20 @@
 {
-  "minSplashScreenShowTime":1000,
+  "minSplashScreenShowTime": 1000,
 
-  "defaults":{
-    "settings":{
+  "defaults": {
+    "settings": {
       "vibration": true,
       "screenShake": true,
       "muted": false
+    },
+    "playerInfo": {
+      "health": 1000,
+      "frame": "playerShip1_green",
+      "shipFrameType": 1
     }
   },
 
-  "devName":"JTronLabs",
-  "appName":"Jasig",
-  "bgColor":"#7ec6f2"
+  "devName": "JTronLabs",
+  "appName": "Jasig",
+  "bgColor": "#7ec6f2"
 }

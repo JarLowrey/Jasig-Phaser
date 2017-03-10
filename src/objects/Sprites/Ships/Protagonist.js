@@ -4,6 +4,7 @@
  *
  */
 import Ship from '../Parents/Ship';
+import ParentSprite from '../Parents/ParentSprite';
 import * as PhaserUi from 'phaser-ui';
 
 
@@ -57,11 +58,13 @@ export default class Protagonist extends Ship {
   }
 
   static getMaxHealth(game) {
-    const defLevel = game.data.play.unlocks.purchases.defense;
-    const heroBaseHealth = game.entities.ships.protagonist.health;
-    const upgradeInfo = game.cache.getJSON('upgrades');
+    const defaultHealth = game.cache.getJSON('preloadJSON').defaults.playerInfo.health;
 
-    return (upgradeInfo.repair.valueIncreasePerLevel * defLevel) + heroBaseHealth;
+    const defLevel = game.data.play.unlocks.purchases.defense;
+    const upgradeInfo = game.cache.getJSON('upgrades');
+    const addedHealth = (upgradeInfo.repair.valueIncreasePerLevel * defLevel);
+
+    return addedHealth + defaultHealth;
   }
 
   reset() {
@@ -72,6 +75,12 @@ export default class Protagonist extends Ship {
 
     this.reachedYDestination = true; //set to true so Unit will not run checks to see if this has reached its destination. Protagonist does not have a compile time destination.
 
+    //setup vars using data instead of the default ship json
+    //texture/size
+    this.loadTexture('sprites', this.game.data.play.playerInfo.frame);
+    ParentSprite.setSize(this, this.info.width, this.info.isCircular, this.info.height);
+    this.shipFrameType = this.game.data.play.playerInfo.shipFrameType;
+    //health
     this.health = this.game.data.play.playerInfo.health;
     this.maxHealth = Protagonist.getMaxHealth(this.game); //used in parent
 

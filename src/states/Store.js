@@ -3,11 +3,9 @@
  */
 import UpgradableStoreItem from '../objects/UI/UpgradableStoreItem';
 import * as PhaserUi from 'phaser-ui';
-import UiHelper from '../objects/UI/UiHelper';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import IconBtn from '../objects/UI/IconBtn';
 import IconText from '../objects/UI/IconText';
-
 
 export default class Store extends Phaser.State {
 
@@ -20,14 +18,14 @@ export default class Store extends Phaser.State {
     this.game.world.setBounds(0, 0, this.game.width, this.game.height);
 
     //setup placement vars
-    const outlineWidth = UiHelper.dp(4);
-    const margin = UiHelper.dp(15);
+    const outlineWidth = (4);
+    const margin = (15);
     this.margin = margin;
     const outlineColor = 0x99E1D9;
     const bgColor = 0x332292F;
-    const upgradeHeight = UiHelper.dp(150);
-    const width = Math.min(UiHelper.dp(75), this.game.width / 6);
-    const btnLen = Math.min(UiHelper.dp(40), this.game.width / 6);
+    const upgradeHeight = (150);
+    const width = Math.min((75), this.game.width / 6);
+    const btnLen = Math.min((40), this.game.width / 6);
     const outlineColorPressed = 0xa1e199;
     const bgColorPressed = 0xe1d999;
 
@@ -142,12 +140,12 @@ export default class Store extends Phaser.State {
   }
 
   assignUpgradePressedFunctions() {
-    this.guns.assignPressFunction(this.upgradePressed('guns', 'gunLevel').bind(this));
-    this.damage.assignPressFunction(this.upgradePressed('damage', 'damageLevel').bind(this));
-    this.fireRate.assignPressFunction(this.upgradePressed('fireRate', 'fireRateLevel').bind(this));
-    this.defense.assignPressFunction(this.upgradePressed('defense', 'defenseLevel').bind(this));
-    this.scoreBoost.assignPressFunction(this.upgradePressed('scoreBoost', 'scoreBoostLevel').bind(this));
-    this.ally.assignPressFunction(this.upgradePressed('ally', 'allyLevel').bind(this));
+    this.guns.assignPressFunction(this.upgradePressed('guns', 'gun').bind(this));
+    this.damage.assignPressFunction(this.upgradePressed('damage', 'damage').bind(this));
+    this.fireRate.assignPressFunction(this.upgradePressed('fireRate', 'fireRate').bind(this));
+    this.defense.assignPressFunction(this.upgradePressed('defense', 'defense').bind(this));
+    this.scoreBoost.assignPressFunction(this.upgradePressed('scoreBoost', 'scoreBoost').bind(this));
+    this.ally.assignPressFunction(this.upgradePressed('ally', 'ally').bind(this));
   }
   purchaseAttempt(groupName, upgradeName, cost) {
     return function() {
@@ -155,7 +153,8 @@ export default class Store extends Phaser.State {
 
       if (cost < currentMoney) { //purchase successful
         this.game.data.play.score -= cost;
-        this.game.data.play.upgrades[upgradeName]++;
+        this.game.data.play.unlocks.purchases[upgradeName] += 1;
+        this.game.data.saveGame();
 
         //perform extra processing for upgrades with special cases
         if (upgradeName == 'health' || upgradeName == 'defenseLevel') {
@@ -163,7 +162,7 @@ export default class Store extends Phaser.State {
           const maxHealth = Protagonist.getMaxHealth(this.game);
           //update data
           this.game.data.play.playerInfo.health = maxHealth;
-          this.game.data.play.playerInfo.maxHealth = maxHealth;
+
           //update UI
           this.healthbar.progress = 1;
           this.healthbar.setText(maxHealth + '/' + maxHealth);

@@ -1,8 +1,5 @@
 {
   "protagonist": {
-    "frame": "playerShip1_green",
-    "shipFrameType": 1,
-    "health": 1000,
     "width": 50,
     "weapons": {
       "low_level": [{
