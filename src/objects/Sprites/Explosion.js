@@ -65,11 +65,11 @@ export default class Explosion extends Phaser.Sprite {
     const frame = this.spriteExplodingFrom.frameName;
     const tint = this.spriteExplodingFrom.tint;
 
-    if (frame.includes('Red') || tint == 0xff0000) {
+    if (tint == 0xff0000 || frame.includes('Red')) {
       explosion = this.game.animations.laserRedExplosion;
-    } else if (frame.includes('Blue') || tint == 0x0000ff) {
+    } else if (tint == 0x0000ff || frame.includes('Blue')) {
       explosion = this.game.animations.laserBlueExplosion;
-    } else if (frame.includes('Green') || tint == 0x00ff00) {
+    } else if (tint == 0x00ff00 || frame.includes('Green')) {
       explosion = this.game.animations.laserGreenExplosion;
     }
 
