@@ -25,6 +25,8 @@ import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
 export default class Game extends Phaser.State {
 
   create() {
+    document.documentElement.style.cursor = 'none'; //hide cursor in game
+
     this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'background');
     this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
@@ -50,6 +52,12 @@ export default class Game extends Phaser.State {
   }
 
   shutdown() {
+    document.documentElement.style.cursor = 'default';
+
+    //save necessary data
+    this.game.data.play.playerInfo.health = this.game.data.play.player.health;
+
+    //delete objects as needed
     Weapons.cleanupAllWeapons(this.game);
   }
 

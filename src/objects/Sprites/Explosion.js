@@ -20,7 +20,6 @@ export default class Explosion extends Phaser.Sprite {
       this.game.animations.sonicExplosion,
       this.game.animations.regularExplosion
     ];
-
     ParentSprite.setupAnimations(this, this.shipExplosions);
 
     this.bulletExplosions = [
@@ -28,7 +27,6 @@ export default class Explosion extends Phaser.Sprite {
       this.game.animations.laserBlueExplosion,
       this.game.animations.laserGreenExplosion
     ];
-
     ParentSprite.setupAnimations(this, this.bulletExplosions);
   }
 
