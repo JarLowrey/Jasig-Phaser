@@ -220,14 +220,15 @@ export default class Store extends Phaser.State {
     return msg;
   }
   upgradeMaxedOut(groupName, upgradeName) {
-    const currentLevel = this.game.data.play.unlocks[upgradeName];
+    const currentLevel = this.game.data.play.unlocks.purchases[upgradeName];
     const info = this.upgradeInfo[groupName];
 
     const isHealthAndIsMaxed = upgradeName == 'health' && this.game.data.play.playerInfo.health == Protagonist.getMaxHealth(this.game);
-    const pastMaxLevel = info && currentLevel >= info.maxLevel;
-    const pastDefinedLevels = info && info.levels && currentLevel >= info.levels.length;
+    const pastMaxLevel = currentLevel >= info.maxLevel;
+    const gunMaxedOut = (upgradeName == 'gun' && info.levels && currentLevel >= info.levels.length);
+    const maxedOutLevel = gunMaxedOut || currentLevel == info.maxLevel;
 
-    return isHealthAndIsMaxed || pastMaxLevel || pastDefinedLevels;
+    return isHealthAndIsMaxed || pastMaxLevel || maxedOutLevel;
   }
 
   createUpgrades(upgradeWidth, upgradeHeight, margin, outlineWidth, outlineColor, backgroundColor, outlineColorPressed, bgColorPressed) {
@@ -254,7 +255,7 @@ export default class Store extends Phaser.State {
       outlineColorPressed, bgColorPressed);
 
     this.scoreBoost = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.scooreBoost, this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
+      this.game.data.play.unlocks.purchases.scoreBoost, this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
