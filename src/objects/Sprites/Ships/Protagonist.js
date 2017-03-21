@@ -99,8 +99,8 @@ export default class Protagonist extends Ship {
     this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
 
     //setup begin/end shooting events
-    this.game.input.onDown.add(this.startShooting.bind(this.weapons), this);
-    this.game.input.onUp.add(this.stopShooting.bind(this.weapons), this);
+    this.game.input.onDown.add(this.startShooting, this);
+    this.game.input.onUp.add(this.stopShooting, this);
   }
 
   checkForDamageOverlay() {

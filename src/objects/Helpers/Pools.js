@@ -4,11 +4,9 @@
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
 
-import InfoWeapon from '../Sprites/Guns/InfoWeapon';
-
 export default class Pools {
 
-  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters, numberOfWeapons) {
+  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters) {
     this.game = game;
 
     //initialize pools
@@ -39,12 +37,6 @@ export default class Pools {
       //this.game.world.bringToTop(emitter);
 
       this.emitters[name] = emitter;
-    }
-
-    this.weapons = [];
-    for (let i = 0; i < numberOfWeapons; i++) {
-      let weapon = this.game.plugins.add(InfoWeapon);
-      this.weapons.push(weapon);
     }
 
     if (savedSpriteInfo && savedSpriteInfo.length > 0) {
@@ -85,18 +77,6 @@ export default class Pools {
   getEmitter(name) {
     let emitter = this.emitters[name];
     return emitter;
-  }
-
-  getWeapon() {
-    for (let weapon of this.weapons) {
-      if (weapon.trackedSprite === null) {
-        return weapon;
-      }
-    }
-
-    var weapon = this.game.plugins.add(Phaser.Weapon);
-    this.weapons.push(weapon);
-    return weapon;
   }
 
   //convenience method for using explosions designed via JSON instead of in a JS file

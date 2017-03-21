@@ -12,27 +12,6 @@
           "x": 0,
           "y": 0
         }
-      }, {
-        "fireRate": 300,
-        "angle": 90,
-        "preallocation": 15,
-        "key": "sprites",
-        "frame": "gun01",
-        "width": 40,
-        "relativePos": {
-          "x": 0,
-          "y": 0
-        }
-      }, {
-        "angle": 80,
-        "preallocation": 15,
-        "key": "sprites",
-        "frame": "gun01",
-        "width": 40,
-        "relativePos": {
-          "x": 0,
-          "y": 0
-        }
       }]
     }
   },

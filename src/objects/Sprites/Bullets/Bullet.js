@@ -4,6 +4,7 @@
  *
  */
 
+import ParentSprite from '../Parents/ParentSprite';
 
 export default class Bullet extends Phaser.Bullet {
 
@@ -14,18 +15,30 @@ export default class Bullet extends Phaser.Bullet {
     this.outOfBoundsKill = true;
   }
 
+  setGun(gun) {
+    this.gun = gun;
+    const diameter = 50;
+    this.loadTexture(this.gun.info.key, this.gun.info.frame);
+    ParentSprite.setSize(this, diameter, true);
+  }
+
   //before calling this, it assumes the checkCollision method has passed
   static bulletCollision(unit, bullet) {
-    const shootingWeapon = bullet.parent.myWeapon;
-    if (unit.isAlive) bullet.kill();
-    if (unit.isAlive) unit.damage(shootingWeapon.dmg, true);
+    console.log('collide', bullet.gun)
+
+    const shootingWeapon = bullet.gun.shooter;
+    bullet.kill();
+    unit.damage(shootingWeapon.dmg, true);
   }
 
   static checkCollision(unit, bullet) {
-    return bullet.alive && unit.isAlive && unit.isFriendly != bullet.gun.shooter.isFriendly;
+    console.log('check', bullet.gun, bullet.alive && bullet.gun && unit.isAlive && unit.isFriendly != bullet.gun.shooter.isFriendly)
+    return unit.isAlive && bullet.alive && bullet.gun && unit.isFriendly != bullet.gun.shooter.isFriendly;
   }
 
   update() {
+    if (!this.alive) return;
+
     if (this.target && this.target.isAlive) {
       this.game.physics.arcade.moveToObject(this, this.target, this.body.velocity); //track towards object
       this.body.angle = this.game.physics.arcade.angleBetween(this, this.target); //set bullet rotation angle to point towards target
@@ -46,7 +59,7 @@ export default class Bullet extends Phaser.Bullet {
     if (this.inWorld) {
       this.game.spritePools.getPool('Explosion').getFirstDead(true).reset(this);
     }
-
+    this.gun = null;
     super.kill();
   }
 }

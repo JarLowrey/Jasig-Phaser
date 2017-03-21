@@ -2,6 +2,7 @@
  * InfoWeapon
  * ====
  */
+import DefaultBullet from '../Bullets/DefaultBullet';
 
 export default class InfoWeapon extends Phaser.Weapon {
 
@@ -12,26 +13,31 @@ export default class InfoWeapon extends Phaser.Weapon {
     this.trackedSprite = null;
   }
 
-  fire() {
-    console.log(this.info, this.trackedSprite);
-    let bullet = super.fire();
-    bullet.gun = this.trackedSprite;
+  fire(from, x, y, offsetX, offsetY) {
+    let bullet = super.fire(from, x, y, offsetX, offsetY);
+    if (bullet == null) {
+      return null;
+    }
+    console.log(bullet)
+    bullet.setGun(this.trackedSprite);
     return bullet;
   }
 
-  _reuseBullets(bulletClassName = 'DefaultBullet') {
-    let bulletGroup = this.game.spritePools.getPool(bulletClassName);
-    console.log(bulletClassName, bulletGroup)
-    let bulletClass = bulletGroup.getChildAt(0).constructor;
-    console.log(bulletClass);
-
-    this.bulletClass = bulletClass;
-    this.bullets = bulletGroup;
+  static _getBulletClass(className) {
+    switch (className) {
+      default: return DefaultBullet;
+    }
   }
 
   setupWeapon(weaponInfo, trackedSprite) {
+    this.info = weaponInfo;
+
+    //setup bullets group
+    let bulletClass = InfoWeapon._getBulletClass(weaponInfo.bulletClass);
+    this.bulletClass = bulletClass;
+    this.createBullets(weaponInfo.preallocationAmount || 20);
+
     this.autoExpandBulletsGroup = weaponInfo.autoExpandBulletsGroup || true; //if ammo was defined, do not auto expand group
-    this._reuseBullets(weaponInfo.bulletClassName);
 
     this.bulletSpeed = weaponInfo.bulletSpeed || 500;
     this.fireRate = weaponInfo.fireRate || 500;

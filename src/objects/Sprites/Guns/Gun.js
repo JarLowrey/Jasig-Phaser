@@ -4,16 +4,19 @@
  * Sprite with an attached Phaser.Weapon that has a specific Bullet Class
  */
 import ParentSprite from '../Parents/ParentSprite';
+import InfoWeapon from './InfoWeapon';
 
 export default class Gun extends ParentSprite {
 
   reset(shooter, gunInfo) {
     super.reset(null, null, gunInfo);
 
+    this.x = gunInfo.relativePos.x;
+    this.y = gunInfo.relativePos.y;
     this.shooter = shooter;
     this.shooter.addChild(this);
 
-    this.weapon = this.game.spritePools.getWeapon();
+    this.weapon = this.game.plugins.add(InfoWeapon);
     this.weapon.setupWeapon(this.info, this);
   }
 

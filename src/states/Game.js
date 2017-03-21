@@ -89,10 +89,6 @@ export default class Game extends Phaser.State {
         class: Bonus,
         count: 6
       },
-      'DefaultBullet': {
-        class: DefaultBullet,
-        count: 50
-      },
       'friendlyShips': {
         class: Ship,
         count: 1
@@ -106,7 +102,6 @@ export default class Game extends Phaser.State {
         count: 20
       }
     };
-    this.bulletClassNames = ['defaultBullet'];
     this.enemyEntityClassNames = [DiagonalMover.className(), Meteor.className()];
     this.friendlyEntityClassNames = ['friendlyShips', 'Protagonist'];
 
@@ -114,8 +109,8 @@ export default class Game extends Phaser.State {
     this.game.spritePools = new Pools(this.game,
       pools,
       this.game.data.play.serializedObjects.sprites,
-      this.game.cache.getJSON('emitters'),
-      10);
+      this.game.cache.getJSON('emitters')
+    );
   }
 
   update() {
@@ -138,8 +133,8 @@ export default class Game extends Phaser.State {
     const player = this.game.data.play.player;
 
     this.overlapUnits();
-    this.overlapBullets(this.friendlyEntityClassNames);
-    this.overlapBullets(this.enemyEntityClassNames);
+    this.overlapBullets(this.friendlyEntityClassNames, this.enemyEntityClassNames);
+    this.overlapBullets(this.enemyEntityClassNames, this.friendlyEntityClassNames);
 
     this.game.physics.arcade.overlap(
       player,
@@ -158,13 +153,17 @@ export default class Game extends Phaser.State {
     }
   }
 
-  overlapBullets(receiverNames) {
-    for (let bulletName of this.bulletClassNames) {
-      let bullets = this.game.spritePools.getPool(bulletName);
+  overlapBullets(shootersArray, receiversArray) {
+    for (let shooter of shootersArray) {
+      if (shooter.guns) {
+        for (let gun of shooter.guns) {
+          let bullets = gun.weapon.bullets;
 
-      for (let receiversName of receiverNames) {
-        let receiversPool = this.game.spritePools.getPool(receiversName);
-        this.game.physics.arcade.overlap(receiversPool, bullets, Bullet.bulletCollision, Bullet.checkCollision, this);
+          for (let receiversName of receiversArray) {
+            let receiversPool = this.game.spritePools.getPool(receiversName);
+            this.game.physics.arcade.overlap(receiversPool, bullets, Bullet.bulletCollision, Bullet.checkCollision, this);
+          }
+        }
       }
     }
   }

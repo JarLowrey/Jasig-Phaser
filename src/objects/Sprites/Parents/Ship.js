@@ -40,12 +40,12 @@ export default class Ship extends Unit {
     super.reset(shipName, isFriendly, 'ships');
 
     //setup+choose weapons
-    this.weapons = [];
+    this.guns = [];
     const myGuns = this.info.weapons['low_level'];
     for (let gunInfo of myGuns) {
       let gun = this.game.spritePools.getPool('gun').getFirstDead(true);
       gun.reset(this, gunInfo);
-      this.weapons.push(gun);
+      this.guns.push(gun);
     }
 
     //save the frame type
@@ -83,20 +83,19 @@ export default class Ship extends Unit {
   startShooting() {
     if (!this.isAlive) return;
 
-    for (let gun of this.weapons) {
+    for (let gun of this.guns) {
       gun.startShooting();
     }
   }
   stopShooting() {
-    console.log(this.weapons)
-    for (let gun of this.weapons) {
+    for (let gun of this.guns) {
       gun.stopShooting();
     }
   }
 
   arrivedAtYDestionation() {
     super.arrivedAtYDestionation();
-    this.weapons.startShooting();
+    this.startShooting();
   }
 
   damage(amount) {
@@ -168,14 +167,14 @@ export default class Ship extends Unit {
       this.game.spritePools.explode('primaryExplosion', 'default', this);
       this.game.spritePools.getPool('Explosion').getFirstDead(true).reset(this);
     }
-    this.weapons.stopShooting();
+    this.stopShooting();
     this.healthbar.visible = false;
 
     super.kill();
   }
   finishKill() {
     this.isBeingKilled = false;
-    for (let gun of this.weapons) {
+    for (let gun of this.guns) {
       this.removeChild(gun);
       gun.kill();
     }
