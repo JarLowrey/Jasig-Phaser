@@ -6,7 +6,7 @@
 
 export default class Pools {
 
-  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters) {
+  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters, weapons) {
     this.game = game;
 
     //initialize pools
@@ -34,7 +34,23 @@ export default class Pools {
       emitter.particleClass = particleClass;
       emitter.makeParticles(key, frame, Math.MAX_SAFE_INTEGER, false, false, info.arguments);
       emitter.info = info;
+
       this.emitters[name] = emitter;
+    }
+
+    this.weapons = new Weapons(this.game);
+    for (let name in weapons) {
+      //define emitter properties with defaults
+      let info = weapons[name];
+      let bulletClass = info.bulletClass;
+
+      //create emitter
+      var weapon = this.game.plugins.add(Phaser.Weapon);
+      console.log(weapon)
+      weapon.bulletClass = bulletClass;
+      weapon.createBullets(ammo);
+
+      this.weapons[name] = weapon;
     }
 
     if (savedSpriteInfo && savedSpriteInfo.length > 0) {
@@ -75,6 +91,10 @@ export default class Pools {
   getEmitter(name) {
     let emitter = this.emitters[name];
     return emitter;
+  }
+
+  getWeapon(bulletName) {
+
   }
 
   //convenience method for using explosions designed via JSON instead of in a JS file

@@ -5,7 +5,6 @@
  */
 
 import Unit from './Unit';
-import Weapons from '../../Helpers/Weapons';
 import * as PhaserUi from 'phaser-ui';
 
 export default class Ship extends Unit {
@@ -41,8 +40,13 @@ export default class Ship extends Unit {
     super.reset(shipName, isFriendly, 'ships');
 
     //setup+choose weapons
-    this.weapons = new Weapons(this);
-    this.weapons.setupWeapons(this.info.weapons['low_level']);
+    this.weapons = [];
+    const myGuns = this.info.weapons['low_level'];
+    for (let gunInfo in myGuns) {
+      let newGun = new Gun(this, gunInfo);
+      this.addChild(newGun);
+      this.weapons.push(newGun);
+    }
 
     //save the frame type
     this.shipFrameType = this.info.shipFrameType;
@@ -53,6 +57,40 @@ export default class Ship extends Unit {
     this.healthbar.setText('', Object.assign({}, this.game.fonts.text));
     this.updateHealthbar();
     this.healthbar.visible = true;
+  }
+
+  /*
+    static cleanupAllWeapons(game) {
+      //clean up all the weapons
+      let destroyWeapons = function(sprite) {
+        if (sprite.weapons) {
+          for (let weapon of sprite.weapons.weapons) {
+            weapon.destroy();
+          }
+        }
+      };
+
+      destroyWeapons(game.data.play.player);
+
+      for (let poolName in game.spritePools.pools) {
+        let pool = game.spritePools.pools[poolName];
+        pool.forEachAlive(function(child) {
+          destroyWeapons(child);
+        }, this);
+      }
+    }
+    */
+  startShooting() {
+    if (!this.shooter.isAlive) return;
+
+    this.weapons.forEach(function(weapon) {
+      weapon.startShooting();
+    });
+  }
+  stopShooting() {
+    this.weapons.forEach(function(weapon) {
+      weapon.stopShooting();
+    });
   }
 
   arrivedAtYDestionation() {

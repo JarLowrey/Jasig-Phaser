@@ -75,6 +75,10 @@ export default {
     type: 'json',
     url: 'json/emitters.json'
   }, {
+    key: 'guns',
+    type: 'json',
+    url: 'json/guns.json'
+  }, {
     key: 'ships',
     type: 'json',
     url: 'json/ships.json'

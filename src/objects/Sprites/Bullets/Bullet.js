@@ -16,6 +16,12 @@ export default class Bullet extends Phaser.Bullet {
     this.outOfBoundsKill = true;
   }
 
+  static bulletCollision(unit, bullet) {
+    const shootingWeapon = bullet.parent.myWeapon;
+    if (unit.isAlive) bullet.kill();
+    if (unit.isAlive) unit.damage(shootingWeapon.dmg, true);
+  }
+
   update() {
     if (this.target && this.target.isAlive) {
       this.game.physics.arcade.moveToObject(this, this.target, this.body.velocity); //track towards object

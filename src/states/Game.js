@@ -11,7 +11,6 @@ import Explosion from '../objects/Sprites/Explosion';
 import Ship from '../objects/Sprites/Parents/Ship';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import Pools from '../objects/Helpers/Pools';
-import Weapons from '../objects/Helpers/Weapons';
 
 import WaveHandler from '../objects/WaveHandler';
 
@@ -55,7 +54,7 @@ export default class Game extends Phaser.State {
     document.documentElement.style.cursor = 'default';
 
     //delete objects as needed
-    Weapons.cleanupAllWeapons(this.game);
+    //Ship.cleanupAllWeapons(this.game);
 
     //save necessary data
     this.game.data.play.playerInfo.health = this.game.data.play.player.health;
