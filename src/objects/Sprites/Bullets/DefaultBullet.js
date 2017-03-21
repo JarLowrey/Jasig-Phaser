@@ -17,6 +17,5 @@ export default class DefaultBullet extends Bullet {
 
   reset(x, y, health) {
     super.reset(x, y, health);
-    this.setFriendlinessTint();
   }
 }

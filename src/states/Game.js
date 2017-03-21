@@ -12,6 +12,10 @@ import Ship from '../objects/Sprites/Parents/Ship';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import Pools from '../objects/Helpers/Pools';
 
+import Gun from '../objects/Sprites/Guns/Gun';
+import DefaultBullet from '../objects/Sprites/Bullets/DefaultBullet';
+import Bullet from '../objects/Sprites/Bullets/Bullet';
+
 import WaveHandler from '../objects/WaveHandler';
 
 import IconText from '../objects/UI/IconText';
@@ -30,13 +34,10 @@ export default class Game extends Phaser.State {
     this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
-
-    this.game.data.play.player = new Protagonist(this.game);
-    this.game.data.play.player.reset();
-    this.add.existing(this.game.data.play.player);
-
-    //setup pools after player so emitters are shown on top
     this.setupSpritePools();
+
+    this.game.spritePools.getPool('Protagonist').getFirstDead().reset();
+    this.add.existing(this.game.data.play.player);
 
     this.game.time.advancedTiming = true;
     //this.game.forceSingleUpdate = true; //http://www.html5gamedevs.com/topic/13514-simple-game-horrible-performance-on-androidcooconjs/#comment-77719
@@ -73,31 +74,48 @@ export default class Game extends Phaser.State {
       },
       */
       [DiagonalMover.className()]: {
-        'class': DiagonalMover,
-        'count': 7
+        class: DiagonalMover,
+        count: 7
       },
       ['Explosion']: {
-        'class': Explosion,
-        'count': 25
+        class: Explosion,
+        count: 25
       },
       [Meteor.className()]: {
-        'class': Meteor,
-        'count': 15
+        class: Meteor,
+        count: 15
       },
       [Bonus.className()]: {
-        'class': Bonus,
-        'count': 6
+        class: Bonus,
+        count: 6
+      },
+      'DefaultBullet': {
+        class: DefaultBullet,
+        count: 50
       },
       'friendlyShips': {
-        'class': Ship,
-        'count': 1
+        class: Ship,
+        count: 1
+      },
+      'Protagonist': {
+        class: Protagonist,
+        count: 1
+      },
+      'gun': {
+        class: Gun,
+        count: 20
       }
     };
+    this.bulletClassNames = ['defaultBullet'];
+    this.enemyEntityClassNames = [DiagonalMover.className(), Meteor.className()];
+    this.friendlyEntityClassNames = ['friendlyShips', 'Protagonist'];
+
 
     this.game.spritePools = new Pools(this.game,
       pools,
       this.game.data.play.serializedObjects.sprites,
-      this.game.cache.getJSON('emitters'));
+      this.game.cache.getJSON('emitters'),
+      10);
   }
 
   update() {
@@ -117,39 +135,38 @@ export default class Game extends Phaser.State {
   }
 
   collisionDectection() {
-    let kamikazes = this.game.spritePools.getPool('Kamikaze');
-    let diagonalmovers = this.game.spritePools.getPool('DiagonalMover');
-    let meteors = this.game.spritePools.getPool('Meteor');
-    let bonuses = this.game.spritePools.getPool('Bonus');
     const player = this.game.data.play.player;
 
-    //this.enemyFriendlyOverlap(Ship);
-    //this.overlapFriendlies(kamikazes);
-    this.overlapFriendlies(diagonalmovers);
-    this.overlapFriendlies(meteors);
+    this.overlapUnits();
+    this.overlapBullets(this.friendlyEntityClassNames);
+    this.overlapBullets(this.enemyEntityClassNames);
 
     this.game.physics.arcade.overlap(
       player,
-      bonuses,
+      this.game.spritePools.getPool(Bonus.className()),
       Bonus.bonusCollision, null, this);
   }
 
-  //each ship has a list of weapons, and each weapon has its own pool of bullets
-  overlapFriendlies(enemies) {
-    const player = this.game.data.play.player;
+  overlapUnits() {
+    for (let friendlyName of this.friendlyEntityClassNames) {
+      let friendlies = this.game.spritePools.getPool(friendlyName);
 
-    //if enemy has weapons, check to see if those weapon's bullets have hit friendlies
-    if (enemies.getChildAt(0).weapons) {
-      enemies.forEachAlive(function(enemy) {
-        enemy.weapons.overlapBullets(player);
-      });
+      for (let enemyName of this.enemyEntityClassNames) {
+        let enemies = this.game.spritePools.getPool(enemyName);
+        this.game.physics.arcade.overlap(enemies, friendlies, Unit.unitCollision, Unit.checkCollision, this);
+      }
     }
+  }
 
-    //check to see friendlies' weapon's bullets have hit enemies
-    player.weapons.overlapBullets(enemies);
+  overlapBullets(receiverNames) {
+    for (let bulletName of this.bulletClassNames) {
+      let bullets = this.game.spritePools.getPool(bulletName);
 
-    //check to see if friendlies and enemies have collided
-    this.game.physics.arcade.overlap(player, enemies, Unit.unitCollision, null, this);
+      for (let receiversName of receiverNames) {
+        let receiversPool = this.game.spritePools.getPool(receiversName);
+        this.game.physics.arcade.overlap(receiversPool, bullets, Bullet.bulletCollision, Bullet.checkCollision, this);
+      }
+    }
   }
 
 }

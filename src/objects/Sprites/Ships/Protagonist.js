@@ -17,7 +17,7 @@ export default class Protagonist extends Ship {
     super(game);
 
     this.body.collideWorldBounds = true;
-    this.minSpeed = 50
+    this.minSpeed = 50;
 
     //  Add an emitter for the ship's trail
     this.shipTrail = this.game.add.emitter(0, 0, 50);
@@ -69,6 +69,7 @@ export default class Protagonist extends Ship {
 
   reset() {
     super.reset('protagonist', true);
+    this.game.data.play.player = this;
 
     this.x = this.game.world.centerX;
     this.y = this.game.world.height;
@@ -98,8 +99,8 @@ export default class Protagonist extends Ship {
     this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
 
     //setup begin/end shooting events
-    this.game.input.onDown.add(this.weapons.startShooting.bind(this.weapons), this);
-    this.game.input.onUp.add(this.weapons.stopShooting.bind(this.weapons), this);
+    this.game.input.onDown.add(this.startShooting.bind(this.weapons), this);
+    this.game.input.onUp.add(this.stopShooting.bind(this.weapons), this);
   }
 
   checkForDamageOverlay() {

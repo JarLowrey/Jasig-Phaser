@@ -17,9 +17,13 @@ export default class ParentSprite extends Phaser.Sprite {
     this.outOfBoundsKill = true;
   }
 
-  reset(entityType, entityName) {
+  reset(entityType, entityName, info) {
     super.reset(0, 0);
-    this.info = this.game.entities[entityType][entityName];
+    if (info) {
+      this.info = info;
+    } else {
+      this.info = this.game.entities[entityType][entityName];
+    }
 
     //set size+texture
     let frame = null;
@@ -32,21 +36,23 @@ export default class ParentSprite extends Phaser.Sprite {
     ParentSprite.setSize(this, this.info.width, this.info.isCircular, this.info.height);
 
     //set body related variables
-    let v = this.info.velocity || {
-      'max': {
-        'x': 0,
-        'y': 0
-      },
-      'min': {
-        'x': 0,
-        'y': 0
-      }
-    };
-    let xSpd = this.game.random(v.min.x, v.max.x);
-    let ySpd = this.game.random(v.min.y, v.max.y);
-    this.body.velocity.set(xSpd, ySpd);
-    this.body.maxVelocity.setTo(600, 600);
-    this.body.drag.setTo(0, 0);
+    if (this.body) {
+      let v = this.info.velocity || {
+        'max': {
+          'x': 0,
+          'y': 0
+        },
+        'min': {
+          'x': 0,
+          'y': 0
+        }
+      };
+      let xSpd = this.game.random(v.min.x, v.max.x);
+      let ySpd = this.game.random(v.min.y, v.max.y);
+      this.body.velocity.set(xSpd, ySpd);
+      this.body.maxVelocity.setTo(600, 600);
+      this.body.drag.setTo(0, 0);
+    }
 
     //other properties
     this.alpha = 1;
@@ -97,11 +103,14 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   static setSize(sprite, width, isCircular = false, height) {
-    sprite.width = width;
-    if (height) {
-      sprite.height = height;
-    } else {
+    if (width) {
+      sprite.width = width;
       sprite.scale.y = sprite.scale.x;
+    } else if (height) {
+      sprite.height = height;
+      sprite.scale.x = sprite.scale.y;
+    } else {
+      throw new Error('No sizes provided');
     }
 
     if (sprite.body) {
@@ -126,9 +135,11 @@ export default class ParentSprite extends Phaser.Sprite {
       sprite.body.setSize(scaledWidth - widthShrinkAmount, scaledHeight - heightShrinkAmount,
         widthShrinkAmount / 2, heightShrinkAmount / 2);
 
-      const myArea = width * height;
-      const playerArea = sprite.game.data.play.player.width * sprite.game.data.play.player.height;
-      sprite.body.mass = myArea / playerArea;
+      /*
+            const myArea = width * height;
+            const playerArea = sprite.game.data.play.player.width * sprite.game.data.play.player.height;
+            sprite.body.mass = myArea / playerArea;
+            */
     }
   }
 

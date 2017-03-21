@@ -10,16 +10,19 @@ export default class Bullet extends Phaser.Bullet {
   reset(x, y, health) {
     super.reset(x, y, health);
 
-    this.shooter = this.parent.myWeapon.trackedSprite;
-
     this.checkWorldBounds = true;
     this.outOfBoundsKill = true;
   }
 
+  //before calling this, it assumes the checkCollision method has passed
   static bulletCollision(unit, bullet) {
     const shootingWeapon = bullet.parent.myWeapon;
     if (unit.isAlive) bullet.kill();
     if (unit.isAlive) unit.damage(shootingWeapon.dmg, true);
+  }
+
+  static checkCollision(unit, bullet) {
+    return bullet.alive && unit.isAlive && unit.isFriendly != bullet.gun.shooter.isFriendly;
   }
 
   update() {
@@ -45,9 +48,5 @@ export default class Bullet extends Phaser.Bullet {
     }
 
     super.kill();
-  }
-
-  setFriendlinessTint() {
-    this.tint = (this.shooter.isFriendly) ? '0x00ff00' : '0xff0000'; //friendly is green, enemy is red
   }
 }

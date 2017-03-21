@@ -42,10 +42,10 @@ export default class Ship extends Unit {
     //setup+choose weapons
     this.weapons = [];
     const myGuns = this.info.weapons['low_level'];
-    for (let gunInfo in myGuns) {
-      let newGun = new Gun(this, gunInfo);
-      this.addChild(newGun);
-      this.weapons.push(newGun);
+    for (let gunInfo of myGuns) {
+      let gun = this.game.spritePools.getPool('gun').getFirstDead(true);
+      gun.reset(this, gunInfo);
+      this.weapons.push(gun);
     }
 
     //save the frame type
@@ -81,16 +81,17 @@ export default class Ship extends Unit {
     }
     */
   startShooting() {
-    if (!this.shooter.isAlive) return;
+    if (!this.isAlive) return;
 
-    this.weapons.forEach(function(weapon) {
-      weapon.startShooting();
-    });
+    for (let gun of this.weapons) {
+      gun.startShooting();
+    }
   }
   stopShooting() {
-    this.weapons.forEach(function(weapon) {
-      weapon.stopShooting();
-    });
+    console.log(this.weapons)
+    for (let gun of this.weapons) {
+      gun.stopShooting();
+    }
   }
 
   arrivedAtYDestionation() {
@@ -174,6 +175,10 @@ export default class Ship extends Unit {
   }
   finishKill() {
     this.isBeingKilled = false;
+    for (let gun of this.weapons) {
+      this.removeChild(gun);
+      gun.kill();
+    }
     super.kill();
   }
   //Overrides super method. this is called at the end of super.kill()

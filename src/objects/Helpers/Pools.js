@@ -4,9 +4,11 @@
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
 
+import InfoWeapon from '../Sprites/Guns/InfoWeapon';
+
 export default class Pools {
 
-  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters, weapons) {
+  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters, numberOfWeapons) {
     this.game = game;
 
     //initialize pools
@@ -34,23 +36,15 @@ export default class Pools {
       emitter.particleClass = particleClass;
       emitter.makeParticles(key, frame, Math.MAX_SAFE_INTEGER, false, false, info.arguments);
       emitter.info = info;
+      //this.game.world.bringToTop(emitter);
 
       this.emitters[name] = emitter;
     }
 
-    this.weapons = new Weapons(this.game);
-    for (let name in weapons) {
-      //define emitter properties with defaults
-      let info = weapons[name];
-      let bulletClass = info.bulletClass;
-
-      //create emitter
-      var weapon = this.game.plugins.add(Phaser.Weapon);
-      console.log(weapon)
-      weapon.bulletClass = bulletClass;
-      weapon.createBullets(ammo);
-
-      this.weapons[name] = weapon;
+    this.weapons = [];
+    for (let i = 0; i < numberOfWeapons; i++) {
+      let weapon = this.game.plugins.add(InfoWeapon);
+      this.weapons.push(weapon);
     }
 
     if (savedSpriteInfo && savedSpriteInfo.length > 0) {
@@ -93,8 +87,16 @@ export default class Pools {
     return emitter;
   }
 
-  getWeapon(bulletName) {
+  getWeapon() {
+    for (let weapon of this.weapons) {
+      if (weapon.trackedSprite === null) {
+        return weapon;
+      }
+    }
 
+    var weapon = this.game.plugins.add(Phaser.Weapon);
+    this.weapons.push(weapon);
+    return weapon;
   }
 
   //convenience method for using explosions designed via JSON instead of in a JS file

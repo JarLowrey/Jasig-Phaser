@@ -103,10 +103,12 @@ export default class Unit extends ParentSprite {
     this.body.velocity.y = 0;
   }
 
+  static checkCollision(unit1, unit2) {
+    return unit1.isFriendly != unit2.isFriendly && unit1.isAlive && unit2.isAlive;
+  }
   static unitCollision(friendlyUnit, enemyUnit) {
-    //apply their damages, so long as they are still alive
-    if (enemyUnit.isAlive) friendlyUnit.damage(50);
-    if (friendlyUnit.isAlive) enemyUnit.damage(10);
+    friendlyUnit.damage(50);
+    enemyUnit.damage(10);
 
     //set a high drag after colliding so enemies dont go flying offscreen.
     //NOTE: this will cause enemies to stop moving after colliding. It's not the best option but it's the best I got for now
@@ -115,10 +117,7 @@ export default class Unit extends ParentSprite {
 
   damage(amount) {
     super.damage(amount);
-
-    if (this.isAlive) {
-      this.showDamagedParticles();
-    }
+    this.showDamagedParticles();
 
     //flash a different color
     this.tint = 0xff0000;
