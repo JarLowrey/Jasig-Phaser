@@ -13,7 +13,6 @@ import Protagonist from '../objects/Sprites/Ships/Protagonist';
 import Pools from '../objects/Helpers/Pools';
 
 import Gun from '../objects/Sprites/Guns/Gun';
-import DefaultBullet from '../objects/Sprites/Bullets/DefaultBullet';
 import Bullet from '../objects/Sprites/Bullets/Bullet';
 
 import WaveHandler from '../objects/WaveHandler';
@@ -104,11 +103,18 @@ export default class Game extends Phaser.State {
     this.enemyEntityClassNames = [DiagonalMover.className(), Meteor.className()];
     this.friendlyEntityClassNames = ['friendlyShips', 'Protagonist'];
 
+    const weapons = {
+      'Bullet': {
+        numWeapons: 20,
+        numBullets: 20
+      }
+    };
 
     this.game.spritePools = new Pools(this.game,
       pools,
       this.game.data.play.serializedObjects.sprites,
-      this.game.cache.getJSON('emitters')
+      this.game.cache.getJSON('emitters'),
+      weapons
     );
   }
 

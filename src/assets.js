@@ -83,6 +83,14 @@ export default {
     type: 'json',
     url: 'json/units.json'
   }, {
+    key: 'bullets',
+    type: 'json',
+    url: 'json/bullets.json'
+  }, {
+    key: 'guns',
+    type: 'json',
+    url: 'json/guns.json'
+  }, {
     key: 'bonuses',
     type: 'json',
     url: 'json/bonuses.json'

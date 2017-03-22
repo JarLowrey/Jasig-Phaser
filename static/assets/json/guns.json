@@ -1,0 +1,7 @@
+{
+  "default": {
+    "key": "sprites",
+    "frame": "gun01",
+    "width": 30
+  }
+}

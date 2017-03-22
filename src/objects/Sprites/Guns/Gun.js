@@ -8,16 +8,33 @@ import InfoWeapon from './InfoWeapon';
 
 export default class Gun extends ParentSprite {
 
-  reset(shooter, gunInfo) {
-    super.reset(null, null, gunInfo);
+  reset(shooter, shipWeaponInfo) {
+    super.reset(null, null, Gun._gunInfo(this.game, shipWeaponInfo));
 
-    this.x = gunInfo.relativePos.x;
-    this.y = gunInfo.relativePos.y;
+    this.info = shipWeaponInfo; //overwrite the gun info that was passed up to parents
+    this.gunInfo = Gun._gunInfo(this.game, shipWeaponInfo);
+
+    this.x = shipWeaponInfo.relativePos.x;
+    this.y = shipWeaponInfo.relativePos.y;
     this.shooter = shooter;
     this.shooter.addChild(this);
 
-    this.weapon = this.game.plugins.add(InfoWeapon);
+    if (this.shooter.isFriendly) {
+      this.angle = Phaser.ANGLE_UP;
+    } else {
+      this.angle = Phaser.ANGLE_DOWN;
+    }
+
+    //use ships bullet key, or the guns bullet key, or the default one
+    const bulletKey = shipWeaponInfo.bulletKey || this.gunInfo.bulletKey || 'default';
+    const bulletClassName = this.game.cache.getJSON('bullets')[bulletKey];
+    this.weapon = this.game.spritePools.getWeapon(this.info.bulletClassName || 'Bullet', this.info.ammo);
     this.weapon.setupWeapon(this.info, this);
+  }
+
+  static _gunInfo(game, shipWeaponInfo) {
+    const gunKey = shipWeaponInfo.gunKey || 'default';
+    return game.cache.getJSON('guns')[gunKey];
   }
 
   startShooting() {
@@ -31,7 +48,7 @@ export default class Gun extends ParentSprite {
 
   kill() {
     super.kill();
-    this.weapon.kill(); //FUCK I NEED TO POOL WEAPONS (+ bullets) NOW TOO!
+    this.weapon.kill();
   }
 
 }

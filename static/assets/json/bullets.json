@@ -1,0 +1,11 @@
+{
+  "default": {
+    "image": {
+      "key": "sprites",
+      "frame": "laserBlue01"
+    },
+    "width": 10,
+    "base_dmg": 25,
+    "bulletClassName": "Bullet"
+  }
+}

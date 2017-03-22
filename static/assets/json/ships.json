@@ -3,11 +3,10 @@
     "width": 50,
     "weapons": {
       "low_level": [{
-        "angle": 100,
-        "preallocation": 15,
-        "key": "sprites",
-        "frame": "gun01",
-        "width": 40,
+        "ammo": 30,
+        "weaponKey": "default",
+        "bulletKey": "default",
+        "fireRate": 50,
         "relativePos": {
           "x": 0,
           "y": 0
@@ -32,13 +31,9 @@
     },
     "weapons": {
       "low_level": [{
-        "angle": 90,
-        "xPercentOffset": 0,
-        "fireRate": 1000,
-        "preallocation": 8,
-        "key": "sprites",
-        "frame": "gun01",
-        "width": 40,
+        "ammo": 15,
+        "gunKey": "default",
+        "bulletKey": "default",
         "relativePos": {
           "x": 0,
           "y": 0

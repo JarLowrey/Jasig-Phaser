@@ -17,16 +17,26 @@ export default class Bullet extends Phaser.Bullet {
 
   setGun(gun) {
     this.gun = gun;
-    const diameter = 50;
-    this.loadTexture(this.gun.info.key, this.gun.info.frame);
-    ParentSprite.setSize(this, diameter, true);
+    const info = this.game.cache.getJSON('bullets')[this.gun.info.bulletKey];
+
+    this.loadTexture(info.image.key, this._processFrame(info.image.frame));
+    ParentSprite.setSize(this, info.width, true);
+    this.dmg = info.base_dmg;
+  }
+
+  _processFrame(frameName) {
+    if (this.isFriendly) {
+      frameName.replace('Red', 'Blue');
+    } else {
+      frameName.replace('Blue', 'Red');
+    }
+    return frameName
   }
 
   //before calling this, it assumes the checkCollision method has passed
   static bulletCollision(unit, bullet) {
-    const shootingWeapon = bullet.gun.weapon;
+    unit.damage(bullet.dmg, true);
     bullet.kill();
-    unit.damage(shootingWeapon.dmg, true);
   }
 
   static checkCollision(unit, bullet) {

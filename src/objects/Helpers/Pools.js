@@ -3,10 +3,11 @@
  *
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
+import InfoWeapon from '../Sprites/Guns/InfoWeapon';
 
 export default class Pools {
 
-  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters) {
+  constructor(game, spriteIntializationDefinitions, savedSpriteInfo = null, emitters, weapons) {
     this.game = game;
 
     //initialize pools
@@ -39,9 +40,37 @@ export default class Pools {
       this.emitters[name] = emitter;
     }
 
+    this.weapons = {};
+    for (let bulletClassName in weapons) {
+      this.weapons[bulletClassName] = [];
+      const info = weapons[bulletClassName];
+
+      for (let i = 0; i < info.numWeapons; i++) {
+        let weapon = this.game.plugins.add(InfoWeapon);
+        weapon.createClassBullets(bulletClassName, info.numBullets);
+        this.weapons[bulletClassName].push(weapon);
+      }
+    }
+
     if (savedSpriteInfo && savedSpriteInfo.length > 0) {
       this.deserialize(savedSpriteInfo);
     }
+  }
+
+  getWeapon(bulletClassName, numBullets = 20) {
+    let weapons = this.weapons[bulletClassName];
+    for (let weapon of weapons) {
+      if (!weapon.alive) {
+        return weapon;
+      }
+    }
+
+    //create a new weapon
+    let weapon = this.game.plugins.add(InfoWeapon);
+    this.weapon.createBullets(bulletClassName, numBullets);
+    this.weapons[bulletClassName].push(weapon);
+
+    return weapon;
   }
 
   _widthToScale(key, frame, desiredWidth) {
