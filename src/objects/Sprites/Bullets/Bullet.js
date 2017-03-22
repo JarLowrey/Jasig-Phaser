@@ -24,7 +24,7 @@ export default class Bullet extends Phaser.Bullet {
 
   //before calling this, it assumes the checkCollision method has passed
   static bulletCollision(unit, bullet) {
-    const shootingWeapon = bullet.gun.shooter;
+    const shootingWeapon = bullet.gun.weapon;
     bullet.kill();
     unit.damage(shootingWeapon.dmg, true);
   }

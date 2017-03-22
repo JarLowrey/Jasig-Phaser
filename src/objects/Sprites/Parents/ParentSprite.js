@@ -76,20 +76,6 @@ export default class ParentSprite extends Phaser.Sprite {
 
   kill() {
     super.kill();
-    this.startNextStateIfPossible();
-  }
-
-  startNextStateIfPossible() {
-    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() === 0;
-    const noActiveBonuses = this.game.spritePools.getPool('Bonus').getFirstAlive() === null;
-    const waveOver = allEnemiesDead && noActiveBonuses;
-    //console.log(this.game.waveHandler.isWaveOver(), this.game.waveHandler.livingEnemiesTotalValue(), noActiveBonuses, this.game.spritePools.getPool('Bonus').getFirstAlive())
-
-    if (this.amPlayer()) {
-      this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-    } else if (waveOver) {
-      this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-    }
   }
 
   amPlayer() {

@@ -44,6 +44,21 @@ export default class WaveHandler {
     this.updateProgressBar();
   }
 
+  /*
+    startNextStateIfPossible() {
+      const player = this.game.data.play.player
+      const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() === 0;
+      const noActiveBonuses = this.game.spritePools.getPool('Bonus').getFirstAlive() === null;
+      const waveOver = allEnemiesDead && noActiveBonuses;
+      //console.log(this.game.waveHandler.isWaveOver(), this.game.waveHandler.livingEnemiesTotalValue(), noActiveBonuses, this.game.spritePools.getPool('Bonus').getFirstAlive())
+
+      if (player.isAlive) {
+        this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+      } else if (waveOver) {
+        this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+      }
+    }
+  */
   updateProgressBar() {
     const percentLeft = this.waveTimer.duration / WaveHandler.timeNeededToEndWave(this.game.data.play.wave.number);
     this.progressBar.progress = percentLeft;
@@ -59,10 +74,20 @@ export default class WaveHandler {
     this.waveIsOver = false;
   }
 
+  endWave() {
+    const player = this.game.data.play.player
+
+    if (!player.isAlive) {
+      this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+    } else {
+      this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+    }
+  }
+
   stopSpawning() {
     this.spawnTimer.stop();
     this.waveIsOver = true;
-    if (this.livingEnemiesTotalValue() === 0) this.game.state.start('Store');
+    this.waveTimer.add(WaveHandler.timeNeededToEndWave(Phaser.Timer.SECOND), this.endWave, this);
   }
 
   isWaveOver() {

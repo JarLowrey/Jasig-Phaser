@@ -18,7 +18,7 @@ export default class InfoWeapon extends Phaser.Weapon {
     if (bullet == null) {
       return null;
     }
-    console.log(bullet)
+
     bullet.setGun(this.trackedSprite);
     return bullet;
   }

@@ -44,6 +44,7 @@ export default class Ship extends Unit {
     const myGuns = this.info.weapons['low_level'];
     for (let gunInfo of myGuns) {
       let gun = this.game.spritePools.getPool('gun').getFirstDead(true);
+      gun.angle = this.angle;
       gun.reset(this, gunInfo);
       this.guns.push(gun);
     }

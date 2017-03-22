@@ -57,6 +57,7 @@ export default class Game extends Phaser.State {
 
     //save necessary data
     this.game.data.play.playerInfo.health = this.game.data.play.player.health;
+    this.game.data.play.player.kill();
     this.game.spritePools = null;
     this.game.data.play.player = null;
 
