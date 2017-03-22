@@ -104,11 +104,9 @@ export default class Unit extends ParentSprite {
   }
 
   static checkCollision(unit1, unit2) {
-    console.log('adasdasd')
     return unit1.isFriendly != unit2.isFriendly && unit1.isAlive && unit2.isAlive;
   }
   static unitCollision(friendlyUnit, enemyUnit) {
-    console.log('324234234234')
     friendlyUnit.damage(50);
     enemyUnit.damage(10);
 

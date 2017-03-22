@@ -35,9 +35,7 @@ export default class Game extends Phaser.State {
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
     this.setupSpritePools();
-
     this.game.spritePools.getPool('Protagonist').getFirstDead().reset();
-    this.add.existing(this.game.data.play.player);
 
     this.game.time.advancedTiming = true;
     //this.game.forceSingleUpdate = true; //http://www.html5gamedevs.com/topic/13514-simple-game-horrible-performance-on-androidcooconjs/#comment-77719
@@ -153,18 +151,23 @@ export default class Game extends Phaser.State {
     }
   }
 
-  overlapBullets(shootersArray, receiversArray) {
-    for (let shooter of shootersArray) {
-      if (shooter.guns) {
-        for (let gun of shooter.guns) {
-          let bullets = gun.weapon.bullets;
+  _overlapBullets(shooter, receiversArray) {
+    if (shooter.guns) {
+      for (let gun of shooter.guns) {
+        let bullets = gun.weapon.bullets;
 
-          for (let receiversName of receiversArray) {
-            let receiversPool = this.game.spritePools.getPool(receiversName);
-            this.game.physics.arcade.overlap(receiversPool, bullets, Bullet.bulletCollision, Bullet.checkCollision, this);
-          }
+        for (let receiversName of receiversArray) {
+          let receiversPool = this.game.spritePools.getPool(receiversName);
+          this.game.physics.arcade.overlap(receiversPool, bullets, Bullet.bulletCollision, Bullet.checkCollision, this);
         }
       }
+    }
+  }
+
+  overlapBullets(shootersArray, receiversArray) {
+    for (let shooterName of shootersArray) {
+      let shooters = this.game.spritePools.getPool(shooterName);
+      shooters.forEachAlive((child) => this._overlapBullets(child, receiversArray), this);
     }
   }
 

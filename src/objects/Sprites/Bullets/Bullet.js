@@ -24,15 +24,12 @@ export default class Bullet extends Phaser.Bullet {
 
   //before calling this, it assumes the checkCollision method has passed
   static bulletCollision(unit, bullet) {
-    console.log('collide', bullet.gun)
-
     const shootingWeapon = bullet.gun.shooter;
     bullet.kill();
     unit.damage(shootingWeapon.dmg, true);
   }
 
   static checkCollision(unit, bullet) {
-    console.log('check', bullet.gun, bullet.alive && bullet.gun && unit.isAlive && unit.isFriendly != bullet.gun.shooter.isFriendly)
     return unit.isAlive && bullet.alive && bullet.gun && unit.isFriendly != bullet.gun.shooter.isFriendly;
   }
 
