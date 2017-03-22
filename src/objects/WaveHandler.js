@@ -74,20 +74,28 @@ export default class WaveHandler {
     this.waveIsOver = false;
   }
 
+  canStartNextState() {
+    const allEnemiesDead = this.game.waveHandler.isWaveOver() && this.game.waveHandler.livingEnemiesTotalValue() === 0;
+    const noActiveBonuses = this.game.spritePools.getPool('Bonus').getFirstAlive() === null;
+    return allEnemiesDead && noActiveBonuses;
+  }
+
   endWave() {
     const player = this.game.data.play.player
 
-    if (!player.isAlive) {
-      this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-    } else {
-      this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
-    }
+    //start next state in 1s to let animations play out
+    this.game.time.events.add(Phaser.Timer.SECOND, () => {
+      if (!player.isAlive) {
+        this.game.state.start('GameOver', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+      } else {
+        this.game.state.start('Store', this.game.getRandomStateTransitionOut(), this.game.getRandomStateTransitionIn());
+      }
+    }, this);
   }
 
   stopSpawning() {
     this.spawnTimer.stop();
     this.waveIsOver = true;
-    this.waveTimer.add(WaveHandler.timeNeededToEndWave(Phaser.Timer.SECOND), this.endWave, this);
   }
 
   isWaveOver() {

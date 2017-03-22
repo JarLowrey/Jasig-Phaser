@@ -76,6 +76,9 @@ export default class ParentSprite extends Phaser.Sprite {
 
   kill() {
     super.kill();
+    if (this.game.waveHandler.canStartNextState()) {
+      this.game.waveHandler.endWave();
+    }
   }
 
   amPlayer() {

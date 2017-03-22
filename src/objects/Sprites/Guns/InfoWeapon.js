@@ -12,6 +12,9 @@ export default class InfoWeapon extends Phaser.Weapon {
   kill() {
     this.trackedSprite = null;
   }
+  get gun() { //convenience method for accessing the gun sprite that shoots this weapon
+    return this.trackedSprite;
+  }
 
   fire(from, x, y, offsetX, offsetY) {
     let bullet = super.fire(from, x, y, offsetX, offsetY);
