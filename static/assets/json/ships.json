@@ -6,10 +6,28 @@
         "ammo": 30,
         "weaponKey": "default",
         "bulletKey": "default",
-        "fireRate": 50,
-        "relativePos": {
+        "fireRate": 100,
+        "percentOffsetFromCenter": {
+          "x": 100,
+          "y": -175
+        }
+      }, {
+        "ammo": 30,
+        "weaponKey": "default",
+        "bulletKey": "default",
+        "fireRate": 100,
+        "percentOffsetFromCenter": {
           "x": 0,
-          "y": 0
+          "y": -350
+        }
+      }, {
+        "ammo": 30,
+        "weaponKey": "default",
+        "bulletKey": "default",
+        "fireRate": 100,
+        "percentOffsetFromCenter": {
+          "x": -100,
+          "y": -175
         }
       }]
     }
@@ -32,9 +50,10 @@
     "weapons": {
       "low_level": [{
         "ammo": 15,
+        "fireRate": 250,
         "gunKey": "default",
         "bulletKey": "default",
-        "relativePos": {
+        "percentOffsetFromCenter": {
           "x": 0,
           "y": 0
         }

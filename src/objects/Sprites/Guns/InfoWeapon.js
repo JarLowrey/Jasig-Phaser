@@ -49,11 +49,12 @@ export default class InfoWeapon extends Phaser.Weapon {
 
     this.bulletSpeed = weaponInfo.bulletSpeed || 500;
     this.fireRate = weaponInfo.fireRate || 500;
-    this.dmg = 25; //this does nothing right now
 
     const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;
     const xPixelOffset = Math.abs(trackedSprite.width) * percentOffset;
     const yPixelOffset = -trackedSprite.anchor.y * trackedSprite.height + trackedSprite.height / 2; //regardless of anchor, bullets start in middle Y of sprite
     this.trackSprite(trackedSprite, xPixelOffset, yPixelOffset, true);
+
+    this.fireFrom.width = this.info.fireFromWidth || 3;
   }
 }

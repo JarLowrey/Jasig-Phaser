@@ -23,6 +23,9 @@ export default class Bonus extends ParentSprite {
 
   kill() {
     super.kill();
+    if (this.game.waveHandler.canStartNextState()) {
+      this.game.waveHandler.endWave();
+    }
   }
 
   static bonusCollision(hero, bonus) {

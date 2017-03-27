@@ -14,10 +14,14 @@ export default class Gun extends ParentSprite {
     this.info = shipWeaponInfo; //overwrite the gun info that was passed up to parents
     this.gunInfo = Gun._gunInfo(this.game, shipWeaponInfo);
 
-    this.x = shipWeaponInfo.relativePos.x;
-    this.y = shipWeaponInfo.relativePos.y;
     this.shooter = shooter;
     this.shooter.addChild(this);
+    this.sendToBack();
+
+    const scaledWidth = Math.abs(this.shooter.width / this.shooter.scale.x);
+    const scaledHeight = Math.abs(this.shooter.height / this.shooter.scale.y);
+    this.x = scaledWidth * shipWeaponInfo.percentOffsetFromCenter.x / 100;
+    this.y = scaledHeight * shipWeaponInfo.percentOffsetFromCenter.y / 100;
 
     if (this.shooter.isFriendly) {
       this.angle = Phaser.ANGLE_UP;

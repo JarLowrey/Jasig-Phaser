@@ -1,14 +1,14 @@
 {
   "regularExplosion": {
     "key": "regularExplosion",
-    "frameRate": 15,
+    "frameRate": 10,
     "frames": ["regularExplosion00", "regularExplosion01", "regularExplosion02", "regularExplosion03",
       "regularExplosion04", "regularExplosion05", "regularExplosion06", "regularExplosion07", "regularExplosion08"
     ]
   },
   "sonicExplosion": {
     "key": "sonicExplosion",
-    "frameRate": 15,
+    "frameRate": 10,
     "frames": ["sonicExplosion00", "sonicExplosion01", "sonicExplosion02", "sonicExplosion03",
       "regularExplosion04", "regularExplosion05", "regularExplosion06", "regularExplosion07", "regularExplosion08"
     ]
@@ -16,19 +16,19 @@
   "laserRedExplosion": {
     "key": "laserRedExplosion",
     "width": 30,
-    "frameRate": 15,
+    "frameRate": 20,
     "frames": ["laserRed11", "laserRed10", "laserRed09", "laserRed08"]
   },
   "laserBlueExplosion": {
     "key": "laserBlueExplosion",
     "width": 30,
-    "frameRate": 15,
+    "frameRate": 20,
     "frames": ["laserBlue11", "laserBlue10", "laserBlue09", "laserBlue08"]
   },
   "laserGreenExplosion": {
     "key": "laserGreenExplosion",
     "width": 30,
-    "frameRate": 15,
+    "frameRate": 20,
     "frames": ["laserGreen01", "laserGreen16", "laserGreen15", "laserGreen14"]
   }
 }

@@ -4,8 +4,8 @@
       "key": "sprites",
       "frame": "laserBlue01"
     },
-    "width": 10,
-    "base_dmg": 25,
+    "width": 15,
+    "base_dmg": 5,
     "bulletClassName": "Bullet"
   }
 }

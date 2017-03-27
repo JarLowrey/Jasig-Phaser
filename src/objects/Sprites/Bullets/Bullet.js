@@ -8,6 +8,9 @@ import ParentSprite from '../Parents/ParentSprite';
 
 export default class Bullet extends Phaser.Bullet {
 
+  get shooter() {
+    return this.gun.shooter;
+  }
   reset(x, y, health) {
     super.reset(x, y, health);
 
@@ -19,18 +22,20 @@ export default class Bullet extends Phaser.Bullet {
     this.gun = gun;
     const info = this.game.cache.getJSON('bullets')[this.gun.info.bulletKey];
 
-    this.loadTexture(info.image.key, this._processFrame(info.image.frame));
+    if (this.frameName != info.image.frame) {
+      this.loadTexture(info.image.key, this._processFrame(info.image.frame));
+    }
     ParentSprite.setSize(this, info.width, true);
     this.dmg = info.base_dmg;
   }
 
   _processFrame(frameName) {
-    if (this.isFriendly) {
-      frameName.replace('Red', 'Blue');
+    if (this.shooter.isFriendly) {
+      frameName = frameName.replace('Red', 'Blue');
     } else {
-      frameName.replace('Blue', 'Red');
+      frameName = frameName.replace('Blue', 'Red');
     }
-    return frameName
+    return frameName;
   }
 
   //before calling this, it assumes the checkCollision method has passed

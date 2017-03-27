@@ -81,7 +81,7 @@ export default class WaveHandler {
   }
 
   endWave() {
-    const player = this.game.data.play.player
+    const player = this.game.data.play.player;
 
     //start next state in 1s to let animations play out
     this.game.time.events.add(Phaser.Timer.SECOND, () => {
@@ -116,14 +116,14 @@ export default class WaveHandler {
 
 
     if (enemyTotal < enemiesThresholdValue + meteorsThresholdValue) {
-      let meteor = this.spawnSprite(Meteor, this._chooseRandMeteorKey());
+      //let meteor = this.spawnSprite(Meteor, this._chooseRandMeteorKey());
       /*
             this.spawnSprite(Meteor, 'meteor');
             this.spawnSprite(Meteor, 'small_meteor');
             this.spawnSprite(Meteor, 'big_meteor');
             this.spawnSprite(Meteor, 'giant_meteor');
       */
-      enemyTotal += meteor.value;
+      //enemyTotal += meteor.value;
     }
 
     if (enemyTotal < enemiesThresholdValue) {
@@ -157,7 +157,7 @@ export default class WaveHandler {
     var time = 1000 * 20;
     time += wave * 2.5;
     //return Math.min(time, 1000 * 90);
-    return 1500;
+    return 2;
   }
 
   livingEnemiesTotalValue() {
