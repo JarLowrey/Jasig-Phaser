@@ -10,12 +10,14 @@ import Unit from '../objects/Sprites/Parents/Unit';
 import Explosion from '../objects/Sprites/Explosion';
 import Ship from '../objects/Sprites/Parents/Ship';
 import Protagonist from '../objects/Sprites/Ships/Protagonist';
-import Pools from '../objects/Helpers/Pools';
 
-import Gun from '../objects/Sprites/Guns/Gun';
-import Bullet from '../objects/Sprites/Bullets/Bullet';
+import Pools from '../objects/Systems/Pools';
+import WaveHandler from '../objects/Systems/WaveHandler';
 
-import WaveHandler from '../objects/WaveHandler';
+import Gun from '../objects/Gear/Guns/Gun';
+import Bullet from '../objects/Gear/Bullets/Bullet';
+
+import MoveController from '../objects/MoveController';
 
 import IconText from '../objects/UI/IconText';
 
@@ -27,14 +29,16 @@ import Kamikaze from '../objects/Sprites/Ships/Kamikaze';
 export default class Game extends Phaser.State {
 
   create() {
-    document.documentElement.style.cursor = 'none'; //hide cursor in game
+    //document.documentElement.style.cursor = 'none'; //hide cursor in game
 
     this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'background');
     this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
     this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
 
     this.setupSpritePools();
-    this.game.spritePools.getPool('Protagonist').getFirstDead().reset();
+    this.game.data.play.player = this.game.spritePools.getPool('Protagonist').getFirstDead();
+    this.game.data.play.player.reset();
+    this.moveController = new MoveController(this.game.data.play.player);
 
     this.game.time.advancedTiming = true;
     //this.game.forceSingleUpdate = true; //http://www.html5gamedevs.com/topic/13514-simple-game-horrible-performance-on-androidcooconjs/#comment-77719
@@ -49,7 +53,7 @@ export default class Game extends Phaser.State {
   }
 
   shutdown() {
-    document.documentElement.style.cursor = 'default';
+    //document.documentElement.style.cursor = 'default';
 
     //delete objects as needed
     //Ship.cleanupAllWeapons(this.game);
@@ -118,10 +122,14 @@ export default class Game extends Phaser.State {
     );
   }
 
-  update() {
+  _tileBackground() {
     this.bg.tilePosition.y += 2;
     this.starfield.tilePosition.y += 4;
     this.starfield2.tilePosition.y += 8;
+  }
+
+  update() {
+    this.moveController.move();
 
     this.game.debug.text(this.game.time.fps, this.game.world.centerX, this.game.world.centerY);
 

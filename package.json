@@ -15,7 +15,7 @@
     "run-android-previous": "npm run cordovaWarn && npm run-script dist && cd cordova-app && cordova run android --nobuild && adb logcat chromium:D SystemWebViewClient:D *:S"
   },
   "dependencies": {
-    "phaser-ce": "2.7.3",
+    "phaser-ce": "^2.7.5",
     "phaser-kinetic-scrolling-plugin": "^1.0.2",
     "phaser-state-transition": "^2.3.1",
     "phaser-ui": "^0.0.7"

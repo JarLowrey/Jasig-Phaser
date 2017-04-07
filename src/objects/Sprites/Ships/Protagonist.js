@@ -17,7 +17,6 @@ export default class Protagonist extends Ship {
     super(game);
 
     this.body.collideWorldBounds = true;
-    this.minSpeed = 50;
 
     //  Add an emitter for the ship's trail
     this.shipTrail = this.game.add.emitter(0, 0, 50);
@@ -32,30 +31,6 @@ export default class Protagonist extends Ship {
     this.addChild(this.shipTrail);
   }
 
-  update() {
-    super.update();
-    const speed = this.getSpeed();
-
-    if (speed > this.minSpeed) {
-      const bank = this.body.velocity.x / this.minSpeed;
-      const normalizedAngle = Math.min(Math.abs(bank * 10), 90);
-      this.angle = normalizedAngle * Math.sign(bank);
-    } else {
-      this.angle = 0;
-    }
-
-    this.game.physics.arcade.moveToPointer(this, speed);
-  }
-
-  getSpeed(activePointer = this.game.input.activePointer) {
-    const activePointerPos = activePointer.position;
-    const distToPointer = Phaser.Point.distance(this, activePointerPos);
-
-    var speed = distToPointer * 5;
-    speed = Math.max(speed, this.minSpeed); //set a min speed. This causes a shaking effect when still
-
-    return speed;
-  }
 
   static getMaxHealth(game) {
     const defaultHealth = game.cache.getJSON('preloadJSON').defaults.playerInfo.health;
@@ -69,7 +44,6 @@ export default class Protagonist extends Ship {
 
   reset() {
     super.reset('protagonist', true);
-    this.game.data.play.player = this;
 
     this.x = this.game.world.centerX;
     this.y = this.game.world.height;
@@ -96,7 +70,8 @@ export default class Protagonist extends Ship {
     this.updateHealthbar();
 
     this.body.mass = 0.001; //reduce the mass so collisions aren't as forceful
-    this.body.maxVelocity.setTo(500000, 500000); //basically remove maxVelocity restrictions
+    this.body.maxVelocity.setTo(5000, 5000); //basically remove maxVelocity restrictions
+    this.body.drag.setTo(500, 500);
 
     //setup begin/end shooting events
     this.game.input.onDown.add(this.startShooting, this);

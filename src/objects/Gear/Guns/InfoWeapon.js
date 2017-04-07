@@ -47,7 +47,7 @@ export default class InfoWeapon extends Phaser.Weapon {
   setupWeapon(weaponInfo, trackedSprite) {
     this.info = weaponInfo;
 
-    this.bulletSpeed = weaponInfo.bulletSpeed || 500;
+    this.bulletSpeed = weaponInfo.bulletSpeed || 800;
     this.fireRate = weaponInfo.fireRate || 500;
 
     const percentOffset = (weaponInfo.xPercentOffset || 0) / 100;

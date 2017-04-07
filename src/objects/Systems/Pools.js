@@ -3,7 +3,7 @@
  *
  * Sprite pools (recycling) go in this class. External classes may access thru this.game.spritePools (defined in Game state)
  */
-import InfoWeapon from '../Sprites/Guns/InfoWeapon';
+import InfoWeapon from '../Gear/Guns/InfoWeapon';
 
 export default class Pools {
 

@@ -3,12 +3,12 @@
  * ====
  *
  */
-import Unit from './Sprites/Parents/Unit';
+import Unit from '../Sprites/Parents/Unit';
 
 //specific unit and ship classes
-import Meteor from './Sprites/Units/Meteor';
-import DiagonalMover from './Sprites/Ships/DiagonalMover';
-import Kamikaze from './Sprites/Ships/Kamikaze';
+import Meteor from '../Sprites/Units/Meteor';
+import DiagonalMover from '../Sprites/Ships/DiagonalMover';
+import Kamikaze from '../Sprites/Ships/Kamikaze';
 
 import * as PhaserUi from 'phaser-ui';
 
@@ -157,7 +157,7 @@ export default class WaveHandler {
     var time = 1000 * 20;
     time += wave * 2.5;
     //return Math.min(time, 1000 * 90);
-    return 2;
+    return time;
   }
 
   livingEnemiesTotalValue() {

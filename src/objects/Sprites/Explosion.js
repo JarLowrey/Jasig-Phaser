@@ -5,7 +5,7 @@
  */
 import ParentSprite from './Parents/ParentSprite';
 import Ship from './Parents/Ship';
-import Bullet from './Bullets/Bullet';
+import Bullet from '../Gear/Bullets/Bullet';
 
 export default class Explosion extends Phaser.Sprite {
 
