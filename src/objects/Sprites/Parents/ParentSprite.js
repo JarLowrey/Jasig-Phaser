@@ -3,6 +3,8 @@
  * ====
  *
  */
+import DataAttributes from '../../DataDrivenEntities/Deserialize';
+import DataAttributes from '../../DataDrivenEntities/Serialize';
 
 export default class ParentSprite extends Phaser.Sprite {
   static className() {
@@ -25,41 +27,7 @@ export default class ParentSprite extends Phaser.Sprite {
       this.info = this.game.entities[entityType][entityName];
     }
 
-    //set size+texture
-    let frame = null;
-    if (Array.isArray(this.info.frame)) {
-      frame = this.info.frame[Math.floor(Math.random() * this.info.frame.length)];
-    } else {
-      frame = this.info.frame;
-    }
-    this.loadTexture(this.info.key || 'sprites', frame);
-    ParentSprite.setSize(this, this.info.width, this.info.isCircular, this.info.height);
-
-    //set body related variables
-    if (this.body) {
-      let v = this.info.velocity || {
-        'max': {
-          'x': 0,
-          'y': 0
-        },
-        'min': {
-          'x': 0,
-          'y': 0
-        }
-      };
-      let xSpd = this.game.random(v.min.x, v.max.x);
-      let ySpd = this.game.random(v.min.y, v.max.y);
-      this.body.velocity.set(xSpd, ySpd);
-      this.body.drag.setTo(0, 0);
-    }
-
-    //other properties
-    this.alpha = 1;
-    this.angle = 0;
-
-    //set default position
-    this.top = 0;
-    this.x = (this.game.world.width * 0.9 + 0.1) * Math.random();
+    DataAttributes.apply(this, this.info);
   }
   update() {
     //debug body
@@ -159,16 +127,7 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   deserialize(info) {
-    ParentSprite.setSize(this, info.width, info.isCircular, info.height);
-    this.x = info.x;
-    this.y = info.y;
-
-    if (this.body) {
-      this.body.velocity.x = info.body.velocity.x;
-      this.body.velocity.y = info.body.velocity.y;
-    }
-
-    this.alpha = info.alpha;
+    DataAttributes.apply(this, info);
   }
 
 }

@@ -9,7 +9,7 @@
 
 import assets from '../assets';
 
-import GameData from '../objects/Helpers/GameData';
+import GameData from '../objects/Data/GameData';
 import * as PhaserUI from 'phaser-ui';
 
 import 'phaser-state-transition'; //only needs an import to setup ^.^

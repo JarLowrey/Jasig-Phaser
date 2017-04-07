@@ -105,7 +105,7 @@ export default class WaveHandler {
   _chooseRandMeteorKey() {
     const meteors = this.game.entities.units;
     const keys = Object.keys(meteors);
-    const randIdx = this.game.between(0, keys.length);
+    const randIdx = Phaser.Math.between(0, keys.length);
     return keys[randIdx];
   }
 

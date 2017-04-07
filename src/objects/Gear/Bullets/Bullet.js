@@ -4,7 +4,7 @@
  *
  */
 
-import ParentSprite from '../Parents/ParentSprite';
+import ParentSprite from '../../Sprites/Parents/ParentSprite';
 
 export default class Bullet extends Phaser.Bullet {
 

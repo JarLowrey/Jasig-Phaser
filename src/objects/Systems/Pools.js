@@ -94,8 +94,7 @@ export default class Pools {
     for (var i = 0; i < savedInfo.length; i++) {
       const savedSpriteInfo = savedInfo[i];
 
-      const newSprite = this.spawn(savedSpriteInfo.className);
-      newSprite.deserialize(savedSpriteInfo);
+      this.getPool(savedSpriteInfo.className).getFirstDead().reset(savedSpriteInfo);
     }
   }
 
@@ -159,7 +158,7 @@ export default class Pools {
     emitter.setRotation(rotation.min, rotation.max);
     emitter.setAlpha(alpha.start, alpha.end, lifespan);
     emitter.setScale(minScale, maxScale, minScale, maxScale);
-    emitter.explode(lifespan, this.game.between(quantity.min, quantity.max));
+    emitter.explode(lifespan, Phaser.Math.between(quantity.min, quantity.max));
   }
 
   _getParticleClass(className) {

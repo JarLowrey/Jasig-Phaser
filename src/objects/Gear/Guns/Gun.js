@@ -3,7 +3,7 @@
  * ====
  * Sprite with an attached Phaser.Weapon that has a specific Bullet Class
  */
-import ParentSprite from '../Parents/ParentSprite';
+import ParentSprite from '../../Sprites/Parents/ParentSprite';
 import InfoWeapon from './InfoWeapon';
 
 export default class Gun extends ParentSprite {
