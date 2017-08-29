@@ -3,8 +3,8 @@
  * ====
  *
  */
-import DataAttributes from '../../DataDrivenEntities/Deserialize';
-import DataAttributes from '../../DataDrivenEntities/Serialize';
+import Deserialize from '../../DataDrivenEntities/Deserialize';
+import Serialize from '../../DataDrivenEntities/Serialize';
 
 export default class ParentSprite extends Phaser.Sprite {
   static className() {
@@ -27,7 +27,7 @@ export default class ParentSprite extends Phaser.Sprite {
       this.info = this.game.entities[entityType][entityName];
     }
 
-    DataAttributes.apply(this, this.info);
+    Deserialize.apply(this, this.info);
   }
   update() {
     //debug body
@@ -100,34 +100,14 @@ export default class ParentSprite extends Phaser.Sprite {
   }
 
   serialize() {
-    let serializedInfo = {
-      width: this.width,
-      height: this.height,
-
-      alpha: this.alpha,
-      angle: this.angle,
-
-      x: this.x,
-      y: this.y,
-
-      className: this.constructor.className(),
-      frame: this.frameName
-    };
-
-    if (this.body) {
-      serializedInfo.body = {
-        velocity: {
-          x: this.body.velocity.x,
-          y: this.body.velocity.y
-        }
-      };
-    }
-
+    let serializedInfo = Serialize.serialize(this);
+    serializedInfo.className = this.constructor.className();
+    
     return serializedInfo;
   }
 
   deserialize(info) {
-    DataAttributes.apply(this, info);
+    Deserialize.apply(this, info);
   }
 
 }

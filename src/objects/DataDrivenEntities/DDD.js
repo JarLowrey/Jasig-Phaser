@@ -9,7 +9,7 @@ export default class DDD {
     return {
       image: {
         key: 'sprites',
-        frame: '';
+        frame: ''
       },
       size: {
         width: 0
