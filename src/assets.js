@@ -1,4 +1,5 @@
 //SOURCE: https://drive.google.com/drive/folders/0Bx_21h_gew2ORDNJb2lWcmpwQlU?usp=sharing
+//Icons from icons8.com
 
 /*
  * `assets` module
@@ -49,10 +50,21 @@
 export default {
   // -- Splash screen assets, displayed during the 'Preload' state.
   boot: [{
-    key: 'preload_sprites',
-    type: 'atlasJSONHash',
-    atlasURL: 'spritesheets/preload_sprites.json',
-    textureURL: 'spritesheets/preload_sprites.png'
+    key: 'logo',
+    type: 'image',
+    url: 'imgs/logo.png'
+  }, {
+    key: 'background',
+    type: 'image',
+    url: 'imgs/background.png'
+  },{
+    key: 'starfield',
+    type: 'image',
+    url: 'imgs/starfield.png'
+  }, {
+    key: 'starfield2',
+    type: 'image',
+    url: 'imgs/starfield2.png'
   }, {
     key: 'preloadJSON',
     type: 'json',
@@ -225,14 +237,9 @@ export default {
     //  assumed.
     //
     //  If `textureURL` is omitted, a pattern `<key>.png` is assumed.
-    key: 'icons',
-    type: 'atlasJSONHash',
-    atlasURL: 'spritesheets/icons.json',
-    textureURL: 'spritesheets/icons.png'
-  }, {
     key: 'sprites',
     type: 'atlasJSONHash',
-    atlasURL: 'spritesheets/game_sprites.json',
-    textureURL: 'spritesheets/game_sprites.png'
+    atlasURL: 'imgs/spritesheet.json',
+    textureURL: 'imgs/spritesheet.png'
   }]
 };

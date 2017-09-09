@@ -79,13 +79,6 @@ export default class Boot extends Phaser.State {
       }
       return num.toFixed(digits).replace(rx, '$1');
     }.bind(this);
-
-    this.game.addBgImg = function(key, frame) {
-      let img = this.game.add.image(0, 0, key, frame);
-      img.width = Math.max(img.width, this.game.world.width);
-      img.height = Math.max(img.height, this.game.world.height);
-      return img;
-    }.bind(this);
   }
 
   onLoadComplete() {

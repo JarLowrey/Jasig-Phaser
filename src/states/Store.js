@@ -11,9 +11,10 @@ export default class Store extends Phaser.State {
 
   create() {
     this.upgradeInfo = this.game.cache.getJSON('upgrades');
-
-    this.game.addBgImg('sprites', 'starfield');
-    this.game.addBgImg('sprites', 'starfield2');
+    
+    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'background');
+    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
+    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield2');
 
     this.game.world.setBounds(0, 0, this.game.width, this.game.height);
 
@@ -29,7 +30,7 @@ export default class Store extends Phaser.State {
     const outlineColorPressed = 0xa1e199;
     const bgColorPressed = 0xe1d999;
 
-    this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'sprites', 'coins', 0);
     this.totalMoney.setText(this.game.nFormatter(this.game.data.play.score));
 
     this.currentWave = this.game.add.text(0, 0, 'Day ' + this.game.data.play.wave.number, Object.assign({}, this.game.fonts.text));
@@ -122,9 +123,9 @@ export default class Store extends Phaser.State {
 
     this.stateBtns = new Phaser.Group(this.game);
 
-    this.playBtn = new IconBtn(this.game, btnLen * 1.5, 'icons', 'play', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Game'));
-    this.settingsBtn = new IconBtn(this.game, btnLen, 'icons', 'settings', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Settings'));
-    this.scoresBtn = new IconBtn(this.game, btnLen, 'icons', 'chart', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Stats'));
+    this.playBtn = new IconBtn(this.game, btnLen * 1.5, 'sprites', 'play', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Game'));
+    this.settingsBtn = new IconBtn(this.game, btnLen, 'sprites', 'settings', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Settings'));
+    this.scoresBtn = new IconBtn(this.game, btnLen, 'sprites', 'chart', outlineWidth / 2, outlineColor, outlineColorPressed, bgColor, bgColorPressed, startState('Stats'));
 
     //set buttons positioning relative to one another
     this.playBtn.x = 0;
@@ -235,32 +236,32 @@ export default class Store extends Phaser.State {
     this.upgrades = new Phaser.Group(this.game);
 
     this.guns = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.gun, this.upgradeInfo.guns.levels.length, 'icons', this.upgradeInfo.guns.icon,
+      this.game.data.play.unlocks.purchases.gun, this.upgradeInfo.guns.levels.length, 'sprites', this.upgradeInfo.guns.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.damage = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.damage, this.upgradeInfo.damage.maxLevel, 'icons', this.upgradeInfo.damage.icon,
+      this.game.data.play.unlocks.purchases.damage, this.upgradeInfo.damage.maxLevel, 'sprites', this.upgradeInfo.damage.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.fireRate = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.fireRate, this.upgradeInfo.fireRate.maxLevel, 'icons', this.upgradeInfo.fireRate.icon,
+      this.game.data.play.unlocks.purchases.fireRate, this.upgradeInfo.fireRate.maxLevel, 'sprites', this.upgradeInfo.fireRate.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.defense = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.defense, this.upgradeInfo.defense.maxLevel, 'icons', this.upgradeInfo.defense.icon,
+      this.game.data.play.unlocks.purchases.defense, this.upgradeInfo.defense.maxLevel, 'sprites', this.upgradeInfo.defense.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.scoreBoost = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.scoreBoost, this.upgradeInfo.scoreBoost.maxLevel, 'icons', this.upgradeInfo.scoreBoost.icon,
+      this.game.data.play.unlocks.purchases.scoreBoost, this.upgradeInfo.scoreBoost.maxLevel, 'sprites', this.upgradeInfo.scoreBoost.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
     this.ally = new UpgradableStoreItem(this.game, upgradeWidth, upgradeHeight,
-      this.game.data.play.unlocks.purchases.ally, this.upgradeInfo.ally.maxLevel, 'icons', this.upgradeInfo.ally.icon,
+      this.game.data.play.unlocks.purchases.ally, this.upgradeInfo.ally.maxLevel, 'sprites', this.upgradeInfo.ally.icon,
       outlineWidth, outlineColor, backgroundColor,
       outlineColorPressed, bgColorPressed);
 
@@ -328,7 +329,7 @@ export default class Store extends Phaser.State {
     this.msg.wordWrapWidth = this.txtBackground.width * 0.9;
 
     //create buyBtn
-    this.buyBtn = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
+    this.buyBtn = new IconText(this.game, 20, 'score', 'text', 'sprites', 'coins', 0);
     this.buyBtn.setPressable(this.txtBackground.width / 2, outlineWidth / 2, outlineColor, bgColor, outlineColorPressed, bgColorPressed);
     this.buyBtn.bottom = this.txtBackground.bottom - this.txtBgOutlineWidth;
 

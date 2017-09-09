@@ -68,7 +68,7 @@ export default class Preload extends Phaser.State {
 
   showSplashScreen() {
     //add logo and loading bar
-    this.logo = this.add.sprite(0, 0, 'preload_sprites', 'j_tron_labs_logo');
+    this.logo = this.add.sprite(0, 0, 'logo');
     this.logo.width = 50;
     this.logo.scale.y = this.logo.scale.x;
     this.logo.anchor.setTo(0.5, 0.5);

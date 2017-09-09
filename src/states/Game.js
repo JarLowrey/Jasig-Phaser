@@ -31,9 +31,9 @@ export default class Game extends Phaser.State {
   create() {
     //document.documentElement.style.cursor = 'none'; //hide cursor in game
 
-    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'background');
-    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield');
-    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'sprites', 'starfield2');
+    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'background');
+    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
+    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield2');
 
     this.setupSpritePools();
     this.game.data.play.player = this.game.spritePools.getPool('Protagonist').getFirstDead();
@@ -46,7 +46,7 @@ export default class Game extends Phaser.State {
     this.game.waveHandler = new WaveHandler(this.game, this.hero);
     this.game.waveHandler.startWave();
 
-    this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'icons', 'coins', 0);
+    this.totalMoney = new IconText(this.game, 20, 'score', 'text', 'sprites', 'coins', 0);
     this.totalMoney.right = this.game.waveHandler.progressBar.right;
     this.totalMoney.top = this.game.waveHandler.progressBar.bottom;
     this.incrementGameResources(0);
