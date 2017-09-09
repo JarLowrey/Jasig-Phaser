@@ -53,7 +53,18 @@ export default {
     key: 'logo',
     type: 'image',
     url: 'imgs/logo.png'
+  },{
+    key: 'preloadJSON',
+    type: 'json',
+    url: 'json/preload.json'
   }, {
+    key: 'font_styles',
+    type: 'json',
+    url: 'json/font_styles.json'
+  }],
+
+  // -- General assets, used throughout the game.
+  game: [ {
     key: 'background',
     type: 'image',
     url: 'imgs/background.png'
@@ -66,17 +77,6 @@ export default {
     type: 'image',
     url: 'imgs/starfield2.png'
   }, {
-    key: 'preloadJSON',
-    type: 'json',
-    url: 'json/preload.json'
-  }, {
-    key: 'font_styles',
-    type: 'json',
-    url: 'json/font_styles.json'
-  }],
-
-  // -- General assets, used throughout the game.
-  game: [{
     key: 'dimen',
     type: 'json',
     url: 'json/dimen.json'
