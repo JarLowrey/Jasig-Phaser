@@ -5,7 +5,7 @@
  */
 export default class DDD {
 
-  static get json() {
+  static get default_serialization() {
     return {
       image: {
         key: 'sprites',

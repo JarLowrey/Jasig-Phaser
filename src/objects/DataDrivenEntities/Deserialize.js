@@ -10,7 +10,7 @@ import DDD from './DDD';
 export default class Deserialize extends DDD {
 
   static apply(sprite, json) {
-    const defaultJson = DDD.json();
+    const defaultJson = DDD.default_serialization;
 
     Deserialize._applyImage(sprite, json, defaultJson);
     Deserialize._applySize(sprite, json, defaultJson);
@@ -36,26 +36,28 @@ export default class Deserialize extends DDD {
   }
 
   static _applyImage(sprite, json, defaultJson) {
+    if (!json.image) { return; }
     let frame = Deserialize._selectProp(json.image.frame);
     this.loadTexture(json.image.key || defaultJson.image.key, frame);
   }
 
   static _applySize(sprite, json, defaultJson) {
+    if (!json.size) { return; }
     ParentSprite.setSize(sprite, Deserialize._selectProp(json.size.width), json.isCircular);
   }
 
   static _applyBody(sprite, json, defaultJson) {
-    if (sprite.body) {
-      let v = json.velocity || defaultJson.body.velocity.x;
-      sprite.body.velocity.set(
-        Deserialize._selectProp(v.x),
-        Deserialize._selectProp(v.y)
-      );
-      sprite.body.drag.setTo(0, 0);
-    }
+    if (!json.body) { return; }
+    let v = json.velocity || defaultJson.body.velocity.x;
+    sprite.body.velocity.set(
+      Deserialize._selectProp(v.x),
+      Deserialize._selectProp(v.y)
+    );
+    sprite.body.drag.setTo(0, 0);
   }
 
   static _setPosition(sprite, json, defaultJson) {
+    if (!json.position) { return; }
     sprite.x = Deserialize._selectProp(json.position.x) || defaultJson.position.x;
     sprite.y = Deserialize._selectProp(json.position.y) || defaultJson.position.y;
     sprite.alpha = Deserialize._selectProp(json.position.alpha) || defaultJson.position.alpha;

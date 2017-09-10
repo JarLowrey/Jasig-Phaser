@@ -82,7 +82,7 @@ export default class Pools {
     var spritesIntoArray = [];
 
     for (var className in this.pools) {
-      this.getPool(className).forEachAlive(function(sprite) {
+      this.getPool(className).forEachAlive(function (sprite) {
         if (sprite.serialize) spritesIntoArray.push(sprite.serialize());
       });
     }

@@ -2,7 +2,7 @@
   "primaryExplosion": {
     "image": {
       "key": "sprites",
-      "frame": "explosion1"
+      "frame": "explosion"
     },
     "explosions": {
       "default": {

@@ -21,7 +21,7 @@ export default class Protagonist extends Ship {
     //  Add an emitter for the ship's trail
     this.shipTrail = this.game.add.emitter(0, 0, 50);
     this.shipTrail.width = 10;
-    this.shipTrail.makeParticles('sprites', 'explosion1');
+    this.shipTrail.makeParticles('sprites', 'explosion');
     this.shipTrail.setXSpeed(-75, 75);
     this.shipTrail.setYSpeed(150, 300);
     this.shipTrail.setRotation(50, -50);
