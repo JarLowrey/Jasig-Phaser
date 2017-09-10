@@ -1,6 +1,13 @@
 {
   "small_meteor": {
-    "frame": ["meteorBrown_tiny1", "meteorBrown_tiny2", "meteorGrey_tiny1", "meteorGrey_tiny2"],
+    "image": {
+      "frame": [
+        "meteorBrown_tiny1",
+        "meteorBrown_tiny2",
+        "meteorGrey_tiny1",
+        "meteorGrey_tiny2"
+      ]
+    },
     "health": 20,
     "width": 10,
     "gold": 20,
@@ -16,7 +23,14 @@
     }
   },
   "meteor": {
-    "frame": ["meteorBrown_med1", "meteorBrown_med2", "meteorGrey_med1", "meteorGrey_med2"],
+    "image": {
+      "frame": [
+        "meteorBrown_med1",
+        "meteorBrown_med2",
+        "meteorGrey_med1",
+        "meteorGrey_med2"
+      ]
+    },
     "health": 20,
     "width": 20,
     "gold": 20,
@@ -32,7 +46,18 @@
     }
   },
   "big_meteor": {
-    "frame": ["meteorBrown_big1", "meteorBrown_big2", "meteorBrown_big3", "meteorBrown_big4", "meteorGrey_big1", "meteorGrey_big2", "meteorGrey_big3", "meteorGrey_big4"],
+    "image": {
+      "frame": [
+        "meteorBrown_big1",
+        "meteorBrown_big2",
+        "meteorBrown_big3",
+        "meteorBrown_big4",
+        "meteorGrey_big1",
+        "meteorGrey_big2",
+        "meteorGrey_big3",
+        "meteorGrey_big4"
+      ]
+    },
     "health": 50,
     "width": 40,
     "gold": 100,
@@ -48,7 +73,14 @@
     }
   },
   "giant_meteor": {
-    "frame": ["spaceMeteors_001", "spaceMeteors_002", "spaceMeteors_003", "spaceMeteors_004"],
+    "image": {
+      "frame": [
+        "spaceMeteors_001",
+        "spaceMeteors_002",
+        "spaceMeteors_003",
+        "spaceMeteors_004"
+      ]
+    },
     "health": 50,
     "width": 60,
     "gold": 100,

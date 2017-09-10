@@ -138,6 +138,7 @@ export default class WaveHandler {
   spawnSprite(newEnemyClass, newEnemyJsonName, isFriendly = false) {
     var newEnemy = this.game.spritePools.getPool(newEnemyClass.className()).getFirstDead(true);
     newEnemy.reset(newEnemyJsonName, isFriendly);
+    console.log(newEnemy);
     return newEnemy;
   }
 

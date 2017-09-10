@@ -11,7 +11,7 @@ export default class Deserialize extends DDD {
 
   static apply(sprite, json) {
     const defaultJson = DDD.default_serialization;
-
+    console.log(json)
     Deserialize._applyImage(sprite, json, defaultJson);
     Deserialize._applySize(sprite, json, defaultJson);
     Deserialize._applyBody(sprite, json, defaultJson);
@@ -25,7 +25,7 @@ export default class Deserialize extends DDD {
 
     if (Array.isArray(json)) {
       const randIndx = Phaser.Math.between(0, json.length);
-      prop = jsonProperty[randIndx];
+      prop = json[randIndx];
     } else if (json.min && json.max) {
       prop = Phaser.Math.random(json.min, json.max);
     } else {
@@ -38,10 +38,10 @@ export default class Deserialize extends DDD {
   static _applyImage(sprite, json, defaultJson) {
     if (!json.image) { return; }
     let frame = Deserialize._selectProp(json.image.frame);
-    this.loadTexture(json.image.key || defaultJson.image.key, frame);
+    sprite.loadTexture(json.key || json.image.key || defaultJson.image.key, frame);
   }
 
-  static _applySize(sprite, json, defaultJson) {
+  static _applySize(sprite, json) {
     if (!json.size) { return; }
     ParentSprite.setSize(sprite, Deserialize._selectProp(json.size.width), json.isCircular);
   }

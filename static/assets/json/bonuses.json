@@ -1,7 +1,9 @@
 {
   "heal": {
-    "key": "icons",
-    "frame": "heal",
+    "image": {
+      "key": "icons",
+      "frame": "heal"
+    },
     "width": 40,
     "bonusFunctionName": "applyHeal",
     "background_color": "0#ffffff",
@@ -19,8 +21,10 @@
     }
   },
   "money": {
-    "key": "icons",
-    "frame": "resources",
+    "image": {
+      "key": "icons",
+      "frame": "resources"
+    },
     "width": 40,
     "bonusFunctionName": "addResources",
     "background_color": "0#ffffff",

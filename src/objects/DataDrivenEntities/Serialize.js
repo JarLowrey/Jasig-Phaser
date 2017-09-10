@@ -11,10 +11,10 @@ export default class Deserialize extends DDD {
     //use the default JSON from DDD. Do not add new properties, only fill in the ones already there
     let json = DDD.json();
 
-    DataAttributes._serializeImage(sprite, json);
-    DataAttributes._serializeSize(sprite, json);
-    DataAttributes._serializeBody(sprite, json);
-    DataAttributes._serializePosition(sprite, json);
+    Deserialize._serializeImage(sprite, json);
+    Deserialize._serializeSize(sprite, json);
+    Deserialize._serializeBody(sprite, json);
+    Deserialize._serializePosition(sprite, json);
 
     return json;
   }

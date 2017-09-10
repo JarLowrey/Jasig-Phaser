@@ -31,9 +31,9 @@ export default class Game extends Phaser.State {
   create() {
     //document.documentElement.style.cursor = 'none'; //hide cursor in game
 
-    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'background');
-    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield');
-    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'starfield2');
+    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'sprites','background');
+    this.starfield = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'sprites', 'starfield');
+    this.starfield2 = this.game.add.tileSprite(0, 0, this.game.width, this.game.height,'sprites', 'starfield2');
 
     this.setupSpritePools();
     this.game.data.play.player = this.game.spritePools.getPool('Protagonist').getFirstDead();

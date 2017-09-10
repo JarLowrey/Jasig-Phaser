@@ -9,7 +9,7 @@ export default class MoveController {
     this.sprite = sprite;
     this.game = sprite.game;
 
-    document.addEventListener("dblclick", this.toggleAllowRotation.bind(this));
+    document.addEventListener('dblclick', this.toggleAllowRotation.bind(this));
 
     this.minSpeed = 500;
     this.maxAccel = Math.abs(this.sprite.width) * 10;
@@ -21,7 +21,7 @@ export default class MoveController {
       up: [Phaser.Keyboard.UP, Phaser.Keyboard.W],
       down: [Phaser.Keyboard.DOWN, Phaser.Keyboard.S],
       fire: [Phaser.Keyboard.SPACE]
-    }
+    };
   }
 
   move() {

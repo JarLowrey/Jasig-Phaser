@@ -48,8 +48,8 @@ export default class DbAccess {
         //No indicies currently needed
 
         // Once the store is created, populate it
-        store.transaction.oncomplete = async function(event) {
-          DbAccess.initDb(game, defaultData).then(function(value) {
+        store.transaction.oncomplete = async function() {
+          DbAccess.initDb(game, defaultData).then(function() {
             resolve(DbAccess._db);
           }, function(reason) {
             reject(reason);
